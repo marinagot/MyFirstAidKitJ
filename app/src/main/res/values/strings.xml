@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">MyFirstAidKit</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">My First Aid Kit</string>
+    <string name="nav_header_subtitle">username</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_account">Account</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="button_login">Login</string>
+    <string name="button_view_now">View now</string>
+    <string name="button_treatments">Treatments</string>
+    <string name="button_FAK">First Aid Kit</string>
+    <string name="button_settings">Settings</string>
+    <string name="button_account">Account</string>
+
+    <string name="txt_now">View now</string>
+    <string name="txt_treatments">Treatments</string>
+    <string name="txt_fak">First Aid Kit</string>
+    <string name="txt_settings">Settings</string>
+    <string name="txt_account">Account</string>
+
+    <string name="user_image">User image or default avatar</string>
+    <string name="txt_username">Username</string>
+    <string name="txt_username_hint">Username</string>
+    <string name="autofillDescription">Username</string>
+    <string name="txt_pwd">Password</string>
+    <string name="btn_sign_in">Sign in</string>
+    <string name="btn_sign_up">Sign up</string>
+
+    <string name="txt_email">Email</string>
+    <string name="txt_birth">Birthdate</string>
+    <string name="btn_done">Done</string>
+
+    <string name="acc_chpwd">Change password</string>
+    <string name="acc_del">Delete account</string>
+    <string name="acc_logout">Logout</string>
+
+    <string name="edit_treatment_name">Treatment name</string>
+    <string name="edit_treatment_lbl_medicine">Choose one medicine</string>
+    <string name="edit_treatment_lbl_freq">Every</string>
+    <string name="edit_treatment_lbl_freq_unit">hours</string>
+    <string name="edit_treatment_txt_num">0</string>
+    <string name="edit_treatment_txt_date">01/05/2019</string>
+    <string name="edit_treatment_btn_add">+</string>
+
+    <string name="edit_medicine_name">Name</string>
+    <string name="edit_medicine_lbl_type">Choose one type</string>
+    <string name="edit_medicine_txt_num">Dose number</string>
+    <string name="edit_medicine_txt_exp_date">Expiration date</string>
+
+    <string name="settings_lbl_notif">Notifications</string>
+    <string name="settings_lbl_alert">Alert</string>
+    <string name="settings_txt_num_min">15</string>
+    <string name="settings_lbl_tmp_unit">minutes</string>
+    <string name="settings_lbl_theme">Theme</string>
+    <string name="settings_btn_rad_def">Default</string>
+    <string name="settings_btn_rad_dark">Dark</string>
+    <string name="settings_btn_rad_light">Light</string>
+
+    <string name="acc_lbl_chpwd">Change password</string>
+    <string name="acc_lbl_del">Change password</string>
+
+    <string name="init_lbl_login">Log in or sign up to start\nmanaging your first aid kit</string>
+</resources>
