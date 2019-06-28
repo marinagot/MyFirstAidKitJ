@@ -68,6 +68,9 @@ public class login extends Fragment {
 
                 getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
                 getActivity().setTitle("Create Account");
+
+                getFragmentManager().beginTransaction().replace(R.id.content, new medicine_edit()).commit();
+                getActivity().setTitle("New Medicine");
             }
         });
 

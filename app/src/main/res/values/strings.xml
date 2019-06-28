@@ -15,13 +15,13 @@
     <string name="button_login">Login</string>
     <string name="button_view_now">View now</string>
     <string name="button_treatments">Treatments</string>
-    <string name="button_FAK">First Aid Kit</string>
+    <string name="button_FAK">My kit</string>
     <string name="button_settings">Settings</string>
     <string name="button_account">Account</string>
 
     <string name="txt_now">View now</string>
     <string name="txt_treatments">Treatments</string>
-    <string name="txt_fak">First Aid Kit</string>
+    <string name="txt_fak">My kit</string>
     <string name="txt_settings">Settings</string>
     <string name="txt_account">Account</string>
 

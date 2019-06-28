@@ -3,10 +3,8 @@ package com.example.myfirstaidkit;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,7 +24,9 @@ public class MainActivity extends AppCompatActivity
         first_aid_kit.OnFragmentInteractionListener,
         settings.OnFragmentInteractionListener,
         account.OnFragmentInteractionListener,
-        create_account.OnFragmentInteractionListener
+        create_account.OnFragmentInteractionListener,
+        treatment_edit.OnFragmentInteractionListener,
+        medicine_edit.OnFragmentInteractionListener
         {
 
     @Override
@@ -36,14 +36,29 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //fab.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+                //getFragmentManager().beginTransaction().replace(R.id.content, new medicine_edit()).commit();
+                //getActivity().setTitle("Home");
+
+                //Fragment fragment = null;
+
+                //setTitle("Edit medicine");
+                //Class fragmentClass = medicine_edit.class;
+
+                //try {
+                //    fragment = (Fragment) fragmentClass.newInstance();
+                //} catch (Exception e) {
+                //    e.printStackTrace();
+                //}
+
+                // Insert the fragment by replacing any existing fragment
+                //FragmentManager fragmentManager = getSupportFragmentManager();
+                //fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
+        //    }
+        //});
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -161,7 +176,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Uri uri){
 
     }
 
