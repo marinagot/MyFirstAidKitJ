@@ -5,7 +5,7 @@ import java.util.UUID;
  */
 
 public class FirstAidKit{
-    interface  User{
+    interface  ColumnasUser{
         String id = "id";
         String username = "username";
         String email = "email";
@@ -17,7 +17,7 @@ public class FirstAidKit{
     }
 
 
-    interface Treatment{
+    interface ColumnasTreatment{
         String id = "id";
         String idUser = "id_user";
         String frecuencia = "frecuencia";

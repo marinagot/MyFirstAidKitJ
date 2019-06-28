@@ -11,7 +11,7 @@ import src.main.java.com.example.myfirstaidkit.data.FirstAidKit.Kit;
 
 public class BaseDatos extends SQLiteHelper {
 
-    private static final String NOMBRE_BASE_DATOS = "Medicine.db";
+    private static final String NOMBRE_BASE_DATOS = "FirstAidKit.db";
     private static final int VERSION_ACTUAL = 1.1;
     private final Context contexto;
 
@@ -30,5 +30,30 @@ public class BaseDatos extends SQLiteHelper {
 
     }
 
-    public BaseDatos
+    public BaseDatos {
+        super(contexto, NOMBRE_BASE_DATOS, null, VERSION_ACTUAL);
+        this.contexto = contexto;
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                db.setForeignKeyConstraintsEnabled(true);
+            } else {
+                db.execSQL("PRAGMA foreign_keys=ON");
+            }
+        }
+    }
+    @Override
+
+    public void onCreate(SQliteDatabase db){
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +
+                "%s TEXT NOT NULL %s)",
+                Tablas.TREATMENT, BaseColumns._ID,
+
+
+    }
 }
