@@ -3,11 +3,11 @@ package com.example.myfirstaidkit;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +49,20 @@ public class treatments extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FloatingActionButton fab = view.findViewById(R.id.newTreatment);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().beginTransaction().replace(R.id.content, new treatment_edit()).commit();
+                getActivity().setTitle("New treatment");
+            }
+        });
     }
 
     @Override

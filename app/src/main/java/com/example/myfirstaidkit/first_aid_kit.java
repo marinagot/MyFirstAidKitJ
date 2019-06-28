@@ -3,6 +3,7 @@ package com.example.myfirstaidkit;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,20 @@ public class first_aid_kit extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FloatingActionButton fab = view.findViewById(R.id.newMedicine);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().beginTransaction().replace(R.id.content, new medicine_edit()).commit();
+                getActivity().setTitle("New medicine");
+            }
+        });
     }
 
     @Override
