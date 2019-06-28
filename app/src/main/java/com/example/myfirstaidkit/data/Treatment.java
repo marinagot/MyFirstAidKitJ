@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class Treatment{
 
-    Integer id_treatment;
-    Integer idUser;
-    Integer frecuencia;
-    Date fechaInicio;
-    Date fechaFinal;
+    public Integer id_treatment;
+    public Integer idUser;
+    public Integer frecuencia;
+    public Date fechaInicio;
+    public Date fechaFinal;
 
     public Treatment(Integer id_treatment, Integer idUser, Integer frecuencia, Date fechaInicio, Date fechaFinal) {
         this.id_treatment = id_treatment;

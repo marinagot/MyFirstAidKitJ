@@ -2,19 +2,19 @@ package com.example.myfirstaidkit.data;
 
 public class Kit{
 
-    Interger idRelacion;
-    Integer idTratamiento;
-    Integer idMedicamento;
+    public Integer idRelacion;
+    public Integer idTratamiento;
+    public Integer idMedicamento;
 
-    public Kit(Interger idRelacion, Integer idTratamiento, Integer idMedicamento) {
+    public Kit(Integer idRelacion, Integer idTratamiento, Integer idMedicamento) {
         this.idRelacion = idRelacion;
         this.idTratamiento = idTratamiento;
         this.idMedicamento = idMedicamento;
     }
 
-    public Interger getIdRelacion() {return idRelacion;}
+    public Integer getIdRelacion() {return idRelacion;}
 
-    public void setIdRelacion(Interger idRelacion) {this.idRelacion = idRelacion;}
+    public void setIdRelacion(Integer idRelacion) {this.idRelacion = idRelacion;}
 
     public Integer getIdTratamiento() {return idTratamiento;}
 

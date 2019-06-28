@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class Medicine {
 
-    Integer id_med;
-    String medicine_name;
-    Integer idKit;
-    String medicine_type;
-    Integer dose_number;
-    Date expiration_date;
+    public Integer id_med;
+    public String medicine_name;
+    public Integer idKit;
+    public String medicine_type;
+    public Integer dose_number;
+    public Date expiration_date;
 
     public Medicine(Integer id_med, String medicine_name, Integer idKit, String medicine_type, Integer dose_number, Date expiration_date) {
         this.id_med = id_med;
@@ -67,6 +67,7 @@ public class Medicine {
     public void setExpiration_date(Date expiration_date) {
         this.expiration_date = expiration_date;
     }
+}
 
 
 

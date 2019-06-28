@@ -3,23 +3,29 @@ package com.example.myfirstaidkit.data;
 import java.util.Date;
 
 public class User {
-
+    private String id;
     private String username;
     private String email;
     private String birthday;
     private String avatar;
     private String password;
     private String confirmPassword;
+    private String idKit;
 
-    public User( String username, String email, String birthday, String avatar, String password, String confirmPassword) {
-
+    public User( String id, String username, String email, String birthday, String avatar, String password, String confirmPassword, String idKit) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.birthday = birthday;
         this.avatar = avatar;
         this.password = password;
         this.confirmPassword = confirmPassword;
+        this.idKit = idKit;
     }
+
+    public String getId() {return id;}
+
+    public void setId(String id) {this.id = id;}
 
     public String getUsername() {
         return username;
@@ -68,4 +74,8 @@ public class User {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+
+    public String getIdKit() {return idKit;}
+
+    public void setIdKit(String idKit) {this.idKit = idKit;}
 }

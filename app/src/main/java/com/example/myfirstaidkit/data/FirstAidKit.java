@@ -1,3 +1,6 @@
+package com.example.myfirstaidkit.data;
+
+
 import java.util.UUID;
 
 /**
@@ -5,63 +8,63 @@ import java.util.UUID;
  */
 
 public class FirstAidKit{
-    interface  ColumnasUser{
-        String id = "id";
-        String username = "username";
-        String email = "email";
-        String birthday = "birthday";
-        String avatar = "avatar";
-        String password = "password";
-        String confirmPassword "confirmPassword";
-        String idKit = "id_kit";
+
+    interface  Columnas_User{
+
+        String ID = "id";
+        String USERNAME = "username";
+        String EMAIL = "email";
+        String BIRTHDAY = "birthday";
+        String AVATAR = "avatar";
+        String PASSWORD = "password";
+        String CONFIRMPASSWORD = "confirmPassword";
+        String IDKIT = "id_kit";
     }
 
 
-    interface ColumnasTreatment{
-        String id = "id";
-        String idUser = "id_user";
-        String frecuencia = "frecuencia";
-        String fechaInicio = "fecha_inicio";
-        String fechaFinal = "fecha_final";
+    interface Columnas_Treatment{
+
+        String ID = "id";
+        String IDUSER = "id_user";
+        String FRECUENCIA = "frecuencia";
+        String FECHAINICIO = "fecha_inicio";
+        String FECHAFINAL = "fecha_final";
     }
 
-    interface Medicine{
-        String id = "id";
-        String medicine_name = "medicine_name";
-        String idKit = "id_kit";
-        String medicine_type = "medicine_type";
-        String expiration_date = "expiration_date";
-        String dose_number = "dose_number";
+    interface Columnas_Medicine{
+
+        String ID = "id";
+        String MEDICINE_NAME = "medicine_name";
+        String IDKIT = "id_kit";
+        String MEDICINE_TYPE = "medicine_type";
+        String EXPIRATION_DATE = "expiration_date";
+        String DOSE_NUMBER = "dose_number";
     }
 
-    interface Kit{
-        String id = "id";
-        String idTratamiento = "id_tratamiento";
-        String idMedicamento = "id_medicamento";
+    interface ColumnasKit{
+        String ID = "id";
+        String ID_TRAT = "id_tratamiento";
+        String ID_MED = "id_medicamento";
     }
 
-    public static class FirstAidKit implements Kit{
+    public static class Kit implements ColumnasKit{
         public static String generarIdKit(){
-            return "kit_" + UUID.randomUUID().toString();
+            return "KIT_" + UUID.randomUUID().toString();
         }
     }
 
-    public static class FirstAidKit implements User{
+    public static class User implements Columnas_User{
         public static String generarIdUser(){
-            return "user_" + UUID.randomUUID().toString();
+            return "USER_" + UUID.randomUUID().toString();
         }
     }
 
-    public static class FirstAidKit implements Treatment{
-        public static String generarIdTreatment(){
-            return "treat_" + UUID.randomUUID().toString();
-        }
+    public static class Treatment implements Columnas_Treatment{
+        public static String generarIdTreatment(){return "TREAT_" + UUID.randomUUID().toString();}
     }
 
-    public static class FirstAidKit implements Medicine{
-        public static String generarIdMedicine(){
-            return "med_" + UUID.randomUUID().toString();
-        }
+    public static class Medicine implements Columnas_Medicine{
+        public static String generarIdMedicine(){return "MED_" + UUID.randomUUID().toString();}
     }
 
     private FirstAidKit(){
