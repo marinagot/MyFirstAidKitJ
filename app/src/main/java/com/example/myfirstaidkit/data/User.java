@@ -2,7 +2,7 @@ package com.example.myfirstaidkit.data;
 
 import android.arch.persistence.room.Entity;
 
-import java.util.Date;
+
 
 @Entity(primaryKeys = {"id"})
 public class User {
@@ -13,7 +13,7 @@ public class User {
     private String avatar;
     private String password;
 
-    public User( Integer id, String username, String email, String birthday, String avatar) {
+    public User( Integer id, String username, String email, String birthday, String avatar, String password) {
         this.id = id;
         this.username = username;
         this.email = email;

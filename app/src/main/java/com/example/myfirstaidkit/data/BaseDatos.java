@@ -63,22 +63,22 @@ public class BaseDatos extends SQLiteOpenHelper {
                 Tablas.USER, BaseColumns._ID, User.ID, User.USERNAME, User.EMAIL,
                 User.PASSWORD, User.BIRTHDAY, User.AVATAR));
 
-        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +
-                "%s TEXT NOT NULL %s)",
-                Tablas.TREATMENT, BaseColumns._ID, Treatment.ID, Treatment.IDUSER,
-                Treatment.FRECUENCIA, Treatment.FECHAINICIO,Treatment.FECHAFINAL));
-
-        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +
-                "%s TEXT NOT NULL %s)",
-                Tablas.MEDICINE, BaseColumns._ID, Medicine.ID, Medicine.MEDICINE_NAME,
-                Medicine.IDKIT, Medicine.MEDICINE_TYPE, Medicine.EXPIRATION_DATE,
-                Medicine.DOSE_NUMBER));
-        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +
-                "%s TEXT NOT NULL %s)",
-                Tablas.KIT, BaseColumns._ID, Kit.ID, Kit.ID_TRAT, Kit.ID_MED));
+//        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+//                "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +
+//                "%s TEXT NOT NULL %s)",
+//                Tablas.TREATMENT, BaseColumns._ID, Treatment.ID, Treatment.IDUSER,
+//                Treatment.FRECUENCIA, Treatment.FECHAINICIO,Treatment.FECHAFINAL));
+//
+//        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+//                "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +
+//                "%s TEXT NOT NULL %s)",
+//                Tablas.MEDICINE, BaseColumns._ID, Medicine.ID, Medicine.MEDICINE_NAME,
+//                Medicine.IDKIT, Medicine.MEDICINE_TYPE, Medicine.EXPIRATION_DATE,
+//                Medicine.DOSE_NUMBER));
+//        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+//                "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +
+//                "%s TEXT NOT NULL %s)",
+//                Tablas.KIT, BaseColumns._ID, Kit.ID, Kit.ID_TRAT, Kit.ID_MED));
 
     }
 
