@@ -73,7 +73,6 @@ public final class OperacionesBaseDatos {
         Cursor c = db.rawQuery("SELECT USERNAME,PASSWORD FROM " +
                 Tablas.USER + " WHERE " + "USERNAME='" +
                 username + "' AND PASSWORD='" + password + "'", null);
-
         if (c.moveToFirst() == true) {
 
             String un = c.getString(0);
@@ -83,6 +82,7 @@ public final class OperacionesBaseDatos {
                 exist = true;
             }
         }
+        db.close();
         return exist;
     }
 }

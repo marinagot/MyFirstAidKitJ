@@ -22,7 +22,7 @@ public class create_account extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     OperacionesBaseDatos us;
-    EditText id,username, email, birthday, password, confirm_password,idKit;
+    EditText username, email, birthday, password, confirm_password;
     ImageView avatar;
 
 
@@ -52,14 +52,13 @@ public class create_account extends Fragment {
 
         us = new OperacionesBaseDatos();
 
-        username = (EditText) viewCA.findViewById(R.id.txt_username_set);
-        email = (EditText) viewCA.findViewById(R.id.txt_email_set);
-        birthday = (EditText) viewCA.findViewById(R.id.txt_birth_set);
-        password = (EditText) viewCA.findViewById(R.id.txt_pwd_set);
-        confirm_password = (EditText) viewCA.findViewById(R.id.txt_pwd_conf_set);
-        avatar = (ImageView) viewCA.findViewById(R.id.image_profile_set);
-
-        Button btnDone = (Button) viewCA.findViewById(R.id.btn_confirm_account);
+        username = viewCA.findViewById(R.id.txt_username_set);
+        email = viewCA.findViewById(R.id.txt_email_set);
+        birthday = viewCA.findViewById(R.id.txt_birth_set);
+        password = viewCA.findViewById(R.id.txt_pwd_set);
+        confirm_password = viewCA.findViewById(R.id.txt_pwd_conf_set);
+        avatar = viewCA.findViewById(R.id.image_profile_set);
+        Button btnDone = viewCA.findViewById(R.id.btn_confirm_account);
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +80,7 @@ public class create_account extends Fragment {
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
 
-                    User user= new User(username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
+                    User user= new User(0, username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
                             avatar.toString(), password.getText().toString());
                     us.insertarUser(user);
 
