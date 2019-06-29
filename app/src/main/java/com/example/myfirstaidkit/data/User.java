@@ -6,16 +6,14 @@ import java.util.Date;
 
 @Entity(primaryKeys = {"id"})
 public class User {
-    private String id;
+    private Integer id;
     private String username;
     private String email;
     private String birthday;
     private String avatar;
     private String password;
-    private String confirmPassword;
-    private String idKit;
 
-    public User( String id, String username, String email, String birthday, String avatar) {
+    public User( Integer id, String username, String email, String birthday, String avatar) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -24,9 +22,9 @@ public class User {
         this.password = password;
     }
 
-    public String getId() {return id;}
+    public Integer getId() {return id;}
 
-    public void setId(String id) {this.id = id;}
+    public void setId(Integer id) {this.id = id;}
 
     public String getUsername() {
         return username;
