@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.myfirstaidkit.data.OperacionesBaseDatos;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +27,7 @@ public class login extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     EditText username,password;
-    UsersSQLiteHelper us;
+    OperacionesBaseDatos us;
 
     public login() {
         // Required empty public constructor
@@ -45,7 +47,7 @@ public class login extends Fragment {
         username = (EditText) v.findViewById(R.id.txt_username);
         password = (EditText) v.findViewById(R.id.txt_pwd);
 
-        us = new UsersSQLiteHelper(getActivity());
+        us = new OperacionesBaseDatos();
 
         Button btnRegister = v.findViewById(R.id.btn_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {

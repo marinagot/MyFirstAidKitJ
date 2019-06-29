@@ -66,5 +66,24 @@ public final class OperacionesBaseDatos {
 
         return idUser;
     }
+
+    public boolean loginData(String username, String password) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        boolean exist = false;
+        Cursor c = db.rawQuery("SELECT USERNAME,PASSWORD FROM " +
+                Tablas.USER + " WHERE " + "USERNAME='" +
+                username + "' AND PASSWORD='" + password + "'", null);
+
+        if (c.moveToFirst() == true) {
+
+            String un = c.getString(0);
+            String pw = c.getString(1);
+
+            if (username.equals(un) && password.equals(pw)) {
+                exist = true;
+            }
+        }
+        return exist;
+    }
 }
 
