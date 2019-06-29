@@ -63,6 +63,7 @@ public final class OperacionesBaseDatos {
         valores.put(User.EMAIL, user.getEmail());
 
         long idUser=db.insertOrThrow(Tablas.USER,null,valores);
+        db.close();
 
         return idUser;
     }
