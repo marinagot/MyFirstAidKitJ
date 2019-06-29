@@ -1,7 +1,9 @@
 package com.example.myfirstaidkit.data;
 
-import java.util.Date;
+import android.arch.persistence.room.Entity;
 
+import java.util.Date;
+@Entity(primaryKeys = {"id_med"})
 public class Medicine {
 
     public Integer id_med;

@@ -17,8 +17,6 @@ public class FirstAidKit{
         String BIRTHDAY = "birthday";
         String AVATAR = "avatar";
         String PASSWORD = "password";
-        String CONFIRMPASSWORD = "confirmPassword";
-        String IDKIT = "id_kit";
     }
 
 

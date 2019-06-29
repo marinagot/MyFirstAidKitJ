@@ -1,5 +1,8 @@
 package com.example.myfirstaidkit.data;
 
+import android.arch.persistence.room.Entity;
+
+@Entity(primaryKeys = {"idRelacion"})
 public class Kit{
 
     public Integer idRelacion;

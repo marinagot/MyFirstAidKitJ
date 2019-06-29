@@ -12,6 +12,7 @@ import com.example.myfirstaidkit.data.FirstAidKit.Kit;
 import com.example.myfirstaidkit.data.FirstAidKit.User;
 import com.example.myfirstaidkit.data.FirstAidKit.Medicine;
 
+
 /**
  * Clase auxiliar que implementa a {@link BaseDatos} para llevar a cabo el CRUD
  * sobre las entidades existentes.
@@ -21,9 +22,9 @@ public final class OperacionesBaseDatos {
 
     private static BaseDatos baseDatos;
 
-    private static OperacionesBaseDatos instancia = new OperacionesBaseDatos();
+    public static OperacionesBaseDatos instancia = new OperacionesBaseDatos();
 
-    private OperacionesBaseDatos() {
+    public OperacionesBaseDatos() {
     }
 
     public static OperacionesBaseDatos obtenerInstancia(Context contexto) {
@@ -50,22 +51,18 @@ public final class OperacionesBaseDatos {
 
     }
 
-    public String insertarUser(com.example.myfirstaidkit.data.User user){
+    public long insertarUser(com.example.myfirstaidkit.data.User user){
         SQLiteDatabase db= baseDatos.getWritableDatabase();
-
-        String idUser = User.generarIdUser();
-
         ContentValues valores = new ContentValues();
-        valores.put(User.ID,idUser);
+
+
         valores.put(User.PASSWORD,user.getPassword());
         valores.put(User.USERNAME,user.getUsername());
         valores.put(User.AVATAR,user.getAvatar());
         valores.put(User.BIRTHDAY, user.getBirthday());
-        valores.put(User.CONFIRMPASSWORD, user.getConfirmPassword());
         valores.put(User.EMAIL, user.getEmail());
-        valores.put(User.IDKIT,user.getIdKit());
 
-        db.insertOrThrow(Tablas.USER,null,valores);
+        long idUser=db.insertOrThrow(Tablas.USER,null,valores);
 
         return idUser;
     }

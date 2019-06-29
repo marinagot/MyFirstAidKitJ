@@ -1,7 +1,10 @@
 package com.example.myfirstaidkit.data;
 
+import android.arch.persistence.room.Entity;
+
 import java.util.Date;
 
+@Entity(primaryKeys = {"id"})
 public class User {
     private String id;
     private String username;
@@ -12,15 +15,13 @@ public class User {
     private String confirmPassword;
     private String idKit;
 
-    public User( String id, String username, String email, String birthday, String avatar, String password, String confirmPassword, String idKit) {
+    public User( String id, String username, String email, String birthday, String avatar) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.birthday = birthday;
         this.avatar = avatar;
         this.password = password;
-        this.confirmPassword = confirmPassword;
-        this.idKit = idKit;
     }
 
     public String getId() {return id;}
@@ -67,15 +68,4 @@ public class User {
         this.password = password;
     }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
     }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public String getIdKit() {return idKit;}
-
-    public void setIdKit(String idKit) {this.idKit = idKit;}
-}

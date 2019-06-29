@@ -61,8 +61,7 @@ public class BaseDatos extends SQLiteOpenHelper {
                 "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +
                 "%s TEXT NOT NULL %s)",
                 Tablas.USER, BaseColumns._ID, User.ID, User.USERNAME, User.EMAIL,
-                User.PASSWORD, User.BIRTHDAY, User.AVATAR, User.IDKIT,
-                User.CONFIRMPASSWORD));
+                User.PASSWORD, User.BIRTHDAY, User.AVATAR));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "%s TEXT UNIQUE NOT NULL,%s DATETIME NOT NULL,%s TEXT NOT NULL %s," +

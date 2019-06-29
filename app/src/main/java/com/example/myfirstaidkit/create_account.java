@@ -1,6 +1,5 @@
 package com.example.myfirstaidkit;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -15,16 +14,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import com.example.myfirstaidkit.data.UsersSQLiteHelper;
-
+import com.example.myfirstaidkit.data.OperacionesBaseDatos;
+import com.example.myfirstaidkit.data.User;
 
 
 public class create_account extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    UsersSQLiteHelper us;
-    EditText username, email, birthday, password, confirm_password;
+    OperacionesBaseDatos us;
+    EditText id,username, email, birthday, password, confirm_password,idKit;
     ImageView avatar;
 
 
@@ -51,7 +49,8 @@ public class create_account extends Fragment {
         // Inflate the layout for this fragment
         View viewCA = inflater.inflate(R.layout.fragment_create_account, container, false);
 
-        us = new UsersSQLiteHelper(getActivity());
+
+        us = new OperacionesBaseDatos();
 
         username = (EditText) viewCA.findViewById(R.id.txt_username_set);
         email = (EditText) viewCA.findViewById(R.id.txt_email_set);
@@ -59,6 +58,7 @@ public class create_account extends Fragment {
         password = (EditText) viewCA.findViewById(R.id.txt_pwd_set);
         confirm_password = (EditText) viewCA.findViewById(R.id.txt_pwd_conf_set);
         avatar = (ImageView) viewCA.findViewById(R.id.image_profile_set);
+
         Button btnDone = (Button) viewCA.findViewById(R.id.btn_confirm_account);
 
         btnDone.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +80,10 @@ public class create_account extends Fragment {
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
-                    us.insertData(username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
-                            avatar.toString(), password.getText().toString(), confirm_password.getText().toString());
+
+                    User user= new User(username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
+                            avatar.toString(), password.getText().toString());
+                    us.insertarUser(user);
 
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("Successful!");

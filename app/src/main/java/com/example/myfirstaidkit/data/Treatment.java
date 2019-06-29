@@ -1,7 +1,10 @@
 package com.example.myfirstaidkit.data;
 
+import android.arch.persistence.room.Entity;
+
 import java.util.Date;
 
+@Entity(primaryKeys = {"id_treatment"})
 public class Treatment{
 
     public Integer id_treatment;
