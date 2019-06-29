@@ -84,10 +84,9 @@ public class medicine_edit extends Fragment {
         }
     }
 
-    UsersSQLiteHelper us;
+//    UsersSQLiteHelper us;
     EditText treatmentName, expirationDate, dosisAmount;
-    Spinner medicine_list;
-    ImageView avatar;
+    Spinner medicineList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,17 +94,21 @@ public class medicine_edit extends Fragment {
         // Inflate the layout for this fragment
         View viewCA = inflater.inflate(R.layout.fragment_medicine_edit, container, false);
 
-        us = new UsersSQLiteHelper(getActivity());
+//        us = new UsersSQLiteHelper(getActivity());
 
-        treatmentName = (EditText) viewCA.findViewById(R.id.txt_treatment_name);
-        medicine_list = (Spinner) viewCA.findViewById(R.id.list_medicine);
-        dosisAmount = (EditText) viewCA.findViewById(R.id.txt_edit_medicine_num);
-        expirationDate = (EditText) viewCA.findViewById(R.id.medicine_edit_expire_date);
-        Button btnDone = (Button) viewCA.findViewById(R.id.btn_edit_medicine);
+        treatmentName = viewCA.findViewById(R.id.txt_treatment_name);
+        medicineList = viewCA.findViewById(R.id.list_medicine);
+        dosisAmount = viewCA.findViewById(R.id.txt_edit_medicine_num);
+        expirationDate = viewCA.findViewById(R.id.medicine_edit_expire_date);
+        Button btnDone = viewCA.findViewById(R.id.btn_edit_medicine);
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if((treatmentName.getText().toString().equals(""))||
+                    (medicineList.getSelectedItem().toString().equals(""))||(expirationDate.getText().toString().equals(""))) {
+
+                }
 //                if((treatmentName.getText().toString().equals(""))||
 //                        (birthday.getText().toString().equals(""))||(password.getText().toString().equals(""))
 //                        ||(confirm_password.getText().toString().equals("")))
