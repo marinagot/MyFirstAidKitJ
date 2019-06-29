@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import androidx.navigation.Navigation;
+
 import com.example.myfirstaidkit.data.UsersSQLiteHelper;
 
 
@@ -87,7 +89,8 @@ public class create_account extends Fragment {
                     alertDialog.setTitle("Successful!");
                     alertDialog.setMessage("Account for " + username.getText().toString() + " created" );
                     alertDialog.show();
-                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
+                    Navigation.findNavController(v).navigate(R.id.action_create_account_to_home);
+                    //getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
                 }
                 else{
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();

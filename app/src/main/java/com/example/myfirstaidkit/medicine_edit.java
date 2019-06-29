@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.navigation.Navigation;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,7 +64,8 @@ public class medicine_edit extends Fragment {
             @Override
             public void onClick(View view) {
                 getFragmentManager().beginTransaction().replace(R.id.content, new first_aid_kit()).commit();
-                getActivity().setTitle("My kit");
+                //Navigation.findNavController(view).navigate(R.id.action_medicine_edit_to_first_aid_kit);
+                getActivity().setTitle("My First Aid Kit");
             }
         });
     }

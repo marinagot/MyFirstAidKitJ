@@ -161,22 +161,26 @@
         android:id="@+id/divider"
         android:layout_width="395dp"
         android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/txt_settings_num"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lbl_settings_notifications"
-        app:layout_constraintVertical_bias="0.017"
-        tools:layout_editor_absoluteX="8dp" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <View
         android:id="@+id/divider2"
         android:layout_width="395dp"
         android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintTop_toBottomOf="@+id/lbl_settings_theme"
-        app:layout_constraintVertical_bias="0.037"
-        tools:layout_editor_absoluteX="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
 </android.support.constraint.ConstraintLayout>

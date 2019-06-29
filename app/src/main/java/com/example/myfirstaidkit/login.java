@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.example.myfirstaidkit.data.User;
 import com.example.myfirstaidkit.data.UserUtilities;
 import com.example.myfirstaidkit.data.UsersSQLiteHelper;
@@ -66,7 +68,8 @@ public class login extends Fragment {
                    // startActivity(intentSU);
                 // Crea el nuevo fragmento y la transacción.
 
-                getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
+                //getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
+                Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
                 getActivity().setTitle("Create Account");
             }
         });
@@ -92,7 +95,8 @@ public class login extends Fragment {
                     boolean sign_in = us.loginData(username.getText().toString(), password.getText().toString());
 
                     if (sign_in == true) {
-                        getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+                        //getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+                        Navigation.findNavController(v).navigate(R.id.action_login_to_home);
                         getActivity().setTitle("Home");
                     } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();

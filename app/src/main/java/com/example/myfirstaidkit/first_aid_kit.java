@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.navigation.Navigation;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +63,7 @@ public class first_aid_kit extends Fragment {
             @Override
             public void onClick(View view) {
                 getFragmentManager().beginTransaction().replace(R.id.content, new medicine_edit()).commit();
+                //Navigation.findNavController(view).navigate(R.id.action_first_aid_kit_to_medicine_edit);
                 getActivity().setTitle("New medicine");
             }
         });

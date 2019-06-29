@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.navigation.Navigation;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -60,6 +62,7 @@ public class treatments extends Fragment {
             @Override
             public void onClick(View view) {
                 getFragmentManager().beginTransaction().replace(R.id.content, new treatment_edit()).commit();
+                //Navigation.findNavController(view).navigate(R.id.action_treatments_to_treatment_edit);
                 getActivity().setTitle("New treatment");
             }
         });

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.navigation.Navigation;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,6 +64,7 @@ public class treatment_edit extends Fragment {
             @Override
             public void onClick(View view) {
                 getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
+                //Navigation.findNavController(view).navigate(R.id.action_treatment_edit_to_treatments);
                 getActivity().setTitle("Treatments");
             }
         });
