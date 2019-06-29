@@ -118,7 +118,7 @@ public final class OperacionesBaseDatos {
     public int deleteUser(User user){
         SQLiteDatabase db= baseDatos.getWritableDatabase();
 
-        String whereClause = String.format("%s=?", Users_db.USERNAME);
+        String whereClause = String.format("%s=?", Users_db.ID);
         final String[] whereArgs = {user.getId().toString()};
 
         int deleted =  db.delete(Tablas.USER,whereClause, whereArgs);
@@ -130,12 +130,24 @@ public final class OperacionesBaseDatos {
         SQLiteDatabase db= baseDatos.getWritableDatabase();
 
         String whereClause = String.format("%s=?", Medicines_db.ID);
-        final String[] whereArgs = {medicine.};
+        final String[] whereArgs = {medicine.getId().toString()};
 
-        int deleted = db.delete(Tablas.USER,whereClause, whereArgs);
+        int deleted = db.delete(Tablas.MEDICINE,whereClause, whereArgs);
 
         return deleted;
 
+    }
+
+    public int deleteTreatment ( Treatment treatment){
+
+       SQLiteDatabase db = baseDatos.getWritableDatabase();
+
+        String whereClause = String.format("%s=?", Treatments_db.ID);
+        final String[] whereArgs = {treatment.getId().toString()};
+
+        int deleted = db.delete(Tablas.TREATMENT, whereClause, whereArgs);
+
+        return deleted;
     }
 
     public Cursor obtenerDetallesPorIdMedicina(String idMedicine) {
