@@ -1,6 +1,8 @@
 package com.example.myfirstaidkit;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.example.myfirstaidkit.data.UsersSQLiteHelper;
 
 
 /**
@@ -76,11 +84,71 @@ public class medicine_edit extends Fragment {
         }
     }
 
+    UsersSQLiteHelper us;
+    EditText treatmentName, expirationDate, dosisAmount;
+    Spinner medicine_list;
+    ImageView avatar;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_medicine_edit, container, false);
+        View viewCA = inflater.inflate(R.layout.fragment_medicine_edit, container, false);
+
+        us = new UsersSQLiteHelper(getActivity());
+
+        treatmentName = (EditText) viewCA.findViewById(R.id.txt_treatment_name);
+        medicine_list = (Spinner) viewCA.findViewById(R.id.list_medicine);
+        dosisAmount = (EditText) viewCA.findViewById(R.id.txt_edit_medicine_num);
+        expirationDate = (EditText) viewCA.findViewById(R.id.medicine_edit_expire_date);
+        Button btnDone = (Button) viewCA.findViewById(R.id.btn_edit_medicine);
+
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if((treatmentName.getText().toString().equals(""))||
+//                        (birthday.getText().toString().equals(""))||(password.getText().toString().equals(""))
+//                        ||(confirm_password.getText().toString().equals("")))
+//                {
+//                    //Display Message
+//                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+//                    alertDialog.setTitle("ALERT!");
+//                    alertDialog.setMessage("All fields must be filled");
+//                    alertDialog.show();
+//                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+//                    TextView tv = (TextView) alertDialog.findViewById(textViewId);
+//                    tv.setTextColor(Color.RED);
+//                    TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
+//                    textViewMessage.setTextColor(Color.RED);
+//                }
+//                else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
+//                    us.insertData(treatmentName.getText().toString(), email.getText().toString(), birthday.getText().toString(),
+//                            avatar.toString(), password.getText().toString(), confirm_password.getText().toString());
+//
+//                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+//                    alertDialog.setTitle("Successful!");
+//                    alertDialog.setMessage("Account for " + treatmentName.getText().toString() + " created" );
+//                    alertDialog.show();
+//                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
+//                }
+//                else{
+//                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+//                    alertDialog.setTitle("Something went wrong!");
+//                    alertDialog.setMessage("The passwords does not match, try again");
+//                    alertDialog.show();
+//                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+//                    TextView tv = (TextView) alertDialog.findViewById(textViewId);
+//                    tv.setTextColor(Color.RED);
+//                    TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
+//                    textViewMessage.setTextColor(Color.RED);
+//
+//                }
+
+            }
+        });
+
+
+        return viewCA;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

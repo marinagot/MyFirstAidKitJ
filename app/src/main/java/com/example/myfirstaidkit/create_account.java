@@ -1,6 +1,5 @@
 package com.example.myfirstaidkit;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
