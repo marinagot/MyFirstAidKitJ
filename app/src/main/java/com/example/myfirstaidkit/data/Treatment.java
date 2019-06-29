@@ -7,23 +7,17 @@ import java.util.Date;
 @Entity(primaryKeys = {"id_treatment"})
 public class Treatment{
 
-    public Integer id_treatment;
     public Integer idUser;
     public Integer frecuencia;
     public Date fechaInicio;
     public Date fechaFinal;
 
-    public Treatment(Integer id_treatment, Integer idUser, Integer frecuencia, Date fechaInicio, Date fechaFinal) {
-        this.id_treatment = id_treatment;
-        this.idUser = idUser;
+    public Treatment(Integer idUser, Integer frecuencia, Date fechaInicio, Date fechaFinal) {
+         this.idUser = idUser;
         this.frecuencia = frecuencia;
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
     }
-
-    public Integer getId_treatment() {return id_treatment;}
-
-    public void setId_treatment(Integer id_treatment) {this.id_treatment = id_treatment;}
 
     public Integer getIdUser() {return idUser;}
 

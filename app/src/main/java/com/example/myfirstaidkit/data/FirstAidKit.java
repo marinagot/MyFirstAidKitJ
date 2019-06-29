@@ -23,7 +23,7 @@ public class FirstAidKit{
     interface Columnas_Treatment{
 
         String ID = "id";
-        String IDUSER = "id_user";
+        String ID_USER = "id_user";
         String FRECUENCIA = "frecuencia";
         String FECHAINICIO = "fecha_inicio";
         String FECHAFINAL = "fecha_final";
@@ -33,7 +33,7 @@ public class FirstAidKit{
 
         String ID = "id";
         String MEDICINE_NAME = "medicine_name";
-        String IDKIT = "id_kit";
+        String ID_KIT = "id_kit";
         String MEDICINE_TYPE = "medicine_type";
         String EXPIRATION_DATE = "expiration_date";
         String DOSE_NUMBER = "dose_number";
@@ -45,23 +45,23 @@ public class FirstAidKit{
         String ID_MED = "id_medicamento";
     }
 
-    public static class Kit implements ColumnasKit{
+    public static class Kits_db implements ColumnasKit{
         public static String generarIdKit(){
             return "KIT_" + UUID.randomUUID().toString();
         }
     }
 
-    public static class User implements Columnas_User{
+    public static class Users_db implements Columnas_User{
         public static String generarIdUser(){
             return "USER_" + UUID.randomUUID().toString();
         }
     }
 
-    public static class Treatment implements Columnas_Treatment{
+    public static class Treatments_db implements Columnas_Treatment{
         public static String generarIdTreatment(){return "TREAT_" + UUID.randomUUID().toString();}
     }
 
-    public static class Medicine implements Columnas_Medicine{
+    public static class Medicines_db implements Columnas_Medicine{
         public static String generarIdMedicine(){return "MED_" + UUID.randomUUID().toString();}
     }
 
