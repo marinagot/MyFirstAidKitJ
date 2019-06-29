@@ -47,7 +47,7 @@ public class login extends Fragment {
         username = (EditText) v.findViewById(R.id.txt_username);
         password = (EditText) v.findViewById(R.id.txt_pwd);
 
-        us = new OperacionesBaseDatos();
+        us = OperacionesBaseDatos.obtenerInstancia(getContext());
 
         Button btnRegister = v.findViewById(R.id.btn_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {
