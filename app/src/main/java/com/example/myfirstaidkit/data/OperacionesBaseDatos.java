@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.example.myfirstaidkit.data.BaseDatos.Tablas;
-import com.example.myfirstaidkit.data.FirstAidKit.Kits_db;
+import com.example.myfirstaidkit.data.FirstAidKit.Relacion_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Users_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Medicines_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Treatments_db;
@@ -89,6 +89,7 @@ public final class OperacionesBaseDatos {
         valores.put(Medicines_db.DOSE_NUMBER, med.getDose_number());
         valores.put(Medicines_db.MEDICINE_NAME, med.getMedicine_name());
         valores.put(Medicines_db.MEDICINE_TYPE, med.getMedicine_type());
+        valores.put(Medicines_db.ID_USER,med.getIdUser());
 
 
         long idMed = db.insertOrThrow(Tablas.MEDICINE, null,valores);
@@ -154,7 +155,7 @@ public final class OperacionesBaseDatos {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.MEDICINE, Kits_db.ID_MED);
+                Tablas.MEDICINE, Relacion_db.ID_MED);
 
         String[] selectionArgs = {idMedicine};
 
@@ -166,7 +167,7 @@ public final class OperacionesBaseDatos {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.USER, Kits_db.ID);
+                Tablas.USER, Relacion_db.ID);
 
         String[] selectionArgs = {idUser};
 
@@ -178,7 +179,7 @@ public final class OperacionesBaseDatos {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.TREATMENT, Kits_db.ID_TRAT);
+                Tablas.TREATMENT, Relacion_db.ID_TRAT);
 
         String[] selectionArgs = {idTreatment};
 

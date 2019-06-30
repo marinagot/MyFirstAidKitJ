@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.provider.BaseColumns;
 
-import com.example.myfirstaidkit.data.FirstAidKit.Kits_db;
+import com.example.myfirstaidkit.data.FirstAidKit.Relacion_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Medicines_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Users_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Treatments_db;
@@ -26,14 +26,14 @@ public class BaseDatos extends SQLiteOpenHelper {
         String USER = "user";
         String MEDICINE = "medicine";
         String TREATMENT = "treatment";
-        String KIT = "kit";
+        String RELACION = "Relacion";
     }
 
     interface Referencias {
         String ID_USER = String.format("REFERENCES %s(%s) ON DELETE CASCADE", Tablas.USER, Users_db.ID);
         String ID_MEDICINE = String.format("REFERENCES %s(%s)", Tablas.MEDICINE, Medicines_db.ID);
         String ID_TREATMENT = String.format("REFERENCES %s(%s)", Tablas.TREATMENT, Treatments_db.ID);
-        String ID_KIT = String.format(" REFERENCES %s(%s)", Tablas.KIT, Kits_db.ID);
+        String ID_RELACION = String.format(" REFERENCES %s(%s)", Tablas.RELACION, Relacion_db.ID);
 
     }
 
@@ -71,13 +71,13 @@ public class BaseDatos extends SQLiteOpenHelper {
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "%s TEXT UNIQUE NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
-                "%s DATETIME NOT NULL,%s INTEGER NOT NULL );",
+                "%s DATETIME NOT NULL,%s INTEGER NOT NULL);",
                 Tablas.MEDICINE, BaseColumns._ID, Medicines_db.MEDICINE_NAME,
                 Medicines_db.ID_USER, Medicines_db.MEDICINE_TYPE, Medicines_db.EXPIRATION_DATE,
                 Medicines_db.DOSE_NUMBER));
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "%s INTEGER NOT NULL , %s INTEGER NOT NULL);",
-                Tablas.KIT, BaseColumns._ID, Kits_db.ID_TRAT, Kits_db.ID_MED));
+                Tablas.RELACION, BaseColumns._ID, Relacion_db.ID_TRAT, Relacion_db.ID_MED));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class BaseDatos extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.USER);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.MEDICINE);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.TREATMENT);
-        db.execSQL("DROP TABLE IF EXISTS " + Tablas.KIT);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.RELACION);
 
         onCreate(db);
 

@@ -39,13 +39,13 @@ public class FirstAidKit{
         String DOSE_NUMBER = "dose_number";
     }
 
-    interface ColumnasKit{
+    interface ColumnasRelacion{
         String ID = "id";
         String ID_TRAT = "id_tratamiento";
         String ID_MED = "id_medicamento";
     }
 
-    public static class Kits_db implements ColumnasKit{
+    public static class Relacion_db implements ColumnasRelacion{
         public static String generarIdKit(){
             return "KIT_" + UUID.randomUUID().toString();
         }
