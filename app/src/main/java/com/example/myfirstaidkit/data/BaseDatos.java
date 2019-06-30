@@ -65,18 +65,18 @@ public class BaseDatos extends SQLiteOpenHelper {
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "%s INTEGER UNIQUE NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
-                "%s DATETIME NOT NULL)",
+                "%s DATETIME NOT NULL);",
                 Tablas.TREATMENT, BaseColumns._ID, Treatments_db.ID_USER,
                 Treatments_db.FRECUENCIA, Treatments_db.FECHAINICIO,Treatments_db.FECHAFINAL));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "%s TEXT UNIQUE NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
-                "%s DATETIME NOT NULL,%s INTEGER NOT NULL )",
+                "%s DATETIME NOT NULL,%s INTEGER NOT NULL );",
                 Tablas.MEDICINE, BaseColumns._ID, Medicines_db.MEDICINE_NAME,
                 Medicines_db.ID_KIT, Medicines_db.MEDICINE_TYPE, Medicines_db.EXPIRATION_DATE,
                 Medicines_db.DOSE_NUMBER));
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s TEXT NOT NULL , %s TEXT NOT NULL",
+                "%s INTEGER NOT NULL , %s INTEGER NOT NULL);",
                 Tablas.KIT, BaseColumns._ID, Kits_db.ID_TRAT, Kits_db.ID_MED));
     }
 
