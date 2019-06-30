@@ -3,6 +3,7 @@ package com.example.myfirstaidkit.data;
 import android.arch.persistence.room.Entity;
 
 import java.util.Date;
+
 @Entity(primaryKeys = {"id"})
 public class Medicine {
 
@@ -17,7 +18,7 @@ public class Medicine {
 
     }
 
-    public Medicine(Integer id, String medicine_name, Integer idUser, String medicine_type, Integer dose_number, Date expiration_date) {
+    public Medicine(Integer id,String medicine_name, Integer idKit, String medicine_type, Integer dose_number, Date expiration_date) {
 
         this.id = id;
         this.medicine_name = medicine_name;
