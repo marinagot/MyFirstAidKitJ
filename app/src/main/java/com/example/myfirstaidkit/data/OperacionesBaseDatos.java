@@ -12,7 +12,12 @@ import com.example.myfirstaidkit.data.FirstAidKit.Users_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Medicines_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Treatments_db;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -152,51 +157,101 @@ public final class OperacionesBaseDatos {
         return deleted;
     }
 
-    public Cursor obtener_Med_IdMedicina(String idMedicine) {
+
+
+    public Treatment get_Treatment_treatmentName(String treatmentName) {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.MEDICINE, Relacion_db.ID_MED);
+                Tablas.TREATMENT, Treatments_db.NAME);
 
-        String[] selectionArgs = {idMedicine};
+        String[] selectionArgs = {treatmentName};
+        Cursor c = db.rawQuery(sql, selectionArgs);
 
-        return db.rawQuery(sql, selectionArgs);
+        Treatment treatment = new Treatment();
+
+        if (c.moveToFirst() == true) {
+
+            treatment.setId(c.getInt(0));
+            treatment.setName(c.getColumnName(1));
+            treatment.setIdUser(c.getInt(2));
+            treatment.setFrecuencia(c.getInt(3));
+
+            try {
+                Date fechaInicio = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
+                Date fechaFinal = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(5));
+                treatment.setFechaInicio(fechaInicio);
+                treatment.setFechaFinal(fechaFinal);
+            } catch (ParseException e) {
+                treatment.setFechaInicio(null);
+                treatment.setFechaFinal(null);
+            }
+
+
+        }
+        db.close();
+        return treatment;
 
     }
 
-    public Cursor obtener_User_IdUser(String idUser) {
-        SQLiteDatabase db = baseDatos.getReadableDatabase();
-
-        String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.USER, Relacion_db.ID);
-
-        String[] selectionArgs = {idUser};
-
-        return db.rawQuery(sql, selectionArgs);
-
-    }
-
-    public Cursor obtener_Treat_idTreat(String idTreatment) {
-        SQLiteDatabase db = baseDatos.getReadableDatabase();
-
-        String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.TREATMENT, Relacion_db.ID_TRAT);
-
-        String[] selectionArgs = {idTreatment};
-
-        return db.rawQuery(sql, selectionArgs);
-
-    }
-
-    public Cursor obtener_User_Username(String username) {
+    public User get_User_Username(String username) {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.USER, Users_db.USERNAME);
 
         String[] selectionArgs = {username};
+        Cursor c = db.rawQuery(sql, selectionArgs);
 
-        return db.rawQuery(sql, selectionArgs);
+        User user = new User();
+
+        if (c.moveToFirst() == true) {
+
+            user.setId(c.getInt(0));
+            user.setUsername(c.getString(1));
+            user.setEmail(c.getString(2));
+            user.setPassword(c.getString(3));
+            user.setBirthday(c.getString(4));
+        }
+        db.close();
+        return user;
+
+    }
+
+    public Medicine get_Medicine_medicineName(String medicineName) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.MEDICINE, Medicines_db.MEDICINE_NAME);
+
+        String[] selectionArgs = {medicineName};
+        Cursor c = db.rawQuery(sql, selectionArgs);
+
+        Medicine medicine = new Medicine();
+
+        if (c.moveToFirst() == true) {
+
+            medicine.setId(c.getInt(0));
+            medicine.setMedicine_name(c.getString(1));
+            medicine.setIdUser(c.getInt(3));
+            medicine.setMedicine_type(c.getString(4));
+
+            medicine.setDose_number(c.getInt(6));
+
+
+            try {
+                Date expirationDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(5));
+                medicine.setExpiration_date(expirationDate);
+
+            } catch (ParseException e) {
+                medicine.setExpiration_date(null);
+
+            }
+
+
+        }
+        db.close();
+        return medicine;
 
     }
 

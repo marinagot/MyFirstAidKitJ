@@ -50,4 +50,6 @@ public class Treatment{
     public Date getFechaFinal() {return fechaFinal;}
 
     public void setFechaFinal(Date fechaFinal) {this.fechaFinal = fechaFinal;}
+
+
 }
