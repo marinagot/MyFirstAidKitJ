@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,15 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.example.myfirstaidkit.data.OperacionesBaseDatos;
+import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Treatment;
-
-import static android.support.v4.content.ContextCompat.getSystemService;
 
 
 /**
@@ -47,7 +42,7 @@ public class treatment_edit extends Fragment {
     SharedPreferences prefs;
     SharedPreferences.Editor edit;
 
-    OperacionesBaseDatos us;
+    DataBaseOperations us;
     Treatment treatment = new Treatment();
     View viewCA, alert;
 
@@ -104,7 +99,7 @@ public class treatment_edit extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_treatment_edit, container, false);
         alert = inflater.inflate(R.layout.alert_treatments, null, false);
 
-        us = OperacionesBaseDatos.obtenerInstancia(getContext());
+        us = DataBaseOperations.get_Instance(getContext());
 
         Button btnAdd = viewCA.findViewById(R.id.btn_treatment_edit_add);
 
