@@ -85,11 +85,11 @@ public final class OperacionesBaseDatos {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
-        valores.put(Medicines_db.ID_KIT, med.getIdKit());
         valores.put(Medicines_db.EXPIRATION_DATE, dateFormat.format(med.getExpiration_date()));
         valores.put(Medicines_db.DOSE_NUMBER, med.getDose_number());
         valores.put(Medicines_db.MEDICINE_NAME, med.getMedicine_name());
         valores.put(Medicines_db.MEDICINE_TYPE, med.getMedicine_type());
+
 
         long idMed = db.insertOrThrow(Tablas.MEDICINE, null,valores);
         db.close();

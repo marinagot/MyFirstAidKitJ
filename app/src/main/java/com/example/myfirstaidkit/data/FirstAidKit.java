@@ -33,7 +33,7 @@ public class FirstAidKit{
 
         String ID = "id";
         String MEDICINE_NAME = "medicine_name";
-        String ID_KIT = "id_kit";
+        String ID_USER = "id_user";
         String MEDICINE_TYPE = "medicine_type";
         String EXPIRATION_DATE = "expiration_date";
         String DOSE_NUMBER = "dose_number";
