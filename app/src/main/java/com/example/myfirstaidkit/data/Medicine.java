@@ -8,9 +8,9 @@ import java.util.Date;
 public class Medicine {
 
     public Integer id;
-    public String medicine_name;
+    public String name;
     public Integer idUser;
-    public String medicine_type;
+    public String type;
     public Integer dose_number;
     public Date expiration_date;
 
@@ -18,12 +18,12 @@ public class Medicine {
 
     }
 
-    public Medicine(Integer id,String medicine_name, Integer idKit, String medicine_type, Integer dose_number, Date expiration_date) {
+    public Medicine(Integer id,String name, Integer idUser, String type, Integer dose_number, Date expiration_date) {
 
         this.id = id;
-        this.medicine_name = medicine_name;
+        this.name = name;
         this.idUser = idUser;
-        this.medicine_type = medicine_type;
+        this.type = type;
         this.dose_number = dose_number;
         this.expiration_date = expiration_date;
     }
@@ -37,11 +37,11 @@ public class Medicine {
     }
 
     public String getMedicine_name() {
-        return medicine_name;
+        return name;
     }
 
-    public void setMedicine_name(String medicine_name) {
-        this.medicine_name = medicine_name;
+    public void setMedicine_name(String name) {
+        this.name = name;
     }
 
     public Integer getIdUser() {return idUser;}
@@ -49,11 +49,11 @@ public class Medicine {
     public void setIdUser(Integer idUser) {this.idUser = idUser;}
 
     public String getMedicine_type() {
-        return medicine_type;
+        return type;
     }
 
     public void setMedicine_type(String medicine_type) {
-        this.medicine_type = medicine_type;
+        this.type = type;
     }
 
     public Integer getDose_number() {

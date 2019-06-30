@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.myfirstaidkit.data.Medicine;
-import com.example.myfirstaidkit.data.OperacionesBaseDatos;
+import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.User;
 
 import java.text.SimpleDateFormat;
@@ -94,7 +94,7 @@ public class medicine_edit extends Fragment {
         }
     }
 
-    OperacionesBaseDatos us;
+    DataBaseOperations us;
     Medicine med = new Medicine();
     View viewCA;
 //    EditText treatmentName, expirationDate, dosisAmount;
@@ -106,7 +106,7 @@ public class medicine_edit extends Fragment {
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_medicine_edit, container, false);
 
-        us = OperacionesBaseDatos.obtenerInstancia(getContext());
+        us = DataBaseOperations.get_Instance(getContext());
 
 
 
@@ -128,8 +128,8 @@ public class medicine_edit extends Fragment {
             @Override
             public void onClick(View v) {
 
-                med.medicine_name = ((EditText) viewCA.findViewById(R.id.txt_medicine_name)).getText().toString();
-                med.medicine_type = ((Spinner) viewCA.findViewById(R.id.list_medicine)).getSelectedItem().toString();
+                med.name = ((EditText) viewCA.findViewById(R.id.txt_medicine_name)).getText().toString();
+                med.type = ((Spinner) viewCA.findViewById(R.id.list_medicine)).getSelectedItem().toString();
                 try {
                     med.dose_number = Integer.parseInt(((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).getText().toString());
                 }
@@ -137,7 +137,7 @@ public class medicine_edit extends Fragment {
                     med.dose_number = -1;
                 }
 
-                if(med.medicine_name.equals("") || med.expiration_date == null || med.dose_number.equals(-1)) {
+                if(med.name.equals("") || med.expiration_date == null || med.dose_number.equals(-1)) {
                     //Display Message
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("ALERT!");
@@ -155,9 +155,9 @@ public class medicine_edit extends Fragment {
 
                     if (user != null) {
                         //Llamas para obtener el userId
-                        med.idUser = us.obtener_User_Username(user).getId();
+                        med.idUser = us.get_User_Username(user).getId();
 
-                        us.insertarMedicina(med);
+                        us.insertMedicine(med);
 
                         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                         alertDialog.setTitle("Successful!");

@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.myfirstaidkit.data.OperacionesBaseDatos;
+import com.example.myfirstaidkit.data.DataBaseOperations;
 
 
 /**
@@ -28,7 +28,7 @@ public class login extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     EditText username,password;
-    OperacionesBaseDatos us;
+    DataBaseOperations us;
 
     //Preferencias de la aplicación
     SharedPreferences prefs;
@@ -52,7 +52,7 @@ public class login extends Fragment {
         username = (EditText) v.findViewById(R.id.txt_username);
         password = (EditText) v.findViewById(R.id.txt_pwd);
 
-        us = OperacionesBaseDatos.obtenerInstancia(getContext());
+        us = DataBaseOperations.get_Instance(getContext());
 
         //Not logged
         edit.putBoolean("isLogged", false);
