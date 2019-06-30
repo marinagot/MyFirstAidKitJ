@@ -144,13 +144,15 @@ public class medicine_edit extends Fragment {
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else {
+                    //Temporal
+                    med.idUser = 1;
                     us.insertarMedicina(med);
 
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("Successful!");
-                    alertDialog.setMessage("Account for " + med.medicine_name + " created" );
+                    alertDialog.setMessage("Medicine created" );
                     alertDialog.show();
-                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
                 }
             }
         });
