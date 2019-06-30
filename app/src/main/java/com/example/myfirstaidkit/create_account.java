@@ -50,7 +50,7 @@ public class create_account extends Fragment {
         View viewCA = inflater.inflate(R.layout.fragment_create_account, container, false);
 
 
-        us = new OperacionesBaseDatos();
+        us = OperacionesBaseDatos.obtenerInstancia(getContext());
 
         username = viewCA.findViewById(R.id.txt_username_set);
         email = viewCA.findViewById(R.id.txt_email_set);

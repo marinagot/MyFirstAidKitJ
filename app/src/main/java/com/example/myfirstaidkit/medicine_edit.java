@@ -10,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.myfirstaidkit.data.UsersSQLiteHelper;
+import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.OperacionesBaseDatos;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -64,15 +68,15 @@ public class medicine_edit extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button btnOk = view.findViewById(R.id.btn_edit_medicine);
-
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().beginTransaction().replace(R.id.content, new first_aid_kit()).commit();
-                getActivity().setTitle("My kit");
-            }
-        });
+//        Button btnOk = view.findViewById(R.id.btn_edit_medicine);
+//
+//        btnOk.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getFragmentManager().beginTransaction().replace(R.id.content, new first_aid_kit()).commit();
+//                getActivity().setTitle("My kit");
+//            }
+//        });
     }
 
     @Override
@@ -84,72 +88,72 @@ public class medicine_edit extends Fragment {
         }
     }
 
-//    UsersSQLiteHelper us;
-    EditText treatmentName, expirationDate, dosisAmount;
-    Spinner medicineList;
+    OperacionesBaseDatos us;
+    Medicine med = new Medicine();
+    View viewCA;
+//    EditText treatmentName, expirationDate, dosisAmount;
+//    Spinner medicineList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View viewCA = inflater.inflate(R.layout.fragment_medicine_edit, container, false);
+        viewCA = inflater.inflate(R.layout.fragment_medicine_edit, container, false);
 
-//        us = new UsersSQLiteHelper(getActivity());
+        us = OperacionesBaseDatos.obtenerInstancia(getContext());
 
-        treatmentName = viewCA.findViewById(R.id.txt_treatment_name);
-        medicineList = viewCA.findViewById(R.id.list_medicine);
-        dosisAmount = viewCA.findViewById(R.id.txt_edit_medicine_num);
-        expirationDate = viewCA.findViewById(R.id.medicine_edit_expire_date);
-        Button btnDone = viewCA.findViewById(R.id.btn_edit_medicine);
 
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if((treatmentName.getText().toString().equals(""))||
-                    (medicineList.getSelectedItem().toString().equals(""))||(expirationDate.getText().toString().equals(""))) {
 
+        CalendarView calendar = viewCA.findViewById(R.id.medicine_edit_expire_date);
+        calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                try{
+                    month += 1;
+                    med.expiration_date = new SimpleDateFormat("dd/MM/yyyy").parse(dayOfMonth + "/" + month + "/" + year);
                 }
-//                if((treatmentName.getText().toString().equals(""))||
-//                        (birthday.getText().toString().equals(""))||(password.getText().toString().equals(""))
-//                        ||(confirm_password.getText().toString().equals("")))
-//                {
-//                    //Display Message
-//                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-//                    alertDialog.setTitle("ALERT!");
-//                    alertDialog.setMessage("All fields must be filled");
-//                    alertDialog.show();
-//                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-//                    TextView tv = (TextView) alertDialog.findViewById(textViewId);
-//                    tv.setTextColor(Color.RED);
-//                    TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
-//                    textViewMessage.setTextColor(Color.RED);
-//                }
-//                else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
-//                    us.insertData(treatmentName.getText().toString(), email.getText().toString(), birthday.getText().toString(),
-//                            avatar.toString(), password.getText().toString(), confirm_password.getText().toString());
-//
-//                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-//                    alertDialog.setTitle("Successful!");
-//                    alertDialog.setMessage("Account for " + treatmentName.getText().toString() + " created" );
-//                    alertDialog.show();
-//                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
-//                }
-//                else{
-//                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-//                    alertDialog.setTitle("Something went wrong!");
-//                    alertDialog.setMessage("The passwords does not match, try again");
-//                    alertDialog.show();
-//                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-//                    TextView tv = (TextView) alertDialog.findViewById(textViewId);
-//                    tv.setTextColor(Color.RED);
-//                    TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
-//                    textViewMessage.setTextColor(Color.RED);
-//
-//                }
+                catch(Exception e){ med.expiration_date = null; }
 
             }
         });
 
+        Button btnDone = viewCA.findViewById(R.id.btn_create_medicine);
+
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                med.medicine_name = ((EditText) viewCA.findViewById(R.id.txt_medicine_name)).getText().toString();
+                med.medicine_type = ((Spinner) viewCA.findViewById(R.id.list_medicine)).getSelectedItem().toString();
+                try {
+                    med.dose_number = Integer.parseInt(((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).getText().toString());
+                }
+                catch(Exception e){
+                    med.dose_number = -1;
+                }
+
+                if(med.medicine_name.equals("") || med.expiration_date == null || med.dose_number.equals(-1)) {
+                    //Display Message
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("ALERT!");
+                    alertDialog.setMessage("All fields must be filled correctly");
+                    alertDialog.show();
+                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+                    TextView tv = alertDialog.findViewById(textViewId);
+                    tv.setTextColor(Color.RED);
+                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+                    textViewMessage.setTextColor(Color.RED);
+                }
+                else {
+                    us.insertarMedicina(med);
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("Successful!");
+                    alertDialog.setMessage("Account for " + med.medicine_name + " created" );
+                    alertDialog.show();
+                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
+                }
+            }
+        });
 
         return viewCA;
     }
