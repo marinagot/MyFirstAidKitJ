@@ -4,41 +4,36 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 
-import com.example.myfirstaidkit.data.BaseDatos.Tablas;
-import com.example.myfirstaidkit.data.FirstAidKit.Relacion_db;
-import com.example.myfirstaidkit.data.FirstAidKit.Users_db;
+import com.example.myfirstaidkit.data.DataBase.Tablas;
 import com.example.myfirstaidkit.data.FirstAidKit.Medicines_db;
 import com.example.myfirstaidkit.data.FirstAidKit.Treatments_db;
+import com.example.myfirstaidkit.data.FirstAidKit.Users_db;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static android.support.constraint.Constraints.TAG;
-
 
 /**
- * Clase auxiliar que implementa a {@link BaseDatos} para llevar a cabo el CRUD
+ * Clase auxiliar que implementa a {@link DataBase} para llevar a cabo el CRUD
  * sobre las entidades existentes.
  */
 
-public final class OperacionesBaseDatos {
+public final class DataBaseOperations {
 
-    private static BaseDatos baseDatos;
+    private static DataBase DataBase;
 
-    public static OperacionesBaseDatos instancia = new OperacionesBaseDatos();
+    public static  DataBaseOperations instance = new  DataBaseOperations();
 
-    public OperacionesBaseDatos() {
+    public  DataBaseOperations() {
     }
 
-    public static OperacionesBaseDatos obtenerInstancia(Context contexto) {
-        if (baseDatos == null) {
-            baseDatos = new BaseDatos(contexto);
+    public static  DataBaseOperations get_Instance(Context context) {
+        if (DataBase == null) {
+            DataBase = new DataBase(context);
         }
-        return instancia;
+        return instance;
     }
 
     /* Aqui se hacen los CRUD : metodos Create, Read, Update y Delete de la base de datos */
@@ -47,7 +42,7 @@ public final class OperacionesBaseDatos {
     /* Por ejemplo, obtener la informacion de un medicamento, dado su id*/
 
     public boolean loginData(String username, String password) {
-        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteDatabase db = DataBase.getReadableDatabase();
         boolean exist = false;
         Cursor c = db.rawQuery("SELECT USERNAME,PASSWORD FROM " +
                 Tablas.USER + " WHERE " + "USERNAME='" +
@@ -65,57 +60,57 @@ public final class OperacionesBaseDatos {
         return exist;
     }
 
-    public long insertarUser(User user){
-        SQLiteDatabase db= baseDatos.getWritableDatabase();
-        ContentValues valores = new ContentValues();
+    public long insertUser(User user){
+        SQLiteDatabase db= DataBase.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
 
-        valores.put(Users_db.PASSWORD,user.getPassword());
-        valores.put(Users_db.USERNAME,user.getUsername());
-        valores.put(Users_db.AVATAR,user.getAvatar());
-        valores.put(Users_db.BIRTHDAY, user.getBirthday());
-        valores.put(Users_db.EMAIL, user.getEmail());
+        values.put(Users_db.PASSWORD,user.getPassword());
+        values.put(Users_db.USERNAME,user.getUsername());
+        values.put(Users_db.AVATAR,user.getAvatar());
+        values.put(Users_db.BIRTHDAY, user.getBirthday());
+        values.put(Users_db.EMAIL, user.getEmail());
 
-        long idUser=db.insertOrThrow(Tablas.USER,null,valores);
+        long idUser=db.insertOrThrow(Tablas.USER,null,values);
         db.close();
 
         return idUser;
     }
 
-    public long insertarMedicina(Medicine med){
-        SQLiteDatabase db= baseDatos.getWritableDatabase();
-        ContentValues valores = new ContentValues();
+    public long insertMedicine(Medicine med){
+        SQLiteDatabase db= DataBase.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
-        valores.put(Medicines_db.EXPIRATION_DATE, dateFormat.format(med.getExpiration_date()));
-        valores.put(Medicines_db.DOSE_NUMBER, med.getDose_number());
-        valores.put(Medicines_db.MEDICINE_NAME, med.getMedicine_name());
-        valores.put(Medicines_db.MEDICINE_TYPE, med.getMedicine_type());
-        valores.put(Medicines_db.ID_USER,med.getIdUser());
+        values.put(Medicines_db.EXPIRATION_DATE, dateFormat.format(med.getExpiration_date()));
+        values.put(Medicines_db.DOSE_NUMBER, med.getDose_number());
+        values.put(Medicines_db.NAME, med.getMedicine_name());
+        values.put(Medicines_db.TYPE, med.getMedicine_type());
+        values.put(Medicines_db.ID_USER,med.getIdUser());
 
 
-        long idMed = db.insertOrThrow(Tablas.MEDICINE, null,valores);
+        long idMed = db.insertOrThrow(Tablas.MEDICINE, null,values);
         db.close();
 
         return idMed;
     }
 
-    public long insertarTreatment(Treatment treatment){
-        SQLiteDatabase db= baseDatos.getWritableDatabase();
-        ContentValues valores = new ContentValues();
+    public long insertTreatment(Treatment treatment){
+        SQLiteDatabase db= DataBase.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        valores.put(Treatments_db.FRECUENCIA, treatment.getFrecuencia());
-        valores.put(Treatments_db.FECHAFINAL,dateFormat.format(treatment.getFechaFinal()));
-        valores.put(Treatments_db.FECHAINICIO, dateFormat.format(treatment.getFechaInicio()));
-        valores.put(Treatments_db.ID_USER, treatment.getIdUser());
-        valores.put(Treatments_db.NAME, treatment.getName());
+        values.put(Treatments_db.FREQUENCY, treatment.getFrequency());
+        values.put(Treatments_db.FINALDATE,dateFormat.format(treatment.getFinalDate()));
+        values.put(Treatments_db.INITIALDATE, dateFormat.format(treatment.getInitialDate()));
+        values.put(Treatments_db.ID_USER, treatment.getIdUser());
+        values.put(Treatments_db.NAME, treatment.getName());
 
-        long idTreatment = db.insertOrThrow(Tablas.TREATMENT, null, valores);
+        long idTreatment = db.insertOrThrow(Tablas.TREATMENT, null, values);
 
         db.close();
         return idTreatment;
@@ -123,7 +118,7 @@ public final class OperacionesBaseDatos {
 
 
     public int deleteUser(User user){
-        SQLiteDatabase db= baseDatos.getWritableDatabase();
+        SQLiteDatabase db= DataBase.getWritableDatabase();
 
         String whereClause = String.format("%s=?", Users_db.ID);
         final String[] whereArgs = {user.getId().toString()};
@@ -134,7 +129,7 @@ public final class OperacionesBaseDatos {
     }
 
     public int deleteMedicine (Medicine medicine){
-        SQLiteDatabase db= baseDatos.getWritableDatabase();
+        SQLiteDatabase db= DataBase.getWritableDatabase();
 
         String whereClause = String.format("%s=?", Medicines_db.ID);
         final String[] whereArgs = {medicine.getId().toString()};
@@ -147,7 +142,7 @@ public final class OperacionesBaseDatos {
 
     public int deleteTreatment ( Treatment treatment){
 
-       SQLiteDatabase db = baseDatos.getWritableDatabase();
+       SQLiteDatabase db = DataBase.getWritableDatabase();
 
         String whereClause = String.format("%s=?", Treatments_db.ID);
         final String[] whereArgs = {treatment.getId().toString()};
@@ -160,7 +155,7 @@ public final class OperacionesBaseDatos {
 
 
     public Treatment get_Treatment_treatmentName(String treatmentName) {
-        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.TREATMENT, Treatments_db.NAME);
@@ -175,16 +170,16 @@ public final class OperacionesBaseDatos {
             treatment.setId(c.getInt(0));
             treatment.setName(c.getColumnName(1));
             treatment.setIdUser(c.getInt(2));
-            treatment.setFrecuencia(c.getInt(3));
+            treatment.setFrequency(c.getInt(3));
 
             try {
-                Date fechaInicio = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
-                Date fechaFinal = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(5));
-                treatment.setFechaInicio(fechaInicio);
-                treatment.setFechaFinal(fechaFinal);
+                Date initialDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
+                Date finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(5));
+                treatment.setInitialDate(initialDate);
+                treatment.setFinalDate(finalDate);
             } catch (ParseException e) {
-                treatment.setFechaInicio(null);
-                treatment.setFechaFinal(null);
+                treatment.setInitialDate(null);
+                treatment.setFinalDate(null);
             }
 
 
@@ -195,7 +190,7 @@ public final class OperacionesBaseDatos {
     }
 
     public User get_User_Username(String username) {
-        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.USER, Users_db.USERNAME);
@@ -219,10 +214,10 @@ public final class OperacionesBaseDatos {
     }
 
     public Medicine get_Medicine_medicineName(String medicineName) {
-        SQLiteDatabase db = baseDatos.getReadableDatabase();
+        SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.MEDICINE, Medicines_db.MEDICINE_NAME);
+                Tablas.MEDICINE, Medicines_db.NAME);
 
         String[] selectionArgs = {medicineName};
         Cursor c = db.rawQuery(sql, selectionArgs);

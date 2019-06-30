@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class FirstAidKit{
 
-    interface  Columnas_User{
+    interface  Column_User{
 
         String ID = "id";
         String USERNAME = "username";
@@ -20,50 +20,50 @@ public class FirstAidKit{
     }
 
 
-    interface Columnas_Treatment{
+    interface Column_Treatment{
 
         String ID = "id";
         String NAME = "name";
         String ID_USER = "id_user";
-        String FRECUENCIA = "frecuencia";
-        String FECHAINICIO = "fecha_inicio";
-        String FECHAFINAL = "fecha_final";
+        String FREQUENCY = "frequency";
+        String INITIALDATE = "initialDate";
+        String FINALDATE = "finalDate";
     }
 
-    interface Columnas_Medicine{
+    interface Column_Medicine{
 
         String ID = "id";
-        String MEDICINE_NAME = "medicine_name";
+        String NAME = "name";
         String ID_USER = "id_user";
-        String MEDICINE_TYPE = "medicine_type";
+        String TYPE = "type";
         String EXPIRATION_DATE = "expiration_date";
         String DOSE_NUMBER = "dose_number";
     }
 
-    interface ColumnasRelacion{
+    interface Column_Med_Tret_Rel{
         String ID = "id";
         String ID_TRAT = "id_tratamiento";
         String ID_MED = "id_medicamento";
     }
 
-    public static class Relacion_db implements ColumnasRelacion{
-        public static String generarIdKit(){
-            return "KIT_" + UUID.randomUUID().toString();
+    public static class Med_Tret_Rel_db implements Column_Med_Tret_Rel{
+        public static String createIdRel(){
+            return "REL_" + UUID.randomUUID().toString();
         }
     }
 
-    public static class Users_db implements Columnas_User{
-        public static String generarIdUser(){
+    public static class Users_db implements Column_User{
+        public static String createIdUser(){
             return "USER_" + UUID.randomUUID().toString();
         }
     }
 
-    public static class Treatments_db implements Columnas_Treatment{
-        public static String generarIdTreatment(){return "TREAT_" + UUID.randomUUID().toString();}
+    public static class Treatments_db implements Column_Treatment{
+        public static String createIdTreatment(){return "TREAT_" + UUID.randomUUID().toString();}
     }
 
-    public static class Medicines_db implements Columnas_Medicine{
-        public static String generarIdMedicine(){return "MED_" + UUID.randomUUID().toString();}
+    public static class Medicines_db implements Column_Medicine{
+        public static String createIdMedicine(){return "MED_" + UUID.randomUUID().toString();}
     }
 
     private FirstAidKit(){

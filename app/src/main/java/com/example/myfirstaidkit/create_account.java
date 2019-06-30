@@ -14,14 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.myfirstaidkit.data.OperacionesBaseDatos;
+import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.User;
 
 
 public class create_account extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    OperacionesBaseDatos us;
+    DataBaseOperations us;
     EditText username, email, birthday, password, confirm_password;
     ImageView avatar;
 
@@ -30,9 +30,7 @@ public class create_account extends Fragment {
      * A simple {@link Fragment} subclass.
      * Activities that contain this fragment must implement the
      * {@link create_account.OnFragmentInteractionListener} interface
-     * to handle interaction events.
-     * Use the {@link create_account#newInstance} factory method to
-     * create an instance of this fragment.
+     * to handle interaction events
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +48,7 @@ public class create_account extends Fragment {
         View viewCA = inflater.inflate(R.layout.fragment_create_account, container, false);
 
 
-        us = OperacionesBaseDatos.obtenerInstancia(getContext());
+        us = DataBaseOperations.get_Instance(getContext());
 
         username = viewCA.findViewById(R.id.txt_username_set);
         email = viewCA.findViewById(R.id.txt_email_set);
@@ -82,7 +80,7 @@ public class create_account extends Fragment {
 
                     User user= new User(0, username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
                             avatar.toString(), password.getText().toString());
-                    us.insertarUser(user);
+                    us.insertUser(user);
 
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("Successful!");
