@@ -48,6 +48,10 @@ public class medicine_edit extends Fragment {
     SharedPreferences prefs;
     SharedPreferences.Editor edit;
 
+    OperacionesBaseDatos us;
+    Medicine med = new Medicine();
+    View viewCA;
+    
     public medicine_edit() {
         // Required empty public constructor
     }
@@ -93,12 +97,6 @@ public class medicine_edit extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
-    OperacionesBaseDatos us;
-    Medicine med = new Medicine();
-    View viewCA;
-//    EditText treatmentName, expirationDate, dosisAmount;
-//    Spinner medicineList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -155,7 +153,7 @@ public class medicine_edit extends Fragment {
 
                     if (user != null) {
                         //Llamas para obtener el userId
-                        med.idUser = us.obtener_User_Username(user).getId();
+                        med.idUser = us.get_User_Username(user).getId();
 
                         us.insertarMedicina(med);
 
@@ -167,6 +165,7 @@ public class medicine_edit extends Fragment {
                     }
                     else {
                         // No esta logueado
+                        getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
                     }
                 }
             }
