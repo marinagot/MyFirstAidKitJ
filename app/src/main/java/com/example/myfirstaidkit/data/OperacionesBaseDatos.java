@@ -188,5 +188,18 @@ public final class OperacionesBaseDatos {
 
     }
 
+    public Cursor obtener_User_Username(String username) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.USER, Users_db.USERNAME);
+
+        String[] selectionArgs = {username};
+
+        return db.rawQuery(sql, selectionArgs);
+
+    }
+
+
 }
 
