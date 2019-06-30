@@ -1,6 +1,9 @@
 package com.example.myfirstaidkit;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import com.example.myfirstaidkit.data.DataBaseOperations;
+import com.example.myfirstaidkit.data.Treatment;
 
 import androidx.navigation.Navigation;
 
@@ -31,6 +39,14 @@ public class treatment_edit extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    //Preferencias de la aplicación
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
+
+    DataBaseOperations us;
+    Treatment treatment = new Treatment();
+    View viewCA, alert;
 
     public treatment_edit() {
         // Required empty public constructor
@@ -58,16 +74,15 @@ public class treatment_edit extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button btnOk = view.findViewById(R.id.btn_treatment_edit_done);
-
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
-                //Navigation.findNavController(view).navigate(R.id.action_treatment_edit_to_treatments);
-                getActivity().setTitle("Treatments");
-            }
-        });
+//        Button btnOk = view.findViewById(R.id.btn_treatment_edit_done);
+//
+//        btnOk.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
+//                getActivity().setTitle("Treatments");
+//            }
+//        });
     }
 
     @Override
@@ -83,7 +98,86 @@ public class treatment_edit extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_treatment_edit, container, false);
+        viewCA = inflater.inflate(R.layout.fragment_treatment_edit, container, false);
+        alert = inflater.inflate(R.layout.alert_treatments, null, false);
+
+        us = DataBaseOperations.get_Instance(getContext());
+
+        Button btnAdd = viewCA.findViewById(R.id.btn_treatment_edit_add);
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                Spinner listMedicines = alert.findViewById(R.id.list_medicines);
+//                EditText period = alert.findViewById(R.id.txt_edit_medicine_num);
+//                EditText endDate = alert.findViewById(R.id.medicine_edit_expire_date);
+//
+//
+//                new AlertDialog.Builder(getContext()).setView(alert)
+//                .setTitle("Insert new medicine")
+//                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.dismiss();
+//                    }
+//                }).show();
+            }
+        });
+
+        Button btnDone = viewCA.findViewById(R.id.btn_treatment_edit_done);
+
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                treatment.name = ((EditText) viewCA.findViewById(R.id.txt_treatment_name)).getText().toString();
+//                med.medicine_type = ((Spinner) viewCA.findViewById(R.id.list_medicines)).getSelectedItem().toString();
+//                try {
+//                    med.dose_number = Integer.parseInt(((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).getText().toString());
+//                }
+//                catch(Exception e){
+//                    med.dose_number = -1;
+//                }
+//
+//                if(med.medicine_name.equals("") || med.expiration_date == null || med.dose_number.equals(-1)) {
+//                    //Display Message
+//                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+//                    alertDialog.setTitle("ALERT!");
+//                    alertDialog.setMessage("All fields must be filled correctly");
+//                    alertDialog.show();
+//                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+//                    TextView tv = alertDialog.findViewById(textViewId);
+//                    tv.setTextColor(Color.RED);
+//                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+//                    textViewMessage.setTextColor(Color.RED);
+//                }
+//                else {
+//
+//                    String user = prefs.getString("username", null);
+//
+//                    if (user != null) {
+//                        //Llamas para obtener el userId
+//                        med.idUser = us.get_User_Username(user).getId();
+//
+//                        us.insertarMedicina(med);
+//
+//                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+//                        alertDialog.setTitle("Successful!");
+//                        alertDialog.setMessage("Medicine created" );
+//                        alertDialog.show();
+//                        getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
+//                    }
+//                    else {
+//                        // No esta logueado
+//                        getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
+//                    }
+//                }
+            }
+        });
+
+        return viewCA;
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -98,6 +192,9 @@ public class treatment_edit extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+
+            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
+            edit = prefs.edit();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

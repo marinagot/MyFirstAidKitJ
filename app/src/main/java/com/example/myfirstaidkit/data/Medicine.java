@@ -1,35 +1,59 @@
 package com.example.myfirstaidkit.data;
 
+import android.arch.persistence.room.Entity;
+
 import java.util.Date;
 
+@Entity(primaryKeys = {"id"})
 public class Medicine {
 
-    String medicine_name;
-    String medicine_type;
-    Integer dose_number;
-    Date expiration_date;
+    public Integer id;
+    public String name;
+    public Integer idUser;
+    public String type;
+    public Integer dose_number;
+    public Date expiration_date;
 
-    public Medicine(String medicine_name, String medicine_type, Integer dose_number, Date expiration_date) {
-        this.medicine_name = medicine_name;
-        this.medicine_type = medicine_type;
+    public Medicine() {
+
+    }
+
+    public Medicine(Integer id,String name, Integer idUser, String type, Integer dose_number, Date expiration_date) {
+
+        this.id = id;
+        this.name = name;
+        this.idUser = idUser;
+        this.type = type;
         this.dose_number = dose_number;
         this.expiration_date = expiration_date;
     }
 
-    public String getMedicine_name() {
-        return medicine_name;
+    public Integer getId() {
+        return id;
     }
 
-    public void setMedicine_name(String medicine_name) {
-        this.medicine_name = medicine_name;
+    public void setId(Integer id) {
+        this.id = id;
     }
+
+    public String getMedicine_name() {
+        return name;
+    }
+
+    public void setMedicine_name(String name) {
+        this.name = name;
+    }
+
+    public Integer getIdUser() {return idUser;}
+
+    public void setIdUser(Integer idUser) {this.idUser = idUser;}
 
     public String getMedicine_type() {
-        return medicine_type;
+        return type;
     }
 
     public void setMedicine_type(String medicine_type) {
-        this.medicine_type = medicine_type;
+        this.type = type;
     }
 
     public Integer getDose_number() {
@@ -48,3 +72,7 @@ public class Medicine {
         this.expiration_date = expiration_date;
     }
 }
+
+
+
+

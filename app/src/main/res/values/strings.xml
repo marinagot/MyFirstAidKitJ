@@ -52,6 +52,7 @@
 
     <string name="edit_medicine_name">Name</string>
     <string name="edit_medicine_lbl_type">Choose one type</string>
+    <string name="edit_medicine_lbl_type2">Choose expiration date</string>
     <string name="edit_medicine_txt_num">Dose number</string>
     <string name="edit_medicine_txt_exp_date">Expiration date</string>
 
@@ -68,4 +69,10 @@
     <string name="acc_lbl_del">Change password</string>
 
     <string name="init_lbl_login">Log in or sign up to start\nmanaging your first aid kit</string>
+
+
+    <string-array name="medicine_types">
+        <item>Pills</item>
+        <item>Syrup</item>
+    </string-array>
 </resources>

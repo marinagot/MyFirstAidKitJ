@@ -1,6 +1,5 @@
 package com.example.myfirstaidkit;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -17,15 +16,14 @@ import android.widget.TextView;
 
 
 import androidx.navigation.Navigation;
-
-import com.example.myfirstaidkit.data.UsersSQLiteHelper;
-
+import com.example.myfirstaidkit.data.DataBaseOperations;
+import com.example.myfirstaidkit.data.User;
 
 
 public class create_account extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    UsersSQLiteHelper us;
+    DataBaseOperations us;
     EditText username, email, birthday, password, confirm_password;
     ImageView avatar;
 
@@ -34,9 +32,7 @@ public class create_account extends Fragment {
      * A simple {@link Fragment} subclass.
      * Activities that contain this fragment must implement the
      * {@link create_account.OnFragmentInteractionListener} interface
-     * to handle interaction events.
-     * Use the {@link create_account#newInstance} factory method to
-     * create an instance of this fragment.
+     * to handle interaction events
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,15 +49,16 @@ public class create_account extends Fragment {
         // Inflate the layout for this fragment
         View viewCA = inflater.inflate(R.layout.fragment_create_account, container, false);
 
-        us = new UsersSQLiteHelper(getActivity());
 
-        username = (EditText) viewCA.findViewById(R.id.txt_username_set);
-        email = (EditText) viewCA.findViewById(R.id.txt_email_set);
-        birthday = (EditText) viewCA.findViewById(R.id.txt_birth_set);
-        password = (EditText) viewCA.findViewById(R.id.txt_pwd_set);
-        confirm_password = (EditText) viewCA.findViewById(R.id.txt_pwd_conf_set);
-        avatar = (ImageView) viewCA.findViewById(R.id.image_profile_set);
-        Button btnDone = (Button) viewCA.findViewById(R.id.btn_confirm_account);
+        us = DataBaseOperations.get_Instance(getContext());
+
+        username = viewCA.findViewById(R.id.txt_username_set);
+        email = viewCA.findViewById(R.id.txt_email_set);
+        birthday = viewCA.findViewById(R.id.txt_birth_set);
+        password = viewCA.findViewById(R.id.txt_pwd_set);
+        confirm_password = viewCA.findViewById(R.id.txt_pwd_conf_set);
+        avatar = viewCA.findViewById(R.id.image_profile_set);
+        Button btnDone = viewCA.findViewById(R.id.btn_confirm_account);
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +79,10 @@ public class create_account extends Fragment {
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
-                    us.insertData(username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
-                            avatar.toString(), password.getText().toString(), confirm_password.getText().toString());
+
+                    User user= new User(0, username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
+                            avatar.toString(), password.getText().toString());
+                    us.insertUser(user);
 
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("Successful!");

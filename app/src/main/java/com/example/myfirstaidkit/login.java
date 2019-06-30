@@ -2,14 +2,11 @@ package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +17,7 @@ import android.widget.TextView;
 import androidx.navigation.Navigation;
 
 import com.example.myfirstaidkit.data.User;
-import com.example.myfirstaidkit.data.UserUtilities;
-import com.example.myfirstaidkit.data.UsersSQLiteHelper;
+import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.create_account;
 
 
@@ -36,7 +32,11 @@ public class login extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     EditText username,password;
-    UsersSQLiteHelper us;
+    DataBaseOperations us;
+
+    //Preferencias de la aplicación
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
 
     public login() {
         // Required empty public constructor
@@ -56,16 +56,17 @@ public class login extends Fragment {
         username = (EditText) v.findViewById(R.id.txt_username);
         password = (EditText) v.findViewById(R.id.txt_pwd);
 
-        us = new UsersSQLiteHelper(getActivity());
+        us = DataBaseOperations.get_Instance(getContext());
+
+        //Not logged
+        edit.putBoolean("isLogged", false);
+        edit.apply();
 
         Button btnRegister = v.findViewById(R.id.btn_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                //Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
-                 //   Intent intentSU = new Intent(getActivity(), createAccount.class);
-                   // startActivity(intentSU);
                 // Crea el nuevo fragmento y la transacción.
 
                 //getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
@@ -95,7 +96,10 @@ public class login extends Fragment {
                     boolean sign_in = us.loginData(username.getText().toString(), password.getText().toString());
 
                     if (sign_in == true) {
-                        //getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+                        edit.putString("username", username.getText().toString());
+                        edit.putBoolean("isLogged", true);
+                        edit.apply();
+
                         Navigation.findNavController(v).navigate(R.id.action_login_to_home);
                         getActivity().setTitle("Home");
                     } else {
@@ -129,6 +133,9 @@ public class login extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+
+            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
+            edit = prefs.edit();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
