@@ -9,15 +9,19 @@ public class Treatment{
 
     public Integer id;
     public Integer idUser;
+    public String name;
     public Integer frecuencia;
     public Date fechaInicio;
     public Date fechaFinal;
 
-    public Treatment() {}
+    public Treatment() {
 
-    public Treatment(Integer id, Integer idUser, Integer frecuencia, Date fechaInicio, Date fechaFinal) {
+    }
+
+    public Treatment(Integer id, Integer idUser, String name, Integer frecuencia, Date fechaInicio, Date fechaFinal) {
         this.id=id;
         this.idUser = idUser;
+        this.name = name;
         this.frecuencia = frecuencia;
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
@@ -30,6 +34,10 @@ public class Treatment{
     public Integer getIdUser() {return idUser;}
 
     public void setIdUser(Integer idUser) {this.idUser = idUser;}
+
+    public String getName() {return name;}
+
+    public void setName(String name) {this.name = name;}
 
     public Integer getFrecuencia() {return frecuencia;}
 

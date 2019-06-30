@@ -23,6 +23,7 @@ public class FirstAidKit{
     interface Columnas_Treatment{
 
         String ID = "id";
+        String NAME = "name";
         String ID_USER = "id_user";
         String FRECUENCIA = "frecuencia";
         String FECHAINICIO = "fecha_inicio";

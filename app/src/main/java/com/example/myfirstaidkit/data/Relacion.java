@@ -9,7 +9,9 @@ public class Relacion{
     public Integer idTratamiento;
     public Integer idMedicamento;
 
-    public Relacion() {}
+    public Relacion() {
+
+    }
 
     public Relacion(Integer idRelacion, Integer idTratamiento, Integer idMedicamento) {
         this.idRelacion = idRelacion;

@@ -108,6 +108,7 @@ public final class OperacionesBaseDatos {
         valores.put(Treatments_db.FECHAFINAL,dateFormat.format(treatment.getFechaFinal()));
         valores.put(Treatments_db.FECHAINICIO, dateFormat.format(treatment.getFechaInicio()));
         valores.put(Treatments_db.ID_USER, treatment.getIdUser());
+        valores.put(Treatments_db.NAME, treatment.getName());
 
         long idTreatment = db.insertOrThrow(Tablas.TREATMENT, null, valores);
 
@@ -186,6 +187,19 @@ public final class OperacionesBaseDatos {
         return db.rawQuery(sql, selectionArgs);
 
     }
+
+    public Cursor obtener_User_Username(String username) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.USER, Users_db.USERNAME);
+
+        String[] selectionArgs = {username};
+
+        return db.rawQuery(sql, selectionArgs);
+
+    }
+
 
 }
 
