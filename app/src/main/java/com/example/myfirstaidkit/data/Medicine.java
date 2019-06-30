@@ -8,16 +8,16 @@ public class Medicine {
 
     public Integer id;
     public String medicine_name;
-    public Integer idKit;
+    public Integer idUser;
     public String medicine_type;
     public Integer dose_number;
     public Date expiration_date;
 
-    public Medicine(Integer id,String medicine_name, Integer idKit, String medicine_type, Integer dose_number, Date expiration_date) {
+    public Medicine(Integer id,String medicine_name, Integer idUser, String medicine_type, Integer dose_number, Date expiration_date) {
 
         this.id = id;
         this.medicine_name = medicine_name;
-        this.idKit = idKit;
+        this.idUser = idUser;
         this.medicine_type = medicine_type;
         this.dose_number = dose_number;
         this.expiration_date = expiration_date;
@@ -39,13 +39,9 @@ public class Medicine {
         this.medicine_name = medicine_name;
     }
 
-    public Integer getIdKit() {
-        return idKit;
-    }
+    public Integer getIdUser() {return idUser;}
 
-    public void setIdKit(Integer idKit) {
-        this.idKit = idKit;
-    }
+    public void setIdUser(Integer idUser) {this.idUser = idUser;}
 
     public String getMedicine_type() {
         return medicine_type;

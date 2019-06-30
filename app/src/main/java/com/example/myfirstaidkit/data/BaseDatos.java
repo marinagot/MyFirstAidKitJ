@@ -73,7 +73,7 @@ public class BaseDatos extends SQLiteOpenHelper {
                 "%s TEXT UNIQUE NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
                 "%s DATETIME NOT NULL,%s INTEGER NOT NULL );",
                 Tablas.MEDICINE, BaseColumns._ID, Medicines_db.MEDICINE_NAME,
-                Medicines_db.ID_KIT, Medicines_db.MEDICINE_TYPE, Medicines_db.EXPIRATION_DATE,
+                Medicines_db.ID_USER, Medicines_db.MEDICINE_TYPE, Medicines_db.EXPIRATION_DATE,
                 Medicines_db.DOSE_NUMBER));
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "%s INTEGER NOT NULL , %s INTEGER NOT NULL);",
