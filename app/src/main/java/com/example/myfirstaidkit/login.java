@@ -2,6 +2,7 @@ package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,10 @@ public class login extends Fragment {
     EditText username,password;
     OperacionesBaseDatos us;
 
+    //Preferencias de la aplicación
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
+
     public login() {
         // Required empty public constructor
     }
@@ -49,14 +54,15 @@ public class login extends Fragment {
 
         us = OperacionesBaseDatos.obtenerInstancia(getContext());
 
+        //Not logged
+        edit.putBoolean("isLogged", false);
+        edit.apply();
+
         Button btnRegister = v.findViewById(R.id.btn_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                //Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
-                 //   Intent intentSU = new Intent(getActivity(), createAccount.class);
-                   // startActivity(intentSU);
                 // Crea el nuevo fragmento y la transacción.
 
                 getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
@@ -85,6 +91,10 @@ public class login extends Fragment {
                     boolean sign_in = us.loginData(username.getText().toString(), password.getText().toString());
 
                     if (sign_in == true) {
+                        edit.putString("username", username.getText().toString());
+                        edit.putBoolean("isLogged", true);
+                        edit.apply();
+
                         getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
                         getActivity().setTitle("Home");
                     } else {
@@ -118,6 +128,9 @@ public class login extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+
+            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
+            edit = prefs.edit();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

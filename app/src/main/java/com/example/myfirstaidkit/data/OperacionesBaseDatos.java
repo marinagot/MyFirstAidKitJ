@@ -188,15 +188,26 @@ public final class OperacionesBaseDatos {
 
     }
 
-    public Cursor obtener_User_Username(String username) {
+    public User obtener_User_Username(String username) {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.USER, Users_db.USERNAME);
 
         String[] selectionArgs = {username};
+        Cursor c = db.rawQuery(sql, selectionArgs);
 
-        return db.rawQuery(sql, selectionArgs);
+        User user = new User();
+
+        if (c.moveToFirst() == true) {
+            user.setId(c.getInt(0));
+            user.setUsername(c.getString(1));
+            user.setEmail(c.getString(2));
+            user.setPassword(c.getString(3));
+            user.setBirthday(c.getString(4));
+        }
+        db.close();
+        return user;
 
     }
 

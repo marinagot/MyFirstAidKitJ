@@ -2,6 +2,7 @@ package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.OperacionesBaseDatos;
+import com.example.myfirstaidkit.data.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,6 +43,10 @@ public class medicine_edit extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    //Preferencias de la aplicación
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
 
     public medicine_edit() {
         // Required empty public constructor
@@ -144,15 +150,24 @@ public class medicine_edit extends Fragment {
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else {
-                    //Temporal
-                    med.idUser = 1;
-                    us.insertarMedicina(med);
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("Successful!");
-                    alertDialog.setMessage("Medicine created" );
-                    alertDialog.show();
-                    getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
+                    String user = prefs.getString("username", null);
+
+                    if (user != null) {
+                        //Llamas para obtener el userId
+                        med.idUser = us.obtener_User_Username(user).getId();
+
+                        us.insertarMedicina(med);
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                        alertDialog.setTitle("Successful!");
+                        alertDialog.setMessage("Medicine created" );
+                        alertDialog.show();
+                        getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
+                    }
+                    else {
+                        // No esta logueado
+                    }
                 }
             }
         });
@@ -172,6 +187,9 @@ public class medicine_edit extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+
+            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
+            edit = prefs.edit();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
