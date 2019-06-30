@@ -107,18 +107,18 @@ public class treatment_edit extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Spinner listMedicines = alert.findViewById(R.id.list_medicines);
-                EditText period = alert.findViewById(R.id.txt_edit_medicine_num);
-                EditText endDate = alert.findViewById(R.id.medicine_edit_expire_date);
-
-
-                new AlertDialog.Builder(getContext()).setView(alert)
-                .setTitle("Insert new medicine")
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                }).show();
+//                Spinner listMedicines = alert.findViewById(R.id.list_medicines);
+//                EditText period = alert.findViewById(R.id.txt_edit_medicine_num);
+//                EditText endDate = alert.findViewById(R.id.medicine_edit_expire_date);
+//
+//
+//                new AlertDialog.Builder(getContext()).setView(alert)
+//                .setTitle("Insert new medicine")
+//                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.dismiss();
+//                    }
+//                }).show();
             }
         });
 
