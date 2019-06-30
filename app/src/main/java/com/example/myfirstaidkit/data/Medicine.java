@@ -1,19 +1,34 @@
 package com.example.myfirstaidkit.data;
 
-import java.util.Date;
+import android.arch.persistence.room.Entity;
 
+import java.util.Date;
+@Entity(primaryKeys = {"id"})
 public class Medicine {
 
-    String medicine_name;
-    String medicine_type;
-    Integer dose_number;
-    Date expiration_date;
+    public Integer id;
+    public String medicine_name;
+    public Integer idKit;
+    public String medicine_type;
+    public Integer dose_number;
+    public Date expiration_date;
 
-    public Medicine(String medicine_name, String medicine_type, Integer dose_number, Date expiration_date) {
+    public Medicine(Integer id,String medicine_name, Integer idKit, String medicine_type, Integer dose_number, Date expiration_date) {
+
+        this.id = id;
         this.medicine_name = medicine_name;
+        this.idKit = idKit;
         this.medicine_type = medicine_type;
         this.dose_number = dose_number;
         this.expiration_date = expiration_date;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getMedicine_name() {
@@ -22,6 +37,14 @@ public class Medicine {
 
     public void setMedicine_name(String medicine_name) {
         this.medicine_name = medicine_name;
+    }
+
+    public Integer getIdKit() {
+        return idKit;
+    }
+
+    public void setIdKit(Integer idKit) {
+        this.idKit = idKit;
     }
 
     public String getMedicine_type() {
@@ -48,3 +71,7 @@ public class Medicine {
         this.expiration_date = expiration_date;
     }
 }
+
+
+
+

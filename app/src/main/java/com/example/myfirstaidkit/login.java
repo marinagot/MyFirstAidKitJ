@@ -2,14 +2,10 @@ package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.myfirstaidkit.data.User;
-import com.example.myfirstaidkit.data.UserUtilities;
-import com.example.myfirstaidkit.data.UsersSQLiteHelper;
-import com.example.myfirstaidkit.create_account;
+import com.example.myfirstaidkit.data.OperacionesBaseDatos;
 
 
 /**
@@ -34,7 +27,7 @@ public class login extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     EditText username,password;
-    UsersSQLiteHelper us;
+    OperacionesBaseDatos us;
 
     public login() {
         // Required empty public constructor
@@ -54,7 +47,7 @@ public class login extends Fragment {
         username = (EditText) v.findViewById(R.id.txt_username);
         password = (EditText) v.findViewById(R.id.txt_pwd);
 
-        us = new UsersSQLiteHelper(getActivity());
+        us = OperacionesBaseDatos.obtenerInstancia(getContext());
 
         Button btnRegister = v.findViewById(R.id.btn_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {
