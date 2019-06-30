@@ -44,6 +44,8 @@
 
     <string name="edit_treatment_name">Treatment name</string>
     <string name="edit_treatment_lbl_medicine">Choose one medicine</string>
+    <string name="edit_treatment_lbl_medicine2">Select a date of ending</string>
+    <string name="edit_treatment_lbl_medicine3">Add medicine</string>
     <string name="edit_treatment_lbl_freq">Every</string>
     <string name="edit_treatment_lbl_freq_unit">hours</string>
     <string name="edit_treatment_txt_num">0</string>

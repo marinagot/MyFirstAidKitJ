@@ -10,7 +10,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -18,6 +20,9 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Treatment;
 
 import androidx.navigation.Navigation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -47,6 +52,12 @@ public class treatment_edit extends Fragment {
     DataBaseOperations us;
     Treatment treatment = new Treatment();
     View viewCA, alert;
+
+    List<String> medicineList;
+
+    Spinner listMedicines;
+    EditText period;
+    CalendarView endDate;
 
     public treatment_edit() {
         // Required empty public constructor
@@ -100,8 +111,13 @@ public class treatment_edit extends Fragment {
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_treatment_edit, container, false);
         alert = inflater.inflate(R.layout.alert_treatments, null, false);
-
         us = DataBaseOperations.get_Instance(getContext());
+
+        medicineList = new ArrayList<>();
+        medicineList.add("list 1");
+        medicineList.add("list 2");
+        medicineList.add("list 3");
+
 
         Button btnAdd = viewCA.findViewById(R.id.btn_treatment_edit_add);
 
@@ -109,18 +125,27 @@ public class treatment_edit extends Fragment {
             @Override
             public void onClick(View v) {
 
-//                Spinner listMedicines = alert.findViewById(R.id.list_medicines);
-//                EditText period = alert.findViewById(R.id.txt_edit_medicine_num);
-//                EditText endDate = alert.findViewById(R.id.medicine_edit_expire_date);
-//
-//
-//                new AlertDialog.Builder(getContext()).setView(alert)
-//                .setTitle("Insert new medicine")
-//                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.dismiss();
-//                    }
-//                }).show();
+                alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
+
+                listMedicines = alert.findViewById(R.id.list_medicines);
+                period = alert.findViewById(R.id.txt_edit_medicine_num);
+                endDate = alert.findViewById(R.id.medicine_edit_expire_date);
+
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, medicineList);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                listMedicines.setAdapter(dataAdapter);
+
+
+                new AlertDialog.Builder(getContext()).setView(alert)
+                .setTitle("Insert new medicine")
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        //Logica de guardado en la lista general
+                        String a = period.getText().toString();
+                        dialog.dismiss();
+                    }
+                }).show();
             }
         });
 

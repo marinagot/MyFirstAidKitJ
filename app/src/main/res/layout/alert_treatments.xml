@@ -2,8 +2,25 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/lbl_edit_medicine_type3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/edit_treatment_lbl_medicine2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.093"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
+        app:layout_constraintVertical_bias="0.045" />
 
     <TextView
         android:id="@+id/lbl_edit_medicine_type"
@@ -16,14 +33,14 @@
         android:text="@string/edit_treatment_lbl_medicine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.092"
+        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.07" />
+        app:layout_constraintVertical_bias="0.057" />
 
     <Spinner
         android:id="@+id/list_medicines"
-        android:layout_width="330dp"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -32,7 +49,6 @@
         android:spinnerMode="dropdown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type"
         app:layout_constraintVertical_bias="0.0" />
@@ -48,10 +64,10 @@
         android:text="@string/edit_treatment_lbl_freq"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txt_edit_medicine_num"
-        app:layout_constraintHorizontal_bias="0.851"
+        app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/list_medicines"
-        app:layout_constraintVertical_bias="0.114" />
+        app:layout_constraintVertical_bias="0.053" />
 
     <EditText
         android:id="@+id/txt_edit_medicine_num"
@@ -66,10 +82,10 @@
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.345"
+        app:layout_constraintHorizontal_bias="0.207"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/list_medicines"
-        app:layout_constraintVertical_bias="0.089" />
+        app:layout_constraintVertical_bias="0.029" />
 
     <TextView
         android:id="@+id/textView4"
@@ -82,27 +98,37 @@
         android:text="@string/edit_treatment_lbl_freq_unit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintHorizontal_bias="0.021"
         app:layout_constraintStart_toEndOf="@+id/txt_edit_medicine_num"
         app:layout_constraintTop_toBottomOf="@+id/list_medicines"
-        app:layout_constraintVertical_bias="0.114" />
+        app:layout_constraintVertical_bias="0.053" />
 
-    <EditText
-        android:id="@+id/medicine_edit_expire_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+    <CalendarView
+        android:layout_width="347dp"
+        android:layout_height="318dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:hint="@string/edit_treatment_txt_date"
-        android:inputType="date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.313"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
-        app:layout_constraintVertical_bias="0.041" />
+        app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <!--<EditText-->
+        <!--android:id="@+id/medicine_edit_expire_date"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:ems="10"-->
+        <!--android:hint="@string/edit_treatment_txt_date"-->
+        <!--android:inputType="date"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.313"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"-->
+        <!--app:layout_constraintVertical_bias="0.041" />-->
 
 </android.support.constraint.ConstraintLayout>
