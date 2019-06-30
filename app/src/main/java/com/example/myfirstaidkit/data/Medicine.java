@@ -36,11 +36,11 @@ public class Medicine {
         this.id = id;
     }
 
-    public String getMedicine_name() {
+    public String getName() {
         return name;
     }
 
-    public void setMedicine_name(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -48,11 +48,11 @@ public class Medicine {
 
     public void setIdUser(Integer idUser) {this.idUser = idUser;}
 
-    public String getMedicine_type() {
+    public String getType() {
         return type;
     }
 
-    public void setMedicine_type(String medicine_type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -70,6 +70,11 @@ public class Medicine {
 
     public void setExpiration_date(Date expiration_date) {
         this.expiration_date = expiration_date;
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }
 
