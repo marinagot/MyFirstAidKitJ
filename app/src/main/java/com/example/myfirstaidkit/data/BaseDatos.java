@@ -58,19 +58,19 @@ public class BaseDatos extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db){
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s TEXT NOT NULL,%s TEXT NOT NULL,%s TEXT NOT NULL," +
+                "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,%s TEXT NOT NULL," +
                         "%s TEXT NOT NULL,%s TEXT NOT NULL);",
                 Tablas.USER, BaseColumns._ID, Users_db.USERNAME, Users_db.EMAIL,
                 Users_db.PASSWORD, Users_db.BIRTHDAY, Users_db.AVATAR));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s INTEGER UNIQUE NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
+                "%s INTEGER NOT NULL,%s TEXT NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
                 "%s DATETIME NOT NULL);",
-                Tablas.TREATMENT, BaseColumns._ID, Treatments_db.ID_USER,
+                Tablas.TREATMENT, BaseColumns._ID, Treatments_db.ID_USER, Treatments_db.NAME,
                 Treatments_db.FRECUENCIA, Treatments_db.FECHAINICIO,Treatments_db.FECHAFINAL));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s TEXT UNIQUE NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
+                "%s TEXT NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
                 "%s DATETIME NOT NULL,%s INTEGER NOT NULL);",
                 Tablas.MEDICINE, BaseColumns._ID, Medicines_db.MEDICINE_NAME,
                 Medicines_db.ID_USER, Medicines_db.MEDICINE_TYPE, Medicines_db.EXPIRATION_DATE,

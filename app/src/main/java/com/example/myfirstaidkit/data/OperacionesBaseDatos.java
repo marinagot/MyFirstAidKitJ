@@ -108,6 +108,7 @@ public final class OperacionesBaseDatos {
         valores.put(Treatments_db.FECHAFINAL,dateFormat.format(treatment.getFechaFinal()));
         valores.put(Treatments_db.FECHAINICIO, dateFormat.format(treatment.getFechaInicio()));
         valores.put(Treatments_db.ID_USER, treatment.getIdUser());
+        valores.put(Treatments_db.NAME, treatment.getName());
 
         long idTreatment = db.insertOrThrow(Tablas.TREATMENT, null, valores);
 
