@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity;
 
 import java.util.Date;
 
-@Entity(primaryKeys = {"id_treatment"})
+@Entity(primaryKeys = {"id"})
 public class Treatment{
 
     public Integer id;

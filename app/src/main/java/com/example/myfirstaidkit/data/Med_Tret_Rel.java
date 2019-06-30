@@ -2,7 +2,7 @@ package com.example.myfirstaidkit.data;
 
 import android.arch.persistence.room.Entity;
 
-@Entity(primaryKeys = {"idRelacion"})
+@Entity(primaryKeys = {"idRelation"})
 public class Med_Tret_Rel{
 
     public Integer idRelation;
