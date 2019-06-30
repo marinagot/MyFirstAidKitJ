@@ -150,7 +150,7 @@ public final class OperacionesBaseDatos {
         return deleted;
     }
 
-    public Cursor obtenerDetallesPorIdMedicina(String idMedicine) {
+    public Cursor obtener_Med_IdMedicina(String idMedicine) {
         SQLiteDatabase db = baseDatos.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
@@ -162,8 +162,29 @@ public final class OperacionesBaseDatos {
 
     }
 
+    public Cursor obtener_User_IdUser(String idUser) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
 
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.USER, Kits_db.ID);
 
+        String[] selectionArgs = {idUser};
+
+        return db.rawQuery(sql, selectionArgs);
+
+    }
+
+    public Cursor obtener_Treat_idTreat(String idTreatment) {
+        SQLiteDatabase db = baseDatos.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.TREATMENT, Kits_db.ID_TRAT);
+
+        String[] selectionArgs = {idTreatment};
+
+        return db.rawQuery(sql, selectionArgs);
+
+    }
 
 }
 
