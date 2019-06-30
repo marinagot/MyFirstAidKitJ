@@ -13,6 +13,8 @@ public class Treatment{
     public Date fechaInicio;
     public Date fechaFinal;
 
+    public Treatment() {}
+
     public Treatment(Integer id, Integer idUser, Integer frecuencia, Date fechaInicio, Date fechaFinal) {
         this.id=id;
         this.idUser = idUser;

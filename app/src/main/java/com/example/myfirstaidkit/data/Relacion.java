@@ -3,13 +3,15 @@ package com.example.myfirstaidkit.data;
 import android.arch.persistence.room.Entity;
 
 @Entity(primaryKeys = {"idRelacion"})
-public class Kit{
+public class Relacion{
 
     public Integer idRelacion;
     public Integer idTratamiento;
     public Integer idMedicamento;
 
-    public Kit(Integer idRelacion, Integer idTratamiento, Integer idMedicamento) {
+    public Relacion() {}
+
+    public Relacion(Integer idRelacion, Integer idTratamiento, Integer idMedicamento) {
         this.idRelacion = idRelacion;
         this.idTratamiento = idTratamiento;
         this.idMedicamento = idMedicamento;
