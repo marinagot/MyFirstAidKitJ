@@ -6,9 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.myfirstaidkit.data.DataBase.Tablas;
-import com.example.myfirstaidkit.data.FirstAidKit.Medicines_db;
-import com.example.myfirstaidkit.data.FirstAidKit.Treatments_db;
-import com.example.myfirstaidkit.data.FirstAidKit.Users_db;
+import com.example.myfirstaidkit.data.FirstAidKit.MedicinesDb;
+import com.example.myfirstaidkit.data.FirstAidKit.TreatmentsDb;
+import com.example.myfirstaidkit.data.FirstAidKit.UsersDb;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,11 +65,11 @@ public final class DataBaseOperations {
         ContentValues values = new ContentValues();
 
 
-        values.put(Users_db.PASSWORD,user.getPassword());
-        values.put(Users_db.USERNAME,user.getUsername());
-        values.put(Users_db.AVATAR,user.getAvatar());
-        values.put(Users_db.BIRTHDAY, user.getBirthday());
-        values.put(Users_db.EMAIL, user.getEmail());
+        values.put(UsersDb.PASSWORD,user.getPassword());
+        values.put(UsersDb.USERNAME,user.getUsername());
+        values.put(UsersDb.AVATAR,user.getAvatar());
+        values.put(UsersDb.BIRTHDAY, user.getBirthday());
+        values.put(UsersDb.EMAIL, user.getEmail());
 
         long idUser=db.insertOrThrow(Tablas.USER,null,values);
         db.close();
@@ -85,11 +85,11 @@ public final class DataBaseOperations {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
-        values.put(Medicines_db.EXPIRATION_DATE, dateFormat.format(med.getExpiration_date()));
-        values.put(Medicines_db.DOSE_NUMBER, med.getDose_number());
-        values.put(Medicines_db.NAME, med.getMedicine_name());
-        values.put(Medicines_db.TYPE, med.getMedicine_type());
-        values.put(Medicines_db.ID_USER,med.getIdUser());
+        values.put(MedicinesDb.EXPIRATION_DATE, dateFormat.format(med.getExpiration_date()));
+        values.put(MedicinesDb.DOSE_NUMBER, med.getDose_number());
+        values.put(MedicinesDb.NAME, med.getName());
+        values.put(MedicinesDb.TYPE, med.getType());
+        values.put(MedicinesDb.ID_USER,med.getIdUser());
 
 
         long idMed = db.insertOrThrow(Tablas.MEDICINE, null,values);
@@ -104,11 +104,9 @@ public final class DataBaseOperations {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        values.put(Treatments_db.FREQUENCY, treatment.getFrequency());
-        values.put(Treatments_db.FINALDATE,dateFormat.format(treatment.getFinalDate()));
-        values.put(Treatments_db.INITIALDATE, dateFormat.format(treatment.getInitialDate()));
-        values.put(Treatments_db.ID_USER, treatment.getIdUser());
-        values.put(Treatments_db.NAME, treatment.getName());
+
+        values.put(TreatmentsDb.ID_USER, treatment.getIdUser());
+        values.put(TreatmentsDb.NAME, treatment.getName());
 
         long idTreatment = db.insertOrThrow(Tablas.TREATMENT, null, values);
 
@@ -120,7 +118,7 @@ public final class DataBaseOperations {
     public int deleteUser(User user){
         SQLiteDatabase db= DataBase.getWritableDatabase();
 
-        String whereClause = String.format("%s=?", Users_db.ID);
+        String whereClause = String.format("%s=?", UsersDb.ID);
         final String[] whereArgs = {user.getId().toString()};
 
         int deleted =  db.delete(Tablas.USER,whereClause, whereArgs);
@@ -131,7 +129,7 @@ public final class DataBaseOperations {
     public int deleteMedicine (Medicine medicine){
         SQLiteDatabase db= DataBase.getWritableDatabase();
 
-        String whereClause = String.format("%s=?", Medicines_db.ID);
+        String whereClause = String.format("%s=?", MedicinesDb.ID);
         final String[] whereArgs = {medicine.getId().toString()};
 
         int deleted = db.delete(Tablas.MEDICINE,whereClause, whereArgs);
@@ -144,7 +142,7 @@ public final class DataBaseOperations {
 
        SQLiteDatabase db = DataBase.getWritableDatabase();
 
-        String whereClause = String.format("%s=?", Treatments_db.ID);
+        String whereClause = String.format("%s=?", TreatmentsDb.ID);
         final String[] whereArgs = {treatment.getId().toString()};
 
         int deleted = db.delete(Tablas.TREATMENT, whereClause, whereArgs);
@@ -158,7 +156,7 @@ public final class DataBaseOperations {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.TREATMENT, Treatments_db.NAME);
+                Tablas.TREATMENT, TreatmentsDb.NAME);
 
         String[] selectionArgs = {treatmentName};
         Cursor c = db.rawQuery(sql, selectionArgs);
@@ -170,17 +168,7 @@ public final class DataBaseOperations {
             treatment.setId(c.getInt(0));
             treatment.setName(c.getColumnName(1));
             treatment.setIdUser(c.getInt(2));
-            treatment.setFrequency(c.getInt(3));
 
-            try {
-                Date initialDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
-                Date finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(5));
-                treatment.setInitialDate(initialDate);
-                treatment.setFinalDate(finalDate);
-            } catch (ParseException e) {
-                treatment.setInitialDate(null);
-                treatment.setFinalDate(null);
-            }
 
 
         }
@@ -193,7 +181,7 @@ public final class DataBaseOperations {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.USER, Users_db.USERNAME);
+                Tablas.USER, UsersDb.USERNAME);
 
         String[] selectionArgs = {username};
         Cursor c = db.rawQuery(sql, selectionArgs);
@@ -217,7 +205,7 @@ public final class DataBaseOperations {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.MEDICINE, Medicines_db.NAME);
+                Tablas.MEDICINE, MedicinesDb.NAME);
 
         String[] selectionArgs = {medicineName};
         Cursor c = db.rawQuery(sql, selectionArgs);
@@ -227,9 +215,9 @@ public final class DataBaseOperations {
         if (c.moveToFirst() == true) {
 
             medicine.setId(c.getInt(0));
-            medicine.setMedicine_name(c.getString(1));
+            medicine.setName(c.getString(1));
             medicine.setIdUser(c.getInt(3));
-            medicine.setMedicine_type(c.getString(4));
+            medicine.setType(c.getString(4));
 
             medicine.setDose_number(c.getInt(6));
 
