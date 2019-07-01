@@ -108,9 +108,6 @@ public final class DataBaseOperations {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        values.put(Treatments_db.FREQUENCY, treatment.getFrequency());
-        values.put(Treatments_db.FINALDATE,dateFormat.format(treatment.getFinalDate()));
-        values.put(Treatments_db.INITIALDATE, dateFormat.format(treatment.getInitialDate()));
         values.put(Treatments_db.ID_USER, treatment.getIdUser());
         values.put(Treatments_db.NAME, treatment.getName());
 
@@ -168,18 +165,6 @@ public final class DataBaseOperations {
             treatment.setId(c.getInt(0));
             treatment.setName(c.getColumnName(1));
             treatment.setIdUser(c.getInt(2));
-            treatment.setFrequency(c.getInt(3));
-
-            try {
-                Date initialDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
-                Date finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(5));
-                treatment.setInitialDate(initialDate);
-                treatment.setFinalDate(finalDate);
-            } catch (ParseException e) {
-                treatment.setInitialDate(null);
-                treatment.setFinalDate(null);
-            }
-
 
         }
         c.close();

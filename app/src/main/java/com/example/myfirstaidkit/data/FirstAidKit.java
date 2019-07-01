@@ -25,9 +25,7 @@ public class FirstAidKit{
         String ID = "id";
         String NAME = "name";
         String ID_USER = "id_user";
-        String FREQUENCY = "frequency";
-        String INITIALDATE = "initialDate";
-        String FINALDATE = "finalDate";
+
     }
 
     interface Column_Medicine{
@@ -44,6 +42,9 @@ public class FirstAidKit{
         String ID = "id";
         String ID_TRAT = "id_tratamiento";
         String ID_MED = "id_medicamento";
+        String FREQUENCY = "frequency";
+        String INITIALDATE = "initialDate";
+        String FINALDATE = "finalDate";
     }
 
     public static class Med_Tret_Rel_db implements Column_Med_Tret_Rel{
