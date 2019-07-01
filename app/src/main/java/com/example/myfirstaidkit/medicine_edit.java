@@ -18,12 +18,8 @@ import android.widget.TextView;
 
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.DataBaseOperations;
-import com.example.myfirstaidkit.data.User;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import androidx.navigation.Navigation;
 
 
 /**
@@ -115,9 +111,9 @@ public class medicine_edit extends Fragment {
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 try{
                     month += 1;
-                    med.expiration_date = new SimpleDateFormat("dd/MM/yyyy").parse(dayOfMonth + "/" + month + "/" + year);
+                    med.setExpirationDate(new SimpleDateFormat("dd/MM/yyyy").parse(dayOfMonth + "/" + month + "/" + year));
                 }
-                catch(Exception e){ med.expiration_date = null; }
+                catch(Exception e){ med.setExpirationDate(null); }
 
             }
         });
@@ -128,16 +124,16 @@ public class medicine_edit extends Fragment {
             @Override
             public void onClick(View v) {
 
-                med.name = ((EditText) viewCA.findViewById(R.id.txt_medicine_name)).getText().toString();
-                med.type = ((Spinner) viewCA.findViewById(R.id.list_medicine)).getSelectedItem().toString();
+                med.setName(((EditText) viewCA.findViewById(R.id.txt_medicine_name)).getText().toString());
+                med.setType(((Spinner) viewCA.findViewById(R.id.list_medicine)).getSelectedItem().toString());
                 try {
-                    med.dose_number = Integer.parseInt(((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).getText().toString());
+                    med.setDoseNumber(Integer.parseInt(((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).getText().toString()));
                 }
                 catch(Exception e){
-                    med.dose_number = -1;
+                    med.setDoseNumber(-1);
                 }
 
-                if(med.name.equals("") || med.expiration_date == null || med.dose_number.equals(-1)) {
+                if(med.getName().equals("") || med.getExpirationDate() == null || med.getDoseNumber().equals(-1)) {
                     //Display Message
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("ALERT!");
@@ -155,7 +151,7 @@ public class medicine_edit extends Fragment {
 
                     if (user != null) {
                         //Llamas para obtener el userId
-                        med.idUser = us.get_User_Username(user).getId();
+                        med.setIdUser(us.getUser_Username(user).getId());
 
                         us.insertMedicine(med);
 
@@ -163,11 +159,13 @@ public class medicine_edit extends Fragment {
                         alertDialog.setTitle("Successful!");
                         alertDialog.setMessage("Medicine created" );
                         alertDialog.show();
-                        getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
+                        getFragmentManager().beginTransaction().replace(R.id.content, new first_aid_kit()).commit();
+                        getActivity().setTitle("My kit");
                     }
                     else {
                         // No esta logueado
                         getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
+                        getActivity().setTitle("Login");
                     }
                 }
             }

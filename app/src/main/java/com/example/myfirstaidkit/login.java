@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.example.myfirstaidkit.data.DataBaseOperations;
 
 
@@ -97,8 +99,10 @@ public class login extends Fragment {
                         edit.putBoolean("isLogged", true);
                         edit.apply();
 
-                        getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+//                        getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+                        Navigation.findNavController(v).navigate(R.id.action_login_to_home);
                         getActivity().setTitle("Home");
+
                     } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                         alertDialog.setTitle("Something went wrong!");

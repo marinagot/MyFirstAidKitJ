@@ -104,6 +104,7 @@
         app:layout_constraintVertical_bias="0.053" />
 
     <CalendarView
+        android:id="@+id/endingDate"
         android:layout_width="347dp"
         android:layout_height="318dp"
         android:layout_marginTop="8dp"

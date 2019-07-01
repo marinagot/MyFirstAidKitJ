@@ -7,32 +7,31 @@ import java.util.Date;
 @Entity(primaryKeys = {"id"})
 public class Medicine {
 
-    public Integer id;
-    public String name;
-    public Integer idUser;
-    public String type;
-    public Integer dose_number;
-    public Date expiration_date;
+    private long id;
+    private String name;
+    private long idUser;
+    private String type;
+    private Integer doseNumber;
+    private Date expirationDate;
 
     public Medicine() {
 
     }
 
-    public Medicine(Integer id,String name, Integer idUser, String type, Integer dose_number, Date expiration_date) {
-
+    public Medicine(long id, String name, long idUser, String type, Integer doseNumber, Date expirationDate) {
         this.id = id;
         this.name = name;
         this.idUser = idUser;
         this.type = type;
-        this.dose_number = dose_number;
-        this.expiration_date = expiration_date;
+        this.doseNumber = doseNumber;
+        this.expirationDate = expirationDate;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -44,9 +43,13 @@ public class Medicine {
         this.name = name;
     }
 
-    public Integer getIdUser() {return idUser;}
+    public long getIdUser() {
+        return idUser;
+    }
 
-    public void setIdUser(Integer idUser) {this.idUser = idUser;}
+    public void setIdUser(long idUser) {
+        this.idUser = idUser;
+    }
 
     public String getType() {
         return type;
@@ -56,20 +59,20 @@ public class Medicine {
         this.type = type;
     }
 
-    public Integer getDose_number() {
-        return dose_number;
+    public Integer getDoseNumber() {
+        return doseNumber;
     }
 
-    public void setDose_number(Integer dose_number) {
-        this.dose_number = dose_number;
+    public void setDoseNumber(Integer doseNumber) {
+        this.doseNumber = doseNumber;
     }
 
-    public Date getExpiration_date() {
-        return expiration_date;
+    public Date getExpirationDate() {
+        return expirationDate;
     }
 
-    public void setExpiration_date(Date expiration_date) {
-        this.expiration_date = expiration_date;
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     @Override
