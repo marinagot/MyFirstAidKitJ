@@ -14,11 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.navigation.Navigation;
-
-import com.example.myfirstaidkit.data.User;
 import com.example.myfirstaidkit.data.DataBaseOperations;
-import com.example.myfirstaidkit.create_account;
 
 
 /**
@@ -69,8 +65,7 @@ public class login extends Fragment {
             public void onClick(View v) {
                 // Crea el nuevo fragmento y la transacción.
 
-                //getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
-                Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
+                getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
                 getActivity().setTitle("Create Account");
             }
         });
@@ -100,7 +95,7 @@ public class login extends Fragment {
                         edit.putBoolean("isLogged", true);
                         edit.apply();
 
-                        Navigation.findNavController(v).navigate(R.id.action_login_to_home);
+                        getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
                         getActivity().setTitle("Home");
                     } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();

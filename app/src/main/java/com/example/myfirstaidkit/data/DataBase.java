@@ -64,10 +64,8 @@ public class DataBase extends SQLiteOpenHelper {
                 Users_db.PASSWORD, Users_db.BIRTHDAY, Users_db.AVATAR));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s INTEGER NOT NULL,%s TEXT NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
-                "%s DATETIME NOT NULL);",
-                Tablas.TREATMENT, BaseColumns._ID, Treatments_db.ID_USER, Treatments_db.NAME,
-                Treatments_db.FREQUENCY, Treatments_db.INITIALDATE,Treatments_db.FINALDATE));
+                "%s INTEGER NOT NULL,%s TEXT NOT NULL);",
+                Tablas.TREATMENT, BaseColumns._ID, Treatments_db.ID_USER, Treatments_db.NAME));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "%s TEXT NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
@@ -76,8 +74,11 @@ public class DataBase extends SQLiteOpenHelper {
                 Medicines_db.ID_USER, Medicines_db.TYPE, Medicines_db.EXPIRATION_DATE,
                 Medicines_db.DOSE_NUMBER));
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s INTEGER NOT NULL , %s INTEGER NOT NULL);",
-                Tablas.RELATION_MED_TREATMENT, BaseColumns._ID, Med_Tret_Rel_db.ID_TRAT, Med_Tret_Rel_db.ID_MED));
+                "%s INTEGER NOT NULL , %s INTEGER NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
+                        "%s DATETIME NOT NULL);",
+                Tablas.RELATION_MED_TREATMENT, BaseColumns._ID, Med_Tret_Rel_db.ID_TRAT,
+                Med_Tret_Rel_db.ID_MED, Med_Tret_Rel_db.FREQUENCY,Med_Tret_Rel_db.INITIALDATE,
+                Med_Tret_Rel_db.FINALDATE));
     }
 
     @Override
