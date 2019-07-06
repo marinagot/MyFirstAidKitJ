@@ -80,7 +80,7 @@ public class create_account extends Fragment {
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
 
-                    User user= new User(0, username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
+                    User user = new User(0, username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
                             avatar.toString(), password.getText().toString());
                     us.insertUser(user);
 
@@ -88,8 +88,9 @@ public class create_account extends Fragment {
                     alertDialog.setTitle("Successful!");
                     alertDialog.setMessage("Account for " + username.getText().toString() + " created" );
                     alertDialog.show();
-                    Navigation.findNavController(v).navigate(R.id.action_create_account_to_home);
-                    //getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+                    Navigation.findNavController(v).navigate(R.id.action_create_account_to_login);
+                    getActivity().setTitle("Login");
+                    //getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
                 }
                 else{
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
