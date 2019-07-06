@@ -23,8 +23,8 @@
         android:label="fragment_create_account"
         tools:layout="@layout/fragment_create_account" >
         <action
-            android:id="@+id/action_create_account_to_login"
-            app:destination="@id/login" />
+            android:id="@+id/action_create_account_to_home"
+            app:destination="@+id/home" />
     </fragment>
     <fragment
         android:id="@+id/home"

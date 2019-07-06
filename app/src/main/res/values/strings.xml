@@ -36,10 +36,7 @@
 
     <string name="txt_email">Email</string>
     <string name="txt_birth">Birthdate</string>
-
     <string name="btn_done">Done</string>
-    <string name="btn_del">Delete</string>
-    <string name="btn_cancel">Cancel</string>
 
     <string name="acc_chpwd">Change password</string>
     <string name="acc_del">Delete account</string>
@@ -71,9 +68,7 @@
     <string name="settings_btn_rad_light">Light</string>
 
     <string name="acc_lbl_chpwd">Change password</string>
-    <string name="acc_lbl_del">Delete account</string>
-
-    <string name="text_del_acc">Write your current password\nbelow to confirm your decision</string>
+    <string name="acc_lbl_del">Change password</string>
 
     <string name="init_lbl_login">Log in or sign up to start\nmanaging your first aid kit</string>
 

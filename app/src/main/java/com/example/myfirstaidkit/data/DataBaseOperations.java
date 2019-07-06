@@ -133,8 +133,8 @@ public final class DataBaseOperations {
     }
 
 
-    public int deleteUser(String password){
-        SQLiteDatabase db = DataBase.getWritableDatabase();
+    public int deleteUser(User user){
+        SQLiteDatabase db= DataBase.getWritableDatabase();
 
         String whereClause = String.format("%s=?", UsersDb.ID);
         final String[] whereArgs = {String.valueOf(user.getId())};
@@ -245,10 +245,13 @@ public final class DataBaseOperations {
                 medicine.setExpirationDate(null);
 
             }
+
+
         }
         c.close();
         db.close();
         return medicine;
+
     }
 
     public List<Medicine> getMedicine_userId(long userId) {
@@ -291,19 +294,5 @@ public final class DataBaseOperations {
     }
 
 
-    public int updateUserPassword(String old_password, String new_password){
-        SQLiteDatabase db = DataBase.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(Users_db.PASSWORD, new_password);
-
-        String whereClause = String.format("%s=?", Users_db.PASSWORD);
-        final String[] whereArgs = {old_password};
-
-        int updated = db.update(Tablas.USER, values, whereClause, whereArgs);
-        db.close();
-        return updated;
-
-    }
 }
 
