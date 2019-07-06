@@ -136,8 +136,8 @@ public final class DataBaseOperations {
     public int deleteUser(String password){
         SQLiteDatabase db = DataBase.getWritableDatabase();
 
-        String whereClause = String.format("%s=?", UsersDb.ID);
-        final String[] whereArgs = {String.valueOf(user.getId())};
+        String whereClause = String.format("%s=?", UsersDb.PASSWORD);
+        final String[] whereArgs = {String.valueOf(password)};
 
         return db.delete(Tablas.USER,whereClause, whereArgs);
     }
@@ -295,9 +295,9 @@ public final class DataBaseOperations {
         SQLiteDatabase db = DataBase.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Users_db.PASSWORD, new_password);
+        values.put(UsersDb.PASSWORD, new_password);
 
-        String whereClause = String.format("%s=?", Users_db.PASSWORD);
+        String whereClause = String.format("%s=?", UsersDb.PASSWORD);
         final String[] whereArgs = {old_password};
 
         int updated = db.update(Tablas.USER, values, whereClause, whereArgs);
