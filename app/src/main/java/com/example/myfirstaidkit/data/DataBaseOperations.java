@@ -9,10 +9,13 @@ import com.example.myfirstaidkit.data.DataBase.Tablas;
 import com.example.myfirstaidkit.data.FirstAidKit.MedicinesDb;
 import com.example.myfirstaidkit.data.FirstAidKit.TreatmentsDb;
 import com.example.myfirstaidkit.data.FirstAidKit.UsersDb;
+import com.example.myfirstaidkit.data.FirstAidKit.MedTretRelDb;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -56,6 +59,7 @@ public final class DataBaseOperations {
                 exist = true;
             }
         }
+        c.close();
         db.close();
         return exist;
     }
@@ -81,12 +85,10 @@ public final class DataBaseOperations {
         SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
-        values.put(MedicinesDb.EXPIRATION_DATE, dateFormat.format(med.getExpiration_date()));
-        values.put(MedicinesDb.DOSE_NUMBER, med.getDose_number());
+        values.put(MedicinesDb.EXPIRATION_DATE, dateFormat.format(med.getExpirationDate()));
+        values.put(MedicinesDb.DOSE_NUMBER, med.getDoseNumber());
         values.put(MedicinesDb.NAME, med.getName());
         values.put(MedicinesDb.TYPE, med.getType());
         values.put(MedicinesDb.ID_USER,med.getIdUser());
@@ -97,13 +99,28 @@ public final class DataBaseOperations {
 
         return idMed;
     }
-
-    public long insertTreatment(Treatment treatment){
+    public long insertRelation(MedTretRel relation){
         SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+        values.put(MedTretRelDb.ID_MED, relation.getIdMedicine());
+        values.put(MedTretRelDb.ID_TRAT, relation.getIdTreatment());
+        values.put(MedTretRelDb.FREQUENCY, relation.getFrequency());
+        values.put(MedTretRelDb.INITIAL_DATE, dateFormat.format(relation.getInitialDate()));
+        values.put(MedTretRelDb.FINAL_DATE, dateFormat.format(relation.getFinalDate()));
+
+
+        long idRel = db.insertOrThrow(Tablas.RELATION_MED_TREATMENT, null, values);
+        db.close();
+
+        return idRel ;
+    }
+
+    public long insertTreatment(Treatment treatment){
+        SQLiteDatabase db= DataBase.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
         values.put(TreatmentsDb.ID_USER, treatment.getIdUser());
         values.put(TreatmentsDb.NAME, treatment.getName());
@@ -111,6 +128,7 @@ public final class DataBaseOperations {
         long idTreatment = db.insertOrThrow(Tablas.TREATMENT, null, values);
 
         db.close();
+
         return idTreatment;
     }
 
@@ -119,22 +137,18 @@ public final class DataBaseOperations {
         SQLiteDatabase db= DataBase.getWritableDatabase();
 
         String whereClause = String.format("%s=?", UsersDb.ID);
-        final String[] whereArgs = {user.getId().toString()};
+        final String[] whereArgs = {String.valueOf(user.getId())};
 
-        int deleted =  db.delete(Tablas.USER,whereClause, whereArgs);
-
-        return deleted;
+        return db.delete(Tablas.USER,whereClause, whereArgs);
     }
 
     public int deleteMedicine (Medicine medicine){
         SQLiteDatabase db= DataBase.getWritableDatabase();
 
         String whereClause = String.format("%s=?", MedicinesDb.ID);
-        final String[] whereArgs = {medicine.getId().toString()};
+        final String[] whereArgs = {String.valueOf(medicine.getId())};
 
-        int deleted = db.delete(Tablas.MEDICINE,whereClause, whereArgs);
-
-        return deleted;
+        return db.delete(Tablas.MEDICINE,whereClause, whereArgs);
 
     }
 
@@ -143,16 +157,14 @@ public final class DataBaseOperations {
        SQLiteDatabase db = DataBase.getWritableDatabase();
 
         String whereClause = String.format("%s=?", TreatmentsDb.ID);
-        final String[] whereArgs = {treatment.getId().toString()};
+        final String[] whereArgs = {String.valueOf(treatment.getId())};
 
-        int deleted = db.delete(Tablas.TREATMENT, whereClause, whereArgs);
-
-        return deleted;
+        return db.delete(Tablas.TREATMENT, whereClause, whereArgs);
     }
 
 
 
-    public Treatment get_Treatment_treatmentName(String treatmentName) {
+    public Treatment getTreatment_treatmentName(String treatmentName) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
@@ -163,7 +175,7 @@ public final class DataBaseOperations {
 
         Treatment treatment = new Treatment();
 
-        if (c.moveToFirst() == true) {
+        if (c.moveToFirst()) {
 
             treatment.setId(c.getInt(0));
             treatment.setName(c.getColumnName(1));
@@ -172,12 +184,13 @@ public final class DataBaseOperations {
 
 
         }
+        c.close();
         db.close();
         return treatment;
 
     }
 
-    public User get_User_Username(String username) {
+    public User getUser_Username(String username) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
@@ -188,7 +201,7 @@ public final class DataBaseOperations {
 
         User user = new User();
 
-        if (c.moveToFirst() == true) {
+        if (c.moveToFirst()) {
 
             user.setId(c.getInt(0));
             user.setUsername(c.getString(1));
@@ -196,12 +209,14 @@ public final class DataBaseOperations {
             user.setPassword(c.getString(3));
             user.setBirthday(c.getString(4));
         }
+        else return null;
+        c.close();
         db.close();
         return user;
 
     }
 
-    public Medicine get_Medicine_medicineName(String medicineName) {
+    public Medicine getMedicine_medicineName(String medicineName) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
@@ -212,29 +227,69 @@ public final class DataBaseOperations {
 
         Medicine medicine = new Medicine();
 
-        if (c.moveToFirst() == true) {
+        if (c.moveToFirst()) {
 
             medicine.setId(c.getInt(0));
             medicine.setName(c.getString(1));
-            medicine.setIdUser(c.getInt(3));
-            medicine.setType(c.getString(4));
+            medicine.setIdUser(c.getInt(2));
+            medicine.setType(c.getString(3));
 
-            medicine.setDose_number(c.getInt(6));
+            medicine.setDoseNumber(c.getInt(5));
 
 
             try {
-                Date expirationDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(5));
-                medicine.setExpiration_date(expirationDate);
+                Date expirationDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
+                medicine.setExpirationDate(expirationDate);
 
             } catch (ParseException e) {
-                medicine.setExpiration_date(null);
+                medicine.setExpirationDate(null);
 
             }
 
 
         }
+        c.close();
         db.close();
         return medicine;
+
+    }
+
+    public List<Medicine> getMedicine_userId(long userId) {
+        SQLiteDatabase db = DataBase.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.MEDICINE, MedicinesDb.ID_USER);
+
+        String[] selectionArgs = {String.valueOf(userId)};
+        Cursor c = db.rawQuery(sql, selectionArgs);
+
+        List<Medicine> medicines = new ArrayList<>();
+
+        while (c.moveToNext()) {
+            Medicine medicine = new Medicine();
+
+            medicine.setId(c.getInt(0));
+            medicine.setName(c.getString(1));
+            medicine.setIdUser(c.getInt(2));
+            medicine.setType(c.getString(3));
+
+            medicine.setDoseNumber(c.getInt(5));
+
+
+            try {
+                Date expirationDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
+                medicine.setExpirationDate(expirationDate);
+
+            } catch (ParseException e) {
+                medicine.setExpirationDate(null);
+
+            }
+            medicines.add(medicine);
+
+        }
+        c.close();
+        db.close();
+        return medicines;
 
     }
 

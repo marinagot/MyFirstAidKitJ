@@ -1,23 +1,24 @@
 package com.example.myfirstaidkit.data;
 
 import android.arch.persistence.room.Entity;
+
 import java.util.Date;
 
 @Entity(primaryKeys = {"idRelation"})
-public class MedTretRel{
+public class MedTretRel {
 
-    public Integer idRelation;
-    public Integer idTreatment;
-    public Integer idMedicine;
-    public Integer frequency;
-    public Date initialDate;
-    public Date finalDate;
+    private long idRelation;
+    private long idTreatment;
+    private long idMedicine;
+    private Integer frequency;
+    private Date initialDate;
+    private Date finalDate;
 
     public MedTretRel() {
 
     }
 
-    public MedTretRel(Integer idRelation, Integer idTreatment, Integer idMedicine, Integer frequency, Date initialDate, Date finalDate) {
+    public MedTretRel(long idRelation, long idTreatment, long idMedicine, Integer frequency, Date initialDate, Date finalDate) {
         this.idRelation = idRelation;
         this.idTreatment = idTreatment;
         this.idMedicine = idMedicine;
@@ -26,27 +27,27 @@ public class MedTretRel{
         this.finalDate = finalDate;
     }
 
-    public Integer getIdRelation() {
+    public long getIdRelation() {
         return idRelation;
     }
 
-    public void setIdRelation(Integer idRelation) {
+    public void setIdRelation(long idRelation) {
         this.idRelation = idRelation;
     }
 
-    public Integer getIdTreatment() {
+    public long getIdTreatment() {
         return idTreatment;
     }
 
-    public void setIdTreatment(Integer idTreatment) {
+    public void setIdTreatment(long idTreatment) {
         this.idTreatment = idTreatment;
     }
 
-    public Integer getIdMedicine() {
+    public long getIdMedicine() {
         return idMedicine;
     }
 
-    public void setIdMedicine(Integer idMedicine) {
+    public void setIdMedicine(long idMedicine) {
         this.idMedicine = idMedicine;
     }
 

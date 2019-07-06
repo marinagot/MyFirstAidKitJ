@@ -7,34 +7,34 @@ import java.util.Date;
 @Entity(primaryKeys = {"id"})
 public class Treatment{
 
-    public Integer id;
-    public Integer idUser;
-    public String name;
+    private long id;
+    private long idUser;
+    private String name;
 
 
     public Treatment() {
 
     }
 
-    public Treatment(Integer id, Integer idUser, String name) {
+    public Treatment(long id, long idUser, String name) {
         this.id = id;
         this.idUser = idUser;
         this.name = name;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Integer getIdUser() {
+    public long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(Integer idUser) {
+    public void setIdUser(long idUser) {
         this.idUser = idUser;
     }
 
