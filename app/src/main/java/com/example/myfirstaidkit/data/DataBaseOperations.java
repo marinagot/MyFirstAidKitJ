@@ -117,14 +117,14 @@ public final class DataBaseOperations {
     }
 
 
-    public int deleteUser(User user){
-        SQLiteDatabase db= DataBase.getWritableDatabase();
+    public int deleteUser(String password){
+        SQLiteDatabase db = DataBase.getWritableDatabase();
 
-        String whereClause = String.format("%s=?", Users_db.ID);
-        final String[] whereArgs = {user.getId().toString()};
+        String whereClause = String.format("%s=?", Users_db.PASSWORD);
+        final String[] whereArgs = {password};
 
         int deleted =  db.delete(Tablas.USER,whereClause, whereArgs);
-
+        db.close();
         return deleted;
     }
 
@@ -242,14 +242,25 @@ public final class DataBaseOperations {
                 medicine.setExpiration_date(null);
 
             }
-
-
         }
         db.close();
         return medicine;
-
     }
 
 
+    public int updateUserPassword(String old_password, String new_password){
+        SQLiteDatabase db = DataBase.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Users_db.PASSWORD, new_password);
+
+        String whereClause = String.format("%s=?", Users_db.PASSWORD);
+        final String[] whereArgs = {old_password};
+
+        int updated = db.update(Tablas.USER, values, whereClause, whereArgs);
+        db.close();
+        return updated;
+
+    }
 }
 
