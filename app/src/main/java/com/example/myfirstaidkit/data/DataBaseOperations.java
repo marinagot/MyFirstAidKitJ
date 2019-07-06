@@ -180,21 +180,6 @@ public final class DataBaseOperations {
             treatment.setId(c.getInt(0));
             treatment.setName(c.getColumnName(1));
             treatment.setIdUser(c.getInt(2));
-            treatment.setFrequency(c.getInt(3));
-
-            try {
-                Date initialDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
-                Date finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(5));
-                treatment.setInitialDate(initialDate);
-                treatment.setFinalDate(finalDate);
-            } catch (ParseException e) {
-                treatment.setInitialDate(null);
-                treatment.setFinalDate(null);
-            }
-
-
-
-
         }
         c.close();
         db.close();

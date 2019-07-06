@@ -20,9 +20,6 @@ public class Treatment{
         this.id = id;
         this.idUser = idUser;
         this.name = name;
-        this.frequency = frequency;
-        this.initialDate = initialDate;
-        this.finalDate = finalDate;
     }
 
     public long getId() {

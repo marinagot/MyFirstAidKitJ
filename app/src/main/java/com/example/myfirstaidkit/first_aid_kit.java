@@ -9,12 +9,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.navigation.Navigation;
 
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Medicine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -90,6 +93,9 @@ public class first_aid_kit extends Fragment {
         }
     }
 
+    List<Medicine> medicineList = new ArrayList<>();
+    ArrayAdapter<Medicine> adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,7 +103,13 @@ public class first_aid_kit extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_first_aid_kit, container, false);
         us = DataBaseOperations.get_Instance(getContext());
 
-        List<Medicine> medicines = us.get_Medicine_userId()
+        medicineList = us.getMedicine_userId(us.getUser_Username(prefs.getString("username", "")).getId());
+
+        ListView list = viewCA.findViewById(R.id.list_user_medicines);
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);
+        list.setAdapter(adapter);
+
+
 
         return viewCA;
     }

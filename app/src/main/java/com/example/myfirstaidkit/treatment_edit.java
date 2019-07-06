@@ -118,7 +118,6 @@ public class treatment_edit extends Fragment {
         }
     }
 
-//    ArrayList<String> listItems = new ArrayList<>();
     ArrayList<Medicine> listItems = new ArrayList<>();
     ArrayAdapter<Medicine> adapter;
     @Override
