@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
-import com.example.myfirstaidkit.data.User;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.create_account;
 
@@ -70,6 +69,7 @@ public class login extends Fragment {
                 // Crea el nuevo fragmento y la transacción.
 
                 //getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
+                //A veces peta
                 Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
                 getActivity().setTitle("Create Account");
             }
@@ -100,8 +100,10 @@ public class login extends Fragment {
                         edit.putBoolean("isLogged", true);
                         edit.apply();
 
+//                        getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
                         Navigation.findNavController(v).navigate(R.id.action_login_to_home);
                         getActivity().setTitle("Home");
+
                     } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                         alertDialog.setTitle("Something went wrong!");
