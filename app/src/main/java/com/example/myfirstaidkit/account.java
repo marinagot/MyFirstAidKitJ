@@ -115,6 +115,7 @@ public class account extends Fragment {
                                     alertDialog.setTitle("Successful!");
                                     alertDialog.setMessage("Password changed" );
                                     alertDialog.show();
+                                    popUpCP.dismiss();
                                 }
                                 else {
                                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();

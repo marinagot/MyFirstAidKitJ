@@ -139,7 +139,9 @@ public final class DataBaseOperations {
         String whereClause = String.format("%s=?", UsersDb.PASSWORD);
         final String[] whereArgs = {String.valueOf(password)};
 
-        return db.delete(Tablas.USER,whereClause, whereArgs);
+        int deleted = db.delete(Tablas.USER,whereClause, whereArgs);
+        db.close();
+        return  deleted;
     }
 
     public int deleteMedicine (Medicine medicine){
@@ -148,8 +150,9 @@ public final class DataBaseOperations {
         String whereClause = String.format("%s=?", MedicinesDb.ID);
         final String[] whereArgs = {String.valueOf(medicine.getId())};
 
-        return db.delete(Tablas.MEDICINE,whereClause, whereArgs);
-
+        int deleted = db.delete(Tablas.MEDICINE,whereClause, whereArgs);
+        db.close();
+        return  deleted;
     }
 
     public int deleteTreatment ( Treatment treatment){
@@ -159,7 +162,9 @@ public final class DataBaseOperations {
         String whereClause = String.format("%s=?", TreatmentsDb.ID);
         final String[] whereArgs = {String.valueOf(treatment.getId())};
 
-        return db.delete(Tablas.TREATMENT, whereClause, whereArgs);
+        int deleted = db.delete(Tablas.TREATMENT, whereClause, whereArgs);
+        db.close();
+        return  deleted;
     }
 
 
