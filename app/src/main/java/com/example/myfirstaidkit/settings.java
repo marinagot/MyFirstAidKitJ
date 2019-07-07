@@ -4,9 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioButton;
 
 
 /**
@@ -61,10 +64,42 @@ public class settings extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        final View vSett = inflater.inflate(R.layout.fragment_settings, container, false);
+        Button btnSaSett = vSett.findViewById(R.id.btn_save_settings);
+        RadioButton btnDefault = (RadioButton) vSett.findViewById(R.id.btn_rad_def);
+        if ((btnDefault.isChecked()) == true ){
+            btnSaSett.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().setTheme(R.style.AppTheme);
+                }
+            });
+        }
+        RadioButton btnDark = (RadioButton) vSett.findViewById(R.id.btn_rad_dark);
+        if ((btnDark.isChecked()) == true ){
+            btnSaSett.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().setTheme(R.style.AppThemeDark);
+                }
+            });
+        }
+
+        RadioButton btnLight = (RadioButton) vSett.findViewById(R.id.btn_rad_light);
+        if ((btnLight.isChecked()) == true ){
+            btnSaSett.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().setTheme(R.style.AppTheme);
+
+                }
+            });
+        }
+
+        return vSett;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
