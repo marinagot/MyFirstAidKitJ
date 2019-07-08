@@ -193,6 +193,33 @@ public final class DataBaseOperations {
 
     }
 
+    public List<Treatment> getTreatment_userId(long userId) {
+        SQLiteDatabase db = DataBase.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.TREATMENT, TreatmentsDb.ID_USER);
+
+        String[] selectionArgs = {String.valueOf(userId)};
+        Cursor c = db.rawQuery(sql, selectionArgs);
+
+        List<Treatment> treatments = new ArrayList<>();
+
+        while (c.moveToNext()) {
+            Treatment treatment = new Treatment();
+
+            treatment.setId(c.getInt(0));
+            treatment.setIdUser(c.getInt(1));
+            treatment.setName(c.getString(2));
+
+            treatments.add(treatment);
+
+        }
+        c.close();
+        db.close();
+        return treatments;
+
+    }
+
     public User getUser_Username(String username) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 

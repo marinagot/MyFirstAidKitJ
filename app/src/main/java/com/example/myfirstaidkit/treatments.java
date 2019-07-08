@@ -9,8 +9,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.navigation.Navigation;
+
+import com.example.myfirstaidkit.data.DataBaseOperations;
+import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.Treatment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +43,12 @@ public class treatments extends Fragment {
 
     SharedPreferences prefs;
     SharedPreferences.Editor edit;
+
+    DataBaseOperations us;
+    View viewCA;
+
+    List<Treatment> treatmentList = new ArrayList<>();
+    ArrayAdapter<Treatment> adapter;
 
     public treatments() {
         // Required empty public constructor
@@ -85,7 +100,19 @@ public class treatments extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_treatments, container, false);
+        viewCA = inflater.inflate(R.layout.fragment_treatments, container, false);
+        us = DataBaseOperations.get_Instance(getContext());
+
+        if (us.userIsLogged(prefs))
+            treatmentList = us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId());
+
+        ListView list = viewCA.findViewById(R.id.list_user_treatments);
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
+        list.setAdapter(adapter);
+
+
+
+        return viewCA;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -47,6 +47,9 @@ public class first_aid_kit extends Fragment {
     DataBaseOperations us;
     View viewCA;
 
+    List<Medicine> medicineList = new ArrayList<>();
+    ArrayAdapter<Medicine> adapter;
+
     public first_aid_kit() {
         // Required empty public constructor
     }
@@ -92,9 +95,6 @@ public class first_aid_kit extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
-    List<Medicine> medicineList = new ArrayList<>();
-    ArrayAdapter<Medicine> adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
