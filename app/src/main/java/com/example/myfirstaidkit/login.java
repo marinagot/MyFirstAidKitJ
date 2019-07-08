@@ -99,9 +99,11 @@ public class login extends Fragment {
                         edit.putString("username", username.getText().toString());
 //                        edit.putBoolean("isLogged", true);
                         edit.apply();
-
-                        getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
-//                        Navigation.findNavController(v).navigate(R.id.action_login_to_home);
+                        try {
+                            Navigation.findNavController(v).navigate(R.id.action_login_to_home);
+                        } catch (Exception e){
+                            getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+                        }
                         getActivity().setTitle("Home");
 
                     } else {
