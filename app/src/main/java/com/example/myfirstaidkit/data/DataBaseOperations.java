@@ -185,9 +185,6 @@ public final class DataBaseOperations {
             treatment.setId(c.getInt(0));
             treatment.setName(c.getColumnName(1));
             treatment.setIdUser(c.getInt(2));
-
-
-
         }
         c.close();
         db.close();

@@ -1,6 +1,7 @@
 package com.example.myfirstaidkit;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,8 +9,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.navigation.Navigation;
+
+import com.example.myfirstaidkit.data.DataBaseOperations;
+import com.example.myfirstaidkit.data.Medicine;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -31,6 +40,12 @@ public class first_aid_kit extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
+
+    DataBaseOperations us;
+    View viewCA;
 
     public first_aid_kit() {
         // Required empty public constructor
@@ -78,11 +93,25 @@ public class first_aid_kit extends Fragment {
         }
     }
 
+    List<Medicine> medicineList = new ArrayList<>();
+    ArrayAdapter<Medicine> adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first_aid_kit, container, false);
+        viewCA = inflater.inflate(R.layout.fragment_first_aid_kit, container, false);
+        us = DataBaseOperations.get_Instance(getContext());
+
+        medicineList = us.getMedicine_userId(us.getUser_Username(prefs.getString("username", "")).getId());
+
+        ListView list = viewCA.findViewById(R.id.list_user_medicines);
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);
+        list.setAdapter(adapter);
+
+
+
+        return viewCA;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -97,6 +126,9 @@ public class first_aid_kit extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+
+            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
+            edit = prefs.edit();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

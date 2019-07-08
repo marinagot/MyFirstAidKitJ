@@ -32,6 +32,8 @@ import java.util.List;
 
 import androidx.navigation.Navigation;
 
+import androidx.navigation.Navigation;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -116,7 +118,6 @@ public class treatment_edit extends Fragment {
         }
     }
 
-//    ArrayList<String> listItems = new ArrayList<>();
     ArrayList<Medicine> listItems = new ArrayList<>();
     ArrayAdapter<Medicine> adapter;
     @Override
