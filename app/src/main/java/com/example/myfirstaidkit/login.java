@@ -58,8 +58,8 @@ public class login extends Fragment {
         us = DataBaseOperations.get_Instance(getContext());
 
         //Not logged
-        edit.putBoolean("isLogged", false);
-        edit.apply();
+//        edit.putBoolean("isLogged", false);
+//        edit.apply();
 
         Button btnRegister = v.findViewById(R.id.btn_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -97,11 +97,11 @@ public class login extends Fragment {
 
                     if (sign_in == true) {
                         edit.putString("username", username.getText().toString());
-                        edit.putBoolean("isLogged", true);
+//                        edit.putBoolean("isLogged", true);
                         edit.apply();
 
-//                        getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
-                        Navigation.findNavController(v).navigate(R.id.action_login_to_home);
+                        getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+//                        Navigation.findNavController(v).navigate(R.id.action_login_to_home);
                         getActivity().setTitle("Home");
 
                     } else {

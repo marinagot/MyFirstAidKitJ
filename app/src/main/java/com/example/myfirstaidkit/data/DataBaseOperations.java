@@ -2,6 +2,7 @@ package com.example.myfirstaidkit.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -306,6 +307,13 @@ public final class DataBaseOperations {
         db.close();
         return updated;
 
+    }
+
+    public boolean userIsLogged(SharedPreferences prefs) {
+        return prefs.getString("username", null) != null;
+    }
+    public String getUserLogged (SharedPreferences prefs) {
+        return prefs.getString("username", null);
     }
 }
 

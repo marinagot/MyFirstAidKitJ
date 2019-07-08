@@ -1,5 +1,7 @@
 package com.example.myfirstaidkit;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.myfirstaidkit.data.DataBaseOperations;
 
 
 public class MainActivity extends AppCompatActivity
@@ -26,8 +29,11 @@ public class MainActivity extends AppCompatActivity
         account.OnFragmentInteractionListener,
         create_account.OnFragmentInteractionListener,
         treatment_edit.OnFragmentInteractionListener,
-        medicine_edit.OnFragmentInteractionListener
-        {
+        medicine_edit.OnFragmentInteractionListener {
+
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
+    DataBaseOperations us;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        prefs = getApplicationContext().getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
+        edit = prefs.edit();
+        us = DataBaseOperations.get_Instance(getApplicationContext());
+
+        setTitle("Login");
 
         //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //fab.setOnClickListener(new View.OnClickListener() {
@@ -102,16 +114,26 @@ public class MainActivity extends AppCompatActivity
         Class fragmentClass = null;
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            fragmentClass = settings.class;
-            setTitle(item.getTitle());
-        } else if (id == R.id.action_account) {
-            fragmentClass = account.class;
-            setTitle(item.getTitle());
-        } else if (id == R.id.action_logout) {
+        boolean logged = us.userIsLogged(prefs);
+
+        if (!logged){
             fragmentClass = login.class;
             setTitle("Login");
-        } else return super.onOptionsItemSelected(item);
+        }
+        else{
+            if (id == R.id.action_settings) {
+                fragmentClass = settings.class;
+                setTitle(item.getTitle());
+            } else if (id == R.id.action_account) {
+                fragmentClass = account.class;
+                setTitle(item.getTitle());
+            } else if (id == R.id.action_logout) {
+                edit.remove("username");
+                edit.apply();
+                fragmentClass = login.class;
+                setTitle("Login");
+            } else return super.onOptionsItemSelected(item);
+        }
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -132,7 +154,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -143,16 +164,19 @@ public class MainActivity extends AppCompatActivity
         Class fragmentClass = null;
 
         int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            fragmentClass = home.class;
-
-        } else if (id == R.id.nav_treatments) {
-            fragmentClass = treatments.class;
-
-        } else if (id == R.id.nav_fak) {
-            fragmentClass = first_aid_kit.class;
-
+        boolean logged = us.userIsLogged(prefs);
+        if (!logged){
+            fragmentClass = login.class;
+            setTitle("Login");
+        }
+        else {
+            if (id == R.id.nav_home) {
+                fragmentClass = home.class;
+            } else if (id == R.id.nav_treatments) {
+                fragmentClass = treatments.class;
+            } else if (id == R.id.nav_fak) {
+                fragmentClass = first_aid_kit.class;
+            }
         }
 
         try {
@@ -165,12 +189,16 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
 
-        // Highlight the selected item has been done by NavigationView
-        item.setChecked(true);
-        // Set action bar title
-        setTitle(item.getTitle());
+        item.setChecked(false);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (logged) {
+            // Highlight the selected item has been done by NavigationView
+            item.setChecked(true);
+            // Set action bar title
+            setTitle(item.getTitle());
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
