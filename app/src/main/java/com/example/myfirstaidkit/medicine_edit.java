@@ -1,6 +1,7 @@
 package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 /**
@@ -105,7 +108,7 @@ public class medicine_edit extends Fragment {
         us = DataBaseOperations.get_Instance(getContext());
 
 
-
+        /*
         CalendarView calendar = viewCA.findViewById(R.id.medicine_edit_expire_date);
         calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
@@ -117,6 +120,32 @@ public class medicine_edit extends Fragment {
 
             }
         });
+        */
+        Button btnDate = (Button) viewCA.findViewById(R.id.btn_cale_medicine);
+        final TextView chosDate = (TextView) viewCA.findViewById(R.id.chosen_date);
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                        new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int day) {
+                        try {
+                            month += 1;
+                            med.setExpirationDate(new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year));
+                            chosDate.setText(day + "/" + month + "/" + year);
+                        }
+                        catch (Exception e) { med.setExpirationDate(null);  }
+                    }
+                },year,month,dayOfMonth);
+                datePickerDialog.show();
+            }
+        });
+
 
         Button btnDone = viewCA.findViewById(R.id.btn_create_medicine);
 

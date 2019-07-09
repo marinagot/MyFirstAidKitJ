@@ -1,6 +1,7 @@
 package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -25,8 +27,10 @@ import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
 import com.example.myfirstaidkit.data.User;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -146,7 +150,7 @@ public class treatment_edit extends Fragment {
 
                 alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
 
-                CalendarView calendar = alert.findViewById(R.id.endingDate);
+               /* CalendarView calendar = alert.findViewById(R.id.endingDate);
                 calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
                     public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                         try{
@@ -157,10 +161,35 @@ public class treatment_edit extends Fragment {
 
                     }
                 });
+                */
+                Button btnFinDate = (Button) alert.findViewById(R.id.btn_date_cale);
+                final TextView finalDateField = (TextView) alert.findViewById(R.id.final_date);
+                btnFinDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view){
+                        Calendar calendar = Calendar.getInstance();
+                        int year = calendar.get(Calendar.YEAR);
+                        int month = calendar.get(Calendar.MONTH);
+                        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                                new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int day) {
+                                        try {
+                                            month += 1;
+                                            finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year);
+                                            finalDateField.setText(day + "/" + month + "/" + year);
+                                        } catch (Exception e){ finalDate = null; }
+                                    }
+                                },year,month,dayOfMonth);
+                        datePickerDialog.show();
+                    }
+                });
 
                 listMedicines = alert.findViewById(R.id.list_medicines);
                 period = alert.findViewById(R.id.txt_edit_medicine_num);
-                endDate = alert.findViewById(R.id.medicine_edit_expire_date);
+                endDate = alert.findViewById(R.id.chosen_date);
+                //endDate = alert.findViewById(R.id.medicine_edit_expire_date);
 
                 ArrayAdapter<Medicine> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, medicineList);
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -1,6 +1,7 @@
 package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,12 +21,15 @@ import androidx.navigation.Navigation;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.User;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 
 public class create_account extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     DataBaseOperations us;
-    EditText username, email, birthday, password, confirm_password;
+    EditText username, email,password, confirm_password;
     ImageView avatar;
 
 
@@ -54,7 +59,30 @@ public class create_account extends Fragment {
 
         username = viewCA.findViewById(R.id.txt_username_set);
         email = viewCA.findViewById(R.id.txt_email_set);
-        birthday = viewCA.findViewById(R.id.txt_birth_set);
+
+
+
+        Button btnBirthDate = (Button) viewCA.findViewById(R.id.btn_cale_birthday);
+        final EditText birthday = viewCA.findViewById(R.id.txt_birth_set);
+        btnBirthDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int day) {
+                                    month += 1;
+                                    birthday.setText(day + "/" + month + "/" + year);
+                            }
+                        },year,month,dayOfMonth);
+                datePickerDialog.show();
+            }
+        });
+
         password = viewCA.findViewById(R.id.txt_pwd_set);
         confirm_password = viewCA.findViewById(R.id.txt_pwd_conf_set);
         avatar = viewCA.findViewById(R.id.image_profile_set);

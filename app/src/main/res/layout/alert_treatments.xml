@@ -10,17 +10,14 @@
         android:id="@+id/lbl_edit_medicine_type3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/edit_treatment_lbl_medicine2"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
-        app:layout_constraintVertical_bias="0.045" />
+        app:layout_constraintVertical_bias="0.04" />
 
     <TextView
         android:id="@+id/lbl_edit_medicine_type"
@@ -29,14 +26,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/edit_treatment_lbl_medicine"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.057" />
+        app:layout_constraintTop_toBottomOf="@+id/list_medicines"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/list_medicines"
@@ -58,52 +53,76 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/edit_treatment_lbl_freq"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txt_edit_medicine_num"
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_medicines"
-        app:layout_constraintVertical_bias="0.053" />
+        app:layout_constraintTop_toBottomOf="@+id/list_medicines" />
 
     <EditText
         android:id="@+id/txt_edit_medicine_num"
         android:layout_width="39dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="@string/edit_treatment_txt_num"
         android:inputType="numberDecimal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.207"
+        app:layout_constraintHorizontal_bias="0.213"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_medicines"
-        app:layout_constraintVertical_bias="0.029" />
+        app:layout_constraintTop_toBottomOf="@+id/list_medicines" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/edit_treatment_lbl_freq_unit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.012"
+        app:layout_constraintStart_toEndOf="@+id/txt_edit_medicine_num"
+        app:layout_constraintTop_toBottomOf="@+id/list_medicines" />
+
+    <TextView
+        android:id="@+id/final_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:ems="5"
+        android:text="dd/MM/yyyy"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lbl_edit_medicine_type3"
+        app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
+        app:layout_constraintVertical_bias="0.04" />
+
+
+    <Button
+        android:id="@+id/btn_date_cale"
+        android:layout_width="40dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/edit_treatment_lbl_freq_unit"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:drawableStart="@drawable/ic_calendar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.021"
-        app:layout_constraintStart_toEndOf="@+id/txt_edit_medicine_num"
-        app:layout_constraintTop_toBottomOf="@+id/list_medicines"
-        app:layout_constraintVertical_bias="0.053" />
+        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintStart_toEndOf="@+id/final_date"
+        app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
+        app:layout_constraintVertical_bias="0.016" />
 
-    <CalendarView
+
+    <!--<<CalendarView
         android:id="@+id/endingDate"
         android:layout_width="347dp"
         android:layout_height="318dp"
@@ -112,7 +131,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0" />-->
 
     <!--<EditText-->
         <!--android:id="@+id/medicine_edit_expire_date"-->

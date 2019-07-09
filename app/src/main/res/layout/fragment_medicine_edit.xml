@@ -89,7 +89,7 @@
         app:layout_constraintHorizontal_bias="0.108"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
-        app:layout_constraintVertical_bias="0.015" />
+        app:layout_constraintVertical_bias="0.049" />
 
     <Button
         android:id="@+id/btn_create_medicine"
@@ -106,9 +106,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.879"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicine_edit_expire_date" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_cale_medicine" />
 
-    <CalendarView
+    <!---<CalendarView
         android:id="@+id/medicine_edit_expire_date"
         android:layout_width="342dp"
         android:layout_height="304dp"
@@ -120,6 +120,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type2"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0" />-->
+
+    <TextView
+        android:id="@+id/chosen_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="dd/MM/yyyy"
+        android:textAlignment="center"
+        android:ems="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.059"
+        app:layout_constraintStart_toEndOf="@+id/lbl_edit_medicine_type2"
+        app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
+        app:layout_constraintVertical_bias="0.049" />
+
+
+    <Button
+        android:id="@+id/btn_cale_medicine"
+        android:layout_width="40dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:drawableStart="@drawable/ic_calendar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toEndOf="@+id/chosen_date"
+        app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
+        app:layout_constraintVertical_bias="0.026" />
+
+
 
 </android.support.constraint.ConstraintLayout>
