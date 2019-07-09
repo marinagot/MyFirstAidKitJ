@@ -107,20 +107,6 @@ public class medicine_edit extends Fragment {
 
         us = DataBaseOperations.get_Instance(getContext());
 
-
-        /*
-        CalendarView calendar = viewCA.findViewById(R.id.medicine_edit_expire_date);
-        calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                try{
-                    month += 1;
-                    med.setExpirationDate(new SimpleDateFormat("dd/MM/yyyy").parse(dayOfMonth + "/" + month + "/" + year));
-                }
-                catch(Exception e){ med.setExpirationDate(null); }
-
-            }
-        });
-        */
         Button btnDate = (Button) viewCA.findViewById(R.id.btn_cale_medicine);
         final TextView chosDate = (TextView) viewCA.findViewById(R.id.chosen_date);
         btnDate.setOnClickListener(new View.OnClickListener() {

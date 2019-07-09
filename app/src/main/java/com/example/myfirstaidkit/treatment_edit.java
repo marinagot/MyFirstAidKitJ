@@ -150,18 +150,6 @@ public class treatment_edit extends Fragment {
 
                 alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
 
-               /* CalendarView calendar = alert.findViewById(R.id.endingDate);
-                calendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
-                    public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                        try{
-                            month += 1;
-                            finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(dayOfMonth + "/" + month + "/" + year);
-                        }
-                        catch(Exception e){ finalDate = null; }
-
-                    }
-                });
-                */
                 Button btnFinDate = (Button) alert.findViewById(R.id.btn_date_cale);
                 final TextView finalDateField = (TextView) alert.findViewById(R.id.final_date);
                 btnFinDate.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +177,6 @@ public class treatment_edit extends Fragment {
                 listMedicines = alert.findViewById(R.id.list_medicines);
                 period = alert.findViewById(R.id.txt_edit_medicine_num);
                 endDate = alert.findViewById(R.id.chosen_date);
-                //endDate = alert.findViewById(R.id.medicine_edit_expire_date);
 
                 ArrayAdapter<Medicine> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, medicineList);
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
