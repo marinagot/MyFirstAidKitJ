@@ -1,12 +1,16 @@
 package com.example.myfirstaidkit;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.myfirstaidkit.data.DataBaseOperations;
 
 
 /**
@@ -28,6 +32,12 @@ public class home extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    DataBaseOperations us;
+
+    //Preferencias de la aplicación
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
 
     public home() {
         // Required empty public constructor
@@ -64,7 +74,12 @@ public class home extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View vlogin = inflater.inflate(R.layout.fragment_home, container, false);
+        TextView homeUser = (TextView) vlogin.findViewById(R.id.txt_user);
+        us = DataBaseOperations.get_Instance(getContext());
+        String user = prefs.getString("username",null);
+        homeUser.setText(us.getUser_Username(user).getUsername());
+        return vlogin;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -79,6 +94,8 @@ public class home extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
+            edit = prefs.edit();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
