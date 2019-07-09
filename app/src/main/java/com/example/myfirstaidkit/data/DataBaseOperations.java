@@ -100,6 +100,7 @@ public final class DataBaseOperations {
 
         return idMed;
     }
+
     public long insertRelation(MedTretRel relation){
         SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -132,7 +133,6 @@ public final class DataBaseOperations {
 
         return idTreatment;
     }
-
 
     public int deleteUser(String password){
         SQLiteDatabase db = DataBase.getWritableDatabase();
@@ -167,8 +167,6 @@ public final class DataBaseOperations {
         db.close();
         return  deleted;
     }
-
-
 
     public Treatment getTreatment_treatmentName(String treatmentName) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
@@ -320,6 +318,44 @@ public final class DataBaseOperations {
 
     }
 
+    public List<MedTretRel> getRelations_treatmentId(long treatmentId) {
+        SQLiteDatabase db = DataBase.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.RELATION_MED_TREATMENT, MedTretRelDb.ID_TRAT);
+
+        String[] selectionArgs = {String.valueOf(treatmentId)};
+        Cursor c = db.rawQuery(sql, selectionArgs);
+
+        List<MedTretRel> relations = new ArrayList<>();
+
+        while (c.moveToNext()) {
+            MedTretRel relation = new MedTretRel();
+
+            relation.setIdTreatment(c.getLong(1));
+            relation.setIdMedicine(c.getLong(2));
+            relation.setFrequency(c.getInt(3));
+
+            try {
+                Date initialDate = new SimpleDateFormat("yyyy-MM-dd HH:ms:ss").parse(c.getString(4));
+                relation.setInitialDate(initialDate);
+            } catch (ParseException e) {
+                relation.setInitialDate(null);
+            }
+            try {
+                Date finalDate = new SimpleDateFormat("yyyy-MM-dd HH:ms:ss").parse(c.getString(5));
+                relation.setFinalDate(finalDate);
+            } catch (ParseException e) {
+                relation.setFinalDate(null);
+            }
+
+            relations.add(relation);
+
+        }
+        c.close();
+        db.close();
+        return relations;
+    }
 
     public int updateUserPassword(String old_password, String new_password){
         SQLiteDatabase db = DataBase.getWritableDatabase();
@@ -339,6 +375,7 @@ public final class DataBaseOperations {
     public boolean userIsLogged(SharedPreferences prefs) {
         return prefs.getString("username", null) != null;
     }
+
     public String getUserLogged (SharedPreferences prefs) {
         return prefs.getString("username", null);
     }

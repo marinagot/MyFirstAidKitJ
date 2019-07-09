@@ -68,9 +68,11 @@ public class login extends Fragment {
             public void onClick(View v) {
                 // Crea el nuevo fragmento y la transacción.
 
-                //getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
-                //A veces peta
-                Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
+                try {
+                    Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
+                } catch (Exception e){
+                    getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
+                }
                 getActivity().setTitle("Create Account");
             }
         });

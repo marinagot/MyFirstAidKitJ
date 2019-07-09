@@ -5,20 +5,25 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.navigation.Navigation;
 
 import com.example.myfirstaidkit.data.DataBaseOperations;
+import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,16 +108,80 @@ public class treatments extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_treatments, container, false);
         us = DataBaseOperations.get_Instance(getContext());
 
+        TabLayout tab = viewCA.findViewById(R.id.tabTreatments);
+
+        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                if (us.userIsLogged(prefs))
+                    if (tab.getText().equals("Active")) {
+                        treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId()));
+                    }
+                    else if (tab.getText().equals("Ended")){
+                        treatmentList = getEndedTreatments(us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId()));
+                    }
+                    else {
+                        treatmentList = us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId());
+                        Collections.reverse(treatmentList);
+                    }
+
+                ListView list = viewCA.findViewById(R.id.list_user_treatments);
+                adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
+                list.setAdapter(adapter);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         if (us.userIsLogged(prefs))
-            treatmentList = us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId());
+            treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId()));
 
         ListView list = viewCA.findViewById(R.id.list_user_treatments);
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
         list.setAdapter(adapter);
 
 
-
         return viewCA;
+    }
+
+    public List<Treatment> getActiveTreatments(List<Treatment> input) {
+        List<Treatment> resp = new ArrayList<>();
+        for (Treatment t : input) {
+            if (getEndDate(us.getRelations_treatmentId(t.getId())).getTime() >= new Date().getTime()) {
+                resp.add(t);
+            }
+        }
+        Collections.reverse(resp);
+        return resp;
+    }
+
+    public List<Treatment> getEndedTreatments(List<Treatment> input) {
+        List<Treatment> resp = new ArrayList<>();
+        for (Treatment t : input) {
+            if (getEndDate(us.getRelations_treatmentId(t.getId())).getTime() < new Date().getTime()) {
+                resp.add(t);
+            }
+        }
+        Collections.reverse(resp);
+        return resp;
+    }
+
+    public Date getEndDate(List<MedTretRel> relations) {
+        Date lastDate = relations.get(0).getFinalDate();
+        for (MedTretRel r : relations) {
+            if (lastDate.getTime() < r.getFinalDate().getTime())
+                lastDate = r.getFinalDate();
+        }
+        return lastDate;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
