@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,8 +59,7 @@ public class login extends Fragment {
         us = DataBaseOperations.get_Instance(getContext());
 
         //Not logged
-//        edit.putBoolean("isLogged", false);
-//        edit.apply();
+        prefs.edit().putBoolean("Islogin", false).commit();
 
         Button btnRegister = v.findViewById(R.id.btn_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -99,8 +99,8 @@ public class login extends Fragment {
 
                     if (sign_in == true) {
                         edit.putString("username", username.getText().toString());
-//                        edit.putBoolean("isLogged", true);
-                        edit.apply();
+                        prefs.edit().putBoolean("Islogin", true).commit();
+
                         try {
                             Navigation.findNavController(v).navigate(R.id.action_login_to_home);
                         } catch (Exception e){
