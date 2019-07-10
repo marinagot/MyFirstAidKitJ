@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -60,10 +62,12 @@ public class treatments extends Fragment {
     SharedPreferences.Editor edit;
 
     DataBaseOperations us;
-    View viewCA, alert;
+    View viewCA, alert, alert2;
 
     List<Treatment> treatmentList = new ArrayList<>();
     ArrayAdapter<Treatment> adapter;
+    ArrayAdapter<Medicine> adapterMed;
+
 
     public treatments() {
         // Required empty public constructor
@@ -112,7 +116,7 @@ public class treatments extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_treatments, container, false);
@@ -162,14 +166,53 @@ public class treatments extends Fragment {
                 //Cambiar alert_treatments por el layout bueno
 
                 Treatment t = treatmentList.get(position);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                final LayoutInflater inflaterl = getActivity().getLayoutInflater();
+                alert = inflaterl.inflate(R.layout.fragment_treatment_medicine_list_pop_up, null);
+                final ListView lv_med = alert.findViewById(R.id.list_treat_medicines);
+                final List<Medicine> list_med = new ArrayList<>();
+                List<MedTretRel> listrel = new ArrayList<>();
+                listrel = us.getRelations_treatmentId(t.getId());
+                Iterator<MedTretRel> it = listrel.iterator();
+                while (it.hasNext()) {
+                    MedTretRel mtr = it.next();
+                    final Date initDate = mtr.getInitialDate();
+                    final Date FinalDate = mtr.getInitialDate();
+                    int freq = mtr.getFrequency();
+                    long intmed = mtr.getIdMedicine();
 
-                alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
+                    Medicine m = us.getMedicine_medicineId(intmed);
+                    list_med.add(m);
+                }
+                adapterMed = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, list_med);
+                lv_med.setAdapter(adapterMed);
 
-                new AlertDialog.Builder(getContext()).setView(alert)
-                        .setTitle(t.getName())
+                /*lv_med.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        Medicine m = list_med.get(position);
+                        final AlertDialog.Builder builderm = new AlertDialog.Builder(getActivity());
+                        final LayoutInflater inflaterm = getActivity().getLayoutInflater();
+                        alert2 = inflaterm.inflate(R.layout.fragment_treatment_medicine_info, null);
+                        TextView dateIn = alert2.findViewById(R.id.lbl_edit_medicine_type8);
+                        TextView dateEnd = alert2.findViewById(R.id.lbl_edit_medicine_type8);
+                        TextView frecuency = alert2.findViewById(R.id.lbl_edit_medicine_type8);
+                        dateIn.setText(new SimpleDateFormat("dd/MM/yyyy").parse(initDate));
+                        frecuency.setText(freq);
+                        builderm.setView(alert2);
+                        builderm.setTitle(m.getName())
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                }).show();
+                    }
+                    });*/
+                builder.setView(alert);
+                builder.setTitle(t.getName())
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
+                                dialog.cancel();
                             }
                         }).show();
             }
