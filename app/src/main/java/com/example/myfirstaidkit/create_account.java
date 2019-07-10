@@ -116,9 +116,14 @@ public class create_account extends Fragment {
                     alertDialog.setTitle("Successful!");
                     alertDialog.setMessage("Account for " + username.getText().toString() + " created" );
                     alertDialog.show();
+
+                    try {
                     Navigation.findNavController(v).navigate(R.id.action_create_account_to_login);
+                    } catch (Exception e){
+                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
+                    }
+
                     getActivity().setTitle("Login");
-                    //getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
                 }
                 else{
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
