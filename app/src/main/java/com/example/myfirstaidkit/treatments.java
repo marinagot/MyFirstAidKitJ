@@ -68,6 +68,9 @@ public class treatments extends Fragment {
     ArrayAdapter<Treatment> adapter;
     ArrayAdapter<Medicine> adapterMed;
 
+    List<Medicine> list_med = new ArrayList<>();
+    List<MedTretRel> listrel = new ArrayList<>();
+
 
     public treatments() {
         // Required empty public constructor
@@ -162,56 +165,53 @@ public class treatments extends Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                // When clicked, show a toast with the TextView text
-                //Cambiar alert_treatments por el layout bueno
 
-                Treatment t = treatmentList.get(position);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                final LayoutInflater inflaterl = getActivity().getLayoutInflater();
+                final Treatment t = treatmentList.get(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflaterl = getActivity().getLayoutInflater();
                 alert = inflaterl.inflate(R.layout.fragment_treatment_medicine_list_pop_up, null);
-                final ListView lv_med = alert.findViewById(R.id.list_treat_medicines);
-                final List<Medicine> list_med = new ArrayList<>();
-                List<MedTretRel> listrel = new ArrayList<>();
+                ListView lv_med = alert.findViewById(R.id.list_treat_medicines);
                 listrel = us.getRelations_treatmentId(t.getId());
-                Iterator<MedTretRel> it = listrel.iterator();
-                while (it.hasNext()) {
-                    MedTretRel mtr = it.next();
-                    final Date initDate = mtr.getInitialDate();
-                    final Date FinalDate = mtr.getInitialDate();
-                    int freq = mtr.getFrequency();
-                    long intmed = mtr.getIdMedicine();
-
-                    Medicine m = us.getMedicine_medicineId(intmed);
-                    list_med.add(m);
+                for (MedTretRel mtr : listrel ) {
+                    list_med.add(us.getMedicine_medicineId(mtr.getIdMedicine()));
                 }
+
                 adapterMed = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, list_med);
                 lv_med.setAdapter(adapterMed);
 
-                /*lv_med.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                lv_med.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
                         Medicine m = list_med.get(position);
-                        final AlertDialog.Builder builderm = new AlertDialog.Builder(getActivity());
-                        final LayoutInflater inflaterm = getActivity().getLayoutInflater();
-                        alert2 = inflaterm.inflate(R.layout.fragment_treatment_medicine_info, null);
-                        TextView dateIn = alert2.findViewById(R.id.lbl_edit_medicine_type8);
-                        TextView dateEnd = alert2.findViewById(R.id.lbl_edit_medicine_type8);
-                        TextView frecuency = alert2.findViewById(R.id.lbl_edit_medicine_type8);
-                        dateIn.setText(new SimpleDateFormat("dd/MM/yyyy").parse(initDate));
-                        frecuency.setText(freq);
-                        builderm.setView(alert2);
-                        builderm.setTitle(m.getName())
+                        MedTretRel relation = listrel.get(position);
+                        AlertDialog.Builder builderM = new AlertDialog.Builder(getActivity());
+                        LayoutInflater inflaterM = getActivity().getLayoutInflater();
+                        alert2 = inflaterM.inflate(R.layout.medicine_treatment_popup, null);
+
+                        TextView title = alert2.findViewById(R.id.medicineTitlePopup);
+                        TextView dateIn = alert2.findViewById(R.id.medicineStartDatePopup);
+                        TextView dateEnd = alert2.findViewById(R.id.medicineEndDatePopup);
+                        TextView frequency = alert2.findViewById(R.id.medicineFrequencyPopup);
+
+                        title.setText(m.getName());
+                        dateIn.setText(new SimpleDateFormat("dd/MM/yyyy").format(relation.getInitialDate()));
+                        dateEnd.setText(new SimpleDateFormat("dd/MM/yyyy").format(relation.getFinalDate()));
+                        frequency.setText(relation.getFrequency().toString());
+
+                        builderM.setView(alert2);
+                        builderM.setTitle(t.getName())
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
                                 }).show();
                     }
-                    });*/
+                    });
                 builder.setView(alert);
                 builder.setTitle(t.getName())
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                list_med = new ArrayList<>();
                                 dialog.cancel();
                             }
                         }).show();

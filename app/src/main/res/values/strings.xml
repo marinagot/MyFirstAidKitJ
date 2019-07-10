@@ -41,6 +41,12 @@
     <string name="btn_del">Delete</string>
     <string name="btn_cancel">Cancel</string>
 
+    <string name="startDate">Start date</string>
+    <string name="endDate">End date</string>
+    <string name="doses1">One dose each</string>
+    <string name="doses2">hours</string>
+    <string name="medicinesInTreatment">List of medicines</string>
+
     <string name="acc_chpwd">Change password</string>
     <string name="acc_del">Delete account</string>
     <string name="acc_logout">Logout</string>
