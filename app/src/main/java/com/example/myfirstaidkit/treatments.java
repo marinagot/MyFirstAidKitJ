@@ -1,6 +1,9 @@
 package com.example.myfirstaidkit;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,9 +13,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.navigation.Navigation;
 
@@ -21,7 +29,9 @@ import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +60,7 @@ public class treatments extends Fragment {
     SharedPreferences.Editor edit;
 
     DataBaseOperations us;
-    View viewCA;
+    View viewCA, alert;
 
     List<Treatment> treatmentList = new ArrayList<>();
     ArrayAdapter<Treatment> adapter;
@@ -109,7 +119,6 @@ public class treatments extends Fragment {
         us = DataBaseOperations.get_Instance(getContext());
 
         TabLayout tab = viewCA.findViewById(R.id.tabTreatments);
-
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -133,22 +142,41 @@ public class treatments extends Fragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
+
 
         if (us.userIsLogged(prefs))
             treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId()));
 
         ListView list = viewCA.findViewById(R.id.list_user_treatments);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // When clicked, show a toast with the TextView text
+                //Cambiar alert_treatments por el layout bueno
+
+                Treatment t = treatmentList.get(position);
+
+                alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
+
+                new AlertDialog.Builder(getContext()).setView(alert)
+                        .setTitle(t.getName())
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        }).show();
+            }
+        });
+
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
         list.setAdapter(adapter);
-
 
         return viewCA;
     }
