@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.myfirstaidkit.data.DataBase.Tablas;
 import com.example.myfirstaidkit.data.FirstAidKit.MedicinesDb;
@@ -279,6 +280,42 @@ public final class DataBaseOperations {
         return medicine;
     }
 
+    public Medicine getMedicine_medicineId(long medicineId) {
+        SQLiteDatabase db = DataBase.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.MEDICINE, "_id");
+        String param = Long.toString(medicineId);
+        String[] selectionArgs = {param};
+
+        Cursor c = db.rawQuery(sql, selectionArgs);
+
+        Medicine medicine = new Medicine();
+
+        if (c.moveToFirst()) {
+
+            medicine.setId(c.getLong(0));
+            medicine.setName(c.getString(1));
+            medicine.setIdUser(c.getInt(2));
+            medicine.setType(c.getString(3));
+
+            medicine.setDoseNumber(c.getInt(5));
+
+
+            try {
+                Date expirationDate = new SimpleDateFormat("dd/MM/yyyy").parse(c.getString(4));
+                medicine.setExpirationDate(expirationDate);
+
+            } catch (ParseException e) {
+                medicine.setExpirationDate(null);
+
+            }
+        }
+        c.close();
+        db.close();
+        return medicine;
+    }
+
     public List<Medicine> getMedicine_userId(long userId) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
@@ -325,6 +362,7 @@ public final class DataBaseOperations {
                 Tablas.RELATION_MED_TREATMENT, MedTretRelDb.ID_TRAT);
 
         String[] selectionArgs = {String.valueOf(treatmentId)};
+        Log.d("Valor", String.valueOf(selectionArgs));
         Cursor c = db.rawQuery(sql, selectionArgs);
 
         List<MedTretRel> relations = new ArrayList<>();

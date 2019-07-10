@@ -27,16 +27,12 @@ import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
 import com.example.myfirstaidkit.data.User;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import androidx.navigation.Navigation;
-
-import androidx.navigation.Navigation;
 
 
 /**
