@@ -1,23 +1,38 @@
 package com.example.myfirstaidkit.data;
 
+import android.arch.persistence.room.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.Volley;
 import com.example.myfirstaidkit.data.DataBase.Tablas;
 import com.example.myfirstaidkit.data.FirstAidKit.MedicinesDb;
 import com.example.myfirstaidkit.data.FirstAidKit.TreatmentsDb;
 import com.example.myfirstaidkit.data.FirstAidKit.UsersDb;
 import com.example.myfirstaidkit.data.FirstAidKit.MedTretRelDb;
+import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -28,17 +43,56 @@ import java.util.List;
 public final class DataBaseOperations {
 
     private static DataBase DataBase;
+    private static RequestQueue queue;
+    private static Context contexto;
+
+    Gson gson = new Gson();
+
+    private static String base_url ="http://192.168.1.46:8080";
 
     public static  DataBaseOperations instance = new  DataBaseOperations();
 
-    public  DataBaseOperations() {
-    }
-
     public static  DataBaseOperations get_Instance(Context context) {
+        contexto = context;
         if (DataBase == null) {
             DataBase = new DataBase(context);
         }
+        if (queue == null) {
+            queue = Volley.newRequestQueue(context);
+        }
         return instance;
+    }
+
+
+    /* Http operations */
+
+    static JSONObject callApi(String url, int type) {
+        return callApi(url, type, null);
+    }
+
+    static JSONObject callApi(String url, int type, JSONObject body) {
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (type, base_url + url, body, future, future);
+
+        // Add the request to the RequestQueue.
+        if (queue != null) {
+            queue.add(jsonObjectRequest);
+        }
+
+        try {
+            JSONObject response = future.get(5, TimeUnit.SECONDS); // this will block
+            return response;
+        } catch (InterruptedException e) {
+            // exception handling
+        } catch (ExecutionException e) {
+            int i = 0;
+            // exception handling
+        } catch (TimeoutException e) {
+            // exception handling
+        }
+        return null;
     }
 
     /* Aqui se hacen los CRUD : metodos Create, Read, Update y Delete de la base de datos */
@@ -46,24 +100,18 @@ public final class DataBaseOperations {
 
     /* Por ejemplo, obtener la informacion de un medicamento, dado su id*/
 
-    public boolean loginData(String username, String password) {
-        SQLiteDatabase db = DataBase.getReadableDatabase();
-        boolean exist = false;
-        Cursor c = db.rawQuery("SELECT USERNAME,PASSWORD FROM " +
-                Tablas.USER + " WHERE " + "USERNAME='" +
-                username + "' AND PASSWORD='" + password + "'", null);
-        if (c.moveToFirst() == true) {
+    public User loginData(String username, String password) {
+        // Primero llama al back
+        final JSONObject data = new JSONObject();
 
-            String un = c.getString(0);
-            String pw = c.getString(1);
+        try {
+            data.put("email", username);
+            data.put("password", password);
+            //Falla
+            return gson.fromJson(callApi("/users/login", Request.Method.POST, data).toString(), User.class);
+        } catch (Exception e) {}
 
-            if (username.equals(un) && password.equals(pw)) {
-                exist = true;
-            }
-        }
-        c.close();
-        db.close();
-        return exist;
+        return null;
     }
 
     public long insertUser(User user){
@@ -219,30 +267,16 @@ public final class DataBaseOperations {
 
     }
 
-    public User getUser_Username(String username) {
-        SQLiteDatabase db = DataBase.getReadableDatabase();
+    public User getUser_Email(String email) {
+        final JSONObject data = new JSONObject();
 
-        String sql = String.format("SELECT * FROM %s WHERE %s=?",
-                Tablas.USER, UsersDb.USERNAME);
+        try {
+            data.put("email", email);
+            User response = gson.fromJson(callApi("/user/?email=" + email, Request.Method.GET).toString(), User.class);
+            return response;
+        } catch (Exception e) {}
 
-        String[] selectionArgs = {username};
-        Cursor c = db.rawQuery(sql, selectionArgs);
-
-        User user = new User();
-
-        if (c.moveToFirst()) {
-
-            user.setId(c.getInt(0));
-            user.setUsername(c.getString(1));
-            user.setEmail(c.getString(2));
-            user.setPassword(c.getString(3));
-            user.setBirthday(c.getString(4));
-        }
-        else return null;
-        c.close();
-        db.close();
-        return user;
-
+        return null;
     }
 
     public Medicine getMedicine_medicineName(String medicineName) {

@@ -132,13 +132,13 @@ public class treatments extends Fragment {
 
                 if (us.userIsLogged(prefs))
                     if (tab.getText().equals("Active")) {
-                        treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId()));
+                        treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Email(us.getUserLogged(prefs)).getId()));
                     }
                     else if (tab.getText().equals("Ended")){
-                        treatmentList = getEndedTreatments(us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId()));
+                        treatmentList = getEndedTreatments(us.getTreatment_userId(us.getUser_Email(us.getUserLogged(prefs)).getId()));
                     }
                     else {
-                        treatmentList = us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId());
+                        treatmentList = us.getTreatment_userId(us.getUser_Email(us.getUserLogged(prefs)).getId());
                         Collections.reverse(treatmentList);
                     }
 
@@ -158,7 +158,7 @@ public class treatments extends Fragment {
 
 
         if (us.userIsLogged(prefs))
-            treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Username(us.getUserLogged(prefs)).getId()));
+            treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Email(us.getUserLogged(prefs)).getId()));
 
         ListView list = viewCA.findViewById(R.id.list_user_treatments);
 

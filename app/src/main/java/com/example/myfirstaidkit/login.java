@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,8 +17,14 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
+import com.android.volley.Request;
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.create_account;
+import com.example.myfirstaidkit.data.User;
+
+import org.json.JSONObject;
 
 
 /**
@@ -32,10 +39,14 @@ public class login extends Fragment {
 
     EditText username,password;
     DataBaseOperations us;
+    ApiCallThread apiCallThread;
+
 
     //Preferencias de la aplicación
     SharedPreferences prefs;
     SharedPreferences.Editor edit;
+
+    /*boolean sign_in;*/
 
     public login() {
         // Required empty public constructor
@@ -52,8 +63,8 @@ public class login extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        username = (EditText) v.findViewById(R.id.txt_username);
-        password = (EditText) v.findViewById(R.id.txt_pwd);
+        username = v.findViewById(R.id.txt_username);
+        password = v.findViewById(R.id.txt_pwd);
 
         us = DataBaseOperations.get_Instance(getContext());
 
@@ -95,30 +106,42 @@ public class login extends Fragment {
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else {
-                    boolean sign_in = us.loginData(username.getText().toString(), password.getText().toString());
-
-                    if (sign_in == true) {
-                        edit.putString("username", username.getText().toString());
-//                        edit.putBoolean("isLogged", true);
-                        edit.apply();
-                        try {
-                            Navigation.findNavController(v).navigate(R.id.action_login_to_home);
-                        } catch (Exception e){
-                            getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+                    //Llamamos al back en un nuevo hilo
+                    new ApiCallThread(new AsyncResponse<User>(){
+                        @Override
+                        public User apiCall(Object... params) {
+                            return us.loginData((String) params[1], (String) params[2]);
                         }
-                        getActivity().setTitle("Home");
 
-                    } else {
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                        alertDialog.setTitle("Something went wrong!");
-                        alertDialog.setMessage("The username or the password, or both, are incorrect, please try again");
-                        alertDialog.show();
-                        int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                        TextView tv = (TextView) alertDialog.findViewById(textViewId);
-                        tv.setTextColor(Color.RED);
-                        TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
-                        textViewMessage.setTextColor(Color.RED);
-                    }
+                        @Override
+                        public void processFinish(View v, User result){
+                            if (result != null) {
+                                edit.putString("username", result.getUsername());
+                                edit.putString("email", result.getEmail());
+//                        edit.putBoolean("isLogged", true);
+                                edit.apply();
+                                try {
+                                    Navigation.findNavController(v).navigate(R.id.action_login_to_home);
+                                } catch (Exception e){
+                                    getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
+                                }
+                                getActivity().setTitle("Home");
+
+                            } else {
+                                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                                alertDialog.setTitle("Something went wrong!");
+                                alertDialog.setMessage("The username or the password, or both, are incorrect, please try again");
+                                alertDialog.show();
+                                int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+                                TextView tv = alertDialog.findViewById(textViewId);
+                                tv.setTextColor(Color.RED);
+                                TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+                                textViewMessage.setTextColor(Color.RED);
+                            }
+                        }
+                    }).execute(v, username.getText().toString(), password.getText().toString());
+
+                    /*new loginThread().execute(v, username.getText().toString(), password.getText().toString());*/
                 }
 
 

@@ -1,8 +1,11 @@
 package com.example.myfirstaidkit;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 
 
@@ -75,10 +82,14 @@ public class home extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View vlogin = inflater.inflate(R.layout.fragment_home, container, false);
-        TextView homeUser = (TextView) vlogin.findViewById(R.id.txt_user);
         us = DataBaseOperations.get_Instance(getContext());
-        String user = prefs.getString("username",null);
-        homeUser.setText(us.getUser_Username(user).getUsername());
+
+
+        String username = prefs.getString("username",null);
+
+        TextView homeUser = vlogin.findViewById(R.id.txt_user);
+        homeUser.setText(username);
+
         return vlogin;
     }
 
@@ -122,5 +133,22 @@ public class home extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class loginThread extends AsyncTask<Object, Void, String> {
+
+        private View v;
+        protected String doInBackground(Object... params) {
+            // Calculate and return retulst
+            v = (View) params[0];
+            return us.getUser_Email((String) params[1]).getUsername();
+        }
+
+
+        protected void onPostExecute(String result) {
+            // This is executed in main Thread, use the result
+            TextView homeUser = v.findViewById(R.id.txt_user);
+            homeUser.setText(result);
+        }
     }
 }

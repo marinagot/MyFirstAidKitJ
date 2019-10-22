@@ -166,7 +166,7 @@ public class medicine_edit extends Fragment {
 
                     if (user != null) {
                         //Llamas para obtener el userId
-                        med.setIdUser(us.getUser_Username(user).getId());
+                        med.setIdUser(us.getUser_Email(user).getId());
 
                         us.insertMedicine(med);
 

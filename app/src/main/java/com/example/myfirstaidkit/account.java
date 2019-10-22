@@ -108,7 +108,7 @@ public class account extends Fragment {
 
                         String user = prefs.getString("username",null);
                         if (user != null){
-                            if ((us.getUser_Username(user).getPassword()).equals(old_password.getText().toString())) {
+                            if ((us.getUser_Email(user).getPassword()).equals(old_password.getText().toString())) {
                                 if ((new_password.getText().toString()).equals(confirm_password.getText().toString())) {
                                     us.updateUserPassword(old_password.getText().toString(), new_password.getText().toString());
                                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
@@ -184,7 +184,7 @@ public class account extends Fragment {
 
                 String user = prefs.getString("username",null);
                 if (user != null){
-                    if ((us.getUser_Username(user).getPassword()).equals(del_password.getText().toString())) {
+                    if ((us.getUser_Email(user).getPassword()).equals(del_password.getText().toString())) {
 
                         us.deleteUser(del_password.getText().toString());
                         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();

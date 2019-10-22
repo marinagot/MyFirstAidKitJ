@@ -130,7 +130,7 @@ public class treatment_edit extends Fragment {
 
         medicineList = new ArrayList<>();
         //Rellenar con campos de base de datos del kit del usuario
-        User user = us.getUser_Username(prefs.getString("username",""));
+        User user = us.getUser_Email(prefs.getString("username",""));
         if (user != null)
             medicineList = us.getMedicine_userId(user.getId());
 
@@ -215,7 +215,7 @@ public class treatment_edit extends Fragment {
                 String user = prefs.getString("username", null);
 
                 if (user != null) {
-                    treatment.setIdUser(us.getUser_Username(user).getId());
+                    treatment.setIdUser(us.getUser_Email(user).getId());
 
                     if (treatment.getName().equals("") || relations.isEmpty()) {
                         //Display Message

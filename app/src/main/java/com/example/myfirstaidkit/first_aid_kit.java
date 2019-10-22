@@ -104,7 +104,7 @@ public class first_aid_kit extends Fragment {
         us = DataBaseOperations.get_Instance(getContext());
 
         if (us.userIsLogged(prefs))
-            medicineList = us.getMedicine_userId(us.getUser_Username(us.getUserLogged(prefs)).getId());
+            medicineList = us.getMedicine_userId(us.getUser_Email(us.getUserLogged(prefs)).getId());
 
         ListView list = viewCA.findViewById(R.id.list_user_medicines);
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);
