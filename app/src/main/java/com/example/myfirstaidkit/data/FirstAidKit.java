@@ -13,8 +13,6 @@ public class FirstAidKit{
         String ID = "id";
         String USERNAME = "username";
         String EMAIL = "email";
-        String BIRTHDAY = "birthday";
-        String AVATAR = "avatar";
         String PASSWORD = "password";
     }
 
@@ -23,9 +21,6 @@ public class FirstAidKit{
         String ID = "id";
         String NAME = "name";
         String ID_USER = "id_user";
-        String FREQUENCY = "frequency";
-        String INITIALDATE = "initialDate";
-        String FINALDATE = "finalDate";
     }
 
     interface ColumnMedicine {

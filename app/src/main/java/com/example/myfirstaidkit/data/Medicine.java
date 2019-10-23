@@ -7,9 +7,9 @@ import java.util.Date;
 @Entity(primaryKeys = {"id"})
 public class Medicine {
 
-    private long id;
+    private String id;
     private String name;
-    private long idUser;
+    private String idUser;
     private String type;
     private Integer doseNumber;
     private Date expirationDate;
@@ -18,7 +18,7 @@ public class Medicine {
 
     }
 
-    public Medicine(long id, String name, long idUser, String type, Integer doseNumber, Date expirationDate) {
+    public Medicine(String id, String name, String idUser, String type, Integer doseNumber, Date expirationDate) {
         this.id = id;
         this.name = name;
         this.idUser = idUser;
@@ -27,11 +27,11 @@ public class Medicine {
         this.expirationDate = expirationDate;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -43,11 +43,11 @@ public class Medicine {
         this.name = name;
     }
 
-    public long getIdUser() {
+    public String getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(long idUser) {
+    public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
 

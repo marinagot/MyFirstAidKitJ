@@ -7,8 +7,8 @@ import java.util.Date;
 @Entity(primaryKeys = {"id"})
 public class Treatment{
 
-    private long id;
-    private long idUser;
+    private String id;
+    private String idUser;
     private String name;
 
 
@@ -16,25 +16,25 @@ public class Treatment{
 
     }
 
-    public Treatment(long id, long idUser, String name) {
+    public Treatment(String id, String idUser, String name) {
         this.id = id;
         this.idUser = idUser;
         this.name = name;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getIdUser() {
+    public String getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(long idUser) {
+    public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
 

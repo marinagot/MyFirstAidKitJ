@@ -108,14 +108,18 @@ public final class DataBaseOperations {
             data.put("email", username);
             data.put("password", password);
             //Falla
-            return gson.fromJson(callApi("/users/login", Request.Method.POST, data).toString(), User.class);
-        } catch (Exception e) {}
+            String o = callApi("/users/login", Request.Method.POST, data).toString();
+            return gson.fromJson(o, User.class);
+        } catch (Exception e) {
+            int i = 0;
+            Log.e("", "error: ", e);
+        }
 
         return null;
     }
 
-    public long insertUser(User user){
-        SQLiteDatabase db= DataBase.getWritableDatabase();
+    public String insertUser(User user){
+        /*SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
 
 
@@ -128,10 +132,11 @@ public final class DataBaseOperations {
         long idUser=db.insertOrThrow(Tablas.USER,null,values);
         db.close();
 
-        return idUser;
+        return idUser;*/
+        return null;
     }
 
-    public long insertMedicine(Medicine med){
+    public String insertMedicine(Medicine med){
         SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -144,13 +149,13 @@ public final class DataBaseOperations {
         values.put(MedicinesDb.ID_USER,med.getIdUser());
 
 
-        long idMed = db.insertOrThrow(Tablas.MEDICINE, null,values);
+        String idMed = String.valueOf(db.insertOrThrow(Tablas.MEDICINE, null,values));
         db.close();
 
         return idMed;
     }
 
-    public long insertRelation(MedTretRel relation){
+    public String insertRelation(MedTretRel relation){
         SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -163,20 +168,20 @@ public final class DataBaseOperations {
         values.put(MedTretRelDb.FINAL_DATE, dateFormat.format(relation.getFinalDate()));
 
 
-        long idRel = db.insertOrThrow(Tablas.RELATION_MED_TREATMENT, null, values);
+        String idRel = String.valueOf(db.insertOrThrow(Tablas.RELATION_MED_TREATMENT, null, values));
         db.close();
 
-        return idRel ;
+        return idRel;
     }
 
-    public long insertTreatment(Treatment treatment){
+    public String insertTreatment(Treatment treatment){
         SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(TreatmentsDb.ID_USER, treatment.getIdUser());
         values.put(TreatmentsDb.NAME, treatment.getName());
 
-        long idTreatment = db.insertOrThrow(Tablas.TREATMENT, null, values);
+        String idTreatment = String.valueOf(db.insertOrThrow(Tablas.TREATMENT, null, values));
 
         db.close();
 
@@ -230,9 +235,9 @@ public final class DataBaseOperations {
 
         if (c.moveToFirst()) {
 
-            treatment.setId(c.getInt(0));
+            treatment.setId(c.getString(0));
             treatment.setName(c.getColumnName(1));
-            treatment.setIdUser(c.getInt(2));
+            treatment.setIdUser(c.getString(2));
         }
         c.close();
         db.close();
@@ -240,13 +245,13 @@ public final class DataBaseOperations {
 
     }
 
-    public List<Treatment> getTreatment_userId(long userId) {
+    public List<Treatment> getTreatment_userId(String userId) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.TREATMENT, TreatmentsDb.ID_USER);
 
-        String[] selectionArgs = {String.valueOf(userId)};
+        String[] selectionArgs = {userId};
         Cursor c = db.rawQuery(sql, selectionArgs);
 
         List<Treatment> treatments = new ArrayList<>();
@@ -254,8 +259,8 @@ public final class DataBaseOperations {
         while (c.moveToNext()) {
             Treatment treatment = new Treatment();
 
-            treatment.setId(c.getInt(0));
-            treatment.setIdUser(c.getInt(1));
+            treatment.setId(c.getString(0));
+            treatment.setIdUser(c.getString(1));
             treatment.setName(c.getString(2));
 
             treatments.add(treatment);
@@ -292,9 +297,9 @@ public final class DataBaseOperations {
 
         if (c.moveToFirst()) {
 
-            medicine.setId(c.getInt(0));
+            medicine.setId(c.getString(0));
             medicine.setName(c.getString(1));
-            medicine.setIdUser(c.getInt(2));
+            medicine.setIdUser(c.getString(2));
             medicine.setType(c.getString(3));
 
             medicine.setDoseNumber(c.getInt(5));
@@ -314,12 +319,12 @@ public final class DataBaseOperations {
         return medicine;
     }
 
-    public Medicine getMedicine_medicineId(long medicineId) {
+    public Medicine getMedicine_medicineId(String medicineId) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.MEDICINE, "_id");
-        String param = Long.toString(medicineId);
+        String param = medicineId;
         String[] selectionArgs = {param};
 
         Cursor c = db.rawQuery(sql, selectionArgs);
@@ -328,9 +333,9 @@ public final class DataBaseOperations {
 
         if (c.moveToFirst()) {
 
-            medicine.setId(c.getLong(0));
+            medicine.setId(c.getString(0));
             medicine.setName(c.getString(1));
-            medicine.setIdUser(c.getInt(2));
+            medicine.setIdUser(c.getString(2));
             medicine.setType(c.getString(3));
 
             medicine.setDoseNumber(c.getInt(5));
@@ -350,7 +355,7 @@ public final class DataBaseOperations {
         return medicine;
     }
 
-    public List<Medicine> getMedicine_userId(long userId) {
+    public List<Medicine> getMedicine_userId(String userId) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
@@ -364,9 +369,9 @@ public final class DataBaseOperations {
         while (c.moveToNext()) {
             Medicine medicine = new Medicine();
 
-            medicine.setId(c.getInt(0));
+            medicine.setId(c.getString(0));
             medicine.setName(c.getString(1));
-            medicine.setIdUser(c.getInt(2));
+            medicine.setIdUser(c.getString(2));
             medicine.setType(c.getString(3));
 
             medicine.setDoseNumber(c.getInt(5));
@@ -389,7 +394,7 @@ public final class DataBaseOperations {
 
     }
 
-    public List<MedTretRel> getRelations_treatmentId(long treatmentId) {
+    public List<MedTretRel> getRelations_treatmentId(String treatmentId) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
@@ -404,8 +409,8 @@ public final class DataBaseOperations {
         while (c.moveToNext()) {
             MedTretRel relation = new MedTretRel();
 
-            relation.setIdTreatment(c.getLong(1));
-            relation.setIdMedicine(c.getLong(2));
+            relation.setIdTreatment(c.getString(1));
+            relation.setIdMedicine(c.getString(2));
             relation.setFrequency(c.getInt(3));
 
             try {

@@ -7,9 +7,9 @@ import java.util.Date;
 @Entity(primaryKeys = {"idRelation"})
 public class MedTretRel {
 
-    private long idRelation;
-    private long idTreatment;
-    private long idMedicine;
+    private String idRelation;
+    private String idTreatment;
+    private String idMedicine;
     private Integer frequency;
     private Date initialDate;
     private Date finalDate;
@@ -18,7 +18,7 @@ public class MedTretRel {
 
     }
 
-    public MedTretRel(long idRelation, long idTreatment, long idMedicine, Integer frequency, Date initialDate, Date finalDate) {
+    public MedTretRel(String idRelation, String idTreatment, String idMedicine, Integer frequency, Date initialDate, Date finalDate) {
         this.idRelation = idRelation;
         this.idTreatment = idTreatment;
         this.idMedicine = idMedicine;
@@ -27,27 +27,27 @@ public class MedTretRel {
         this.finalDate = finalDate;
     }
 
-    public long getIdRelation() {
+    public String getIdRelation() {
         return idRelation;
     }
 
-    public void setIdRelation(long idRelation) {
+    public void setIdRelation(String idRelation) {
         this.idRelation = idRelation;
     }
 
-    public long getIdTreatment() {
+    public String getIdTreatment() {
         return idTreatment;
     }
 
-    public void setIdTreatment(long idTreatment) {
+    public void setIdTreatment(String idTreatment) {
         this.idTreatment = idTreatment;
     }
 
-    public long getIdMedicine() {
+    public String getIdMedicine() {
         return idMedicine;
     }
 
-    public void setIdMedicine(long idMedicine) {
+    public void setIdMedicine(String idMedicine) {
         this.idMedicine = idMedicine;
     }
 

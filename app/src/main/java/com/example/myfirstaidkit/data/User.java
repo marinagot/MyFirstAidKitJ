@@ -4,31 +4,32 @@ import android.arch.persistence.room.Entity;
 
 @Entity(primaryKeys = {"id"})
 public class User {
-    private long id;
+    private String id;
     private String username;
     private String email;
-    private String birthday;
-    private String avatar;
     private String password;
 
     public User() {
 
     }
 
-    public User(long id, String username, String email, String birthday, String avatar, String password) {
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
+    public User(String id, String username, String email, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.birthday = birthday;
-        this.avatar = avatar;
         this.password = password;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -46,22 +47,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     public String getPassword() {

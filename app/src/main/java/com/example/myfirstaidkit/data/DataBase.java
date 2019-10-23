@@ -57,7 +57,29 @@ public class DataBase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
 
-        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY AUTOINCREMENT," +
+                "%s TEXT NOT NULL,%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,",
+                Tablas.USER, UsersDb.ID, UsersDb.USERNAME, UsersDb.EMAIL,
+                UsersDb.PASSWORD));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY AUTOINCREMENT," +
+                "%s INTEGER NOT NULL,%s TEXT NOT NULL);",
+                Tablas.TREATMENT, UsersDb.ID, TreatmentsDb.ID_USER, TreatmentsDb.NAME));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY AUTOINCREMENT," +
+                "%s TEXT NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
+                "%s DATETIME NOT NULL,%s INTEGER NOT NULL);",
+                Tablas.MEDICINE, UsersDb.ID, MedicinesDb.NAME,
+                MedicinesDb.ID_USER, MedicinesDb.TYPE, MedicinesDb.EXPIRATION_DATE,
+                MedicinesDb.DOSE_NUMBER));
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY AUTOINCREMENT," +
+                "%s INTEGER NOT NULL , %s INTEGER NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
+                "%s DATETIME NOT NULL);",
+                Tablas.RELATION_MED_TREATMENT, UsersDb.ID, MedTretRelDb.ID_TRAT,
+                MedTretRelDb.ID_MED, MedTretRelDb.FREQUENCY, MedTretRelDb.INITIAL_DATE,
+                MedTretRelDb.FINAL_DATE));
+
+        /*db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,%s TEXT NOT NULL," +
                 "%s TEXT NOT NULL,%s TEXT NOT NULL);",
                 Tablas.USER, BaseColumns._ID, UsersDb.USERNAME, UsersDb.EMAIL,
@@ -78,7 +100,7 @@ public class DataBase extends SQLiteOpenHelper {
                 "%s DATETIME NOT NULL);",
                 Tablas.RELATION_MED_TREATMENT, BaseColumns._ID, MedTretRelDb.ID_TRAT,
                 MedTretRelDb.ID_MED, MedTretRelDb.FREQUENCY, MedTretRelDb.INITIAL_DATE,
-                MedTretRelDb.FINAL_DATE));
+                MedTretRelDb.FINAL_DATE));*/
     }
 
     @Override

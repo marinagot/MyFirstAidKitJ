@@ -108,8 +108,8 @@ public class create_account extends Fragment {
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
 
-                    User user = new User(0, username.getText().toString(), email.getText().toString(), birthday.getText().toString(),
-                            avatar.toString(), password.getText().toString());
+                    User user = new User("0", username.getText().toString(), email.getText().toString(), /*birthday.getText().toString(),
+                            avatar.toString(),*/ password.getText().toString());
                     us.insertUser(user);
 
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
