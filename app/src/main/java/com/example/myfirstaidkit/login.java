@@ -2,6 +2,7 @@ package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -88,7 +89,7 @@ public class login extends Fragment {
             }
         });
 
-        Button btnLogin = v.findViewById(R.id.btn_sign_in);
+        final Button btnLogin = v.findViewById(R.id.btn_sign_in);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,13 +121,17 @@ public class login extends Fragment {
                                 edit.putString("email", result.getEmail());
 //                        edit.putBoolean("isLogged", true);
                                 edit.apply();
-                                try {
+
+                                Intent intent = new Intent(getContext(), LoggedActivity.class);
+                                /*Intent intent = new Intent(getContext(), MainActivity.class);*/
+                                startActivity(intent);
+
+                                /*try {
                                     Navigation.findNavController(v).navigate(R.id.action_login_to_home);
                                 } catch (Exception e){
                                     getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
                                 }
-                                getActivity().setTitle("Home");
-
+                                getActivity().setTitle("Home");*/
                             } else {
                                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                                 alertDialog.setTitle("Something went wrong!");

@@ -22,12 +22,10 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         home.OnFragmentInteractionListener,
-        login.OnFragmentInteractionListener,
         treatments.OnFragmentInteractionListener,
         first_aid_kit.OnFragmentInteractionListener,
         settings.OnFragmentInteractionListener,
         account.OnFragmentInteractionListener,
-        create_account.OnFragmentInteractionListener,
         treatment_edit.OnFragmentInteractionListener,
         medicine_edit.OnFragmentInteractionListener {
 
@@ -39,14 +37,14 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
 
         prefs = getApplicationContext().getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
         edit = prefs.edit();
         us = DataBaseOperations.get_Instance(getApplicationContext());
 
-        setTitle("Login");
+        setTitle("Home");
 
         //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //fab.setOnClickListener(new View.OnClickListener() {
@@ -72,20 +70,20 @@ public class MainActivity extends AppCompatActivity
         //    }
         //});
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();*/
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        /*NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);*/
 
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -94,7 +92,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
-        }
+        }*/
     }
 
     @Override
@@ -148,8 +146,8 @@ public class MainActivity extends AppCompatActivity
         // Highlight the selected item has been done by NavigationView
         item.setChecked(true);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);*/
 
         return true;
     }
@@ -170,12 +168,12 @@ public class MainActivity extends AppCompatActivity
             setTitle("Login");
         }
         else {
-            if (id == R.id.nav_home) {
-                fragmentClass = home.class;
+            if (id == R.id.nav_fak) {
+                fragmentClass = first_aid_kit.class;
             } else if (id == R.id.nav_treatments) {
                 fragmentClass = treatments.class;
-            } else if (id == R.id.nav_fak) {
-                fragmentClass = first_aid_kit.class;
+            /*} else if (id == R.id.nav_account) {
+                fragmentClass = home.class;*/
             }
         }
 
@@ -198,8 +196,8 @@ public class MainActivity extends AppCompatActivity
             setTitle(item.getTitle());
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        /*DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);*/
         return true;
     }
 

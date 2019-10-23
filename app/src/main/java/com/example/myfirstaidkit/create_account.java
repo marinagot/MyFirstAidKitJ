@@ -62,7 +62,7 @@ public class create_account extends Fragment {
 
 
 
-        Button btnBirthDate = (Button) viewCA.findViewById(R.id.btn_cale_birthday);
+        /*Button btnBirthDate = (Button) viewCA.findViewById(R.id.btn_cale_birthday);
         final EditText birthday = viewCA.findViewById(R.id.txt_birth_set);
         btnBirthDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +81,7 @@ public class create_account extends Fragment {
                         },year,month,dayOfMonth);
                 datePickerDialog.show();
             }
-        });
+        });*/
 
         password = viewCA.findViewById(R.id.txt_pwd_set);
         confirm_password = viewCA.findViewById(R.id.txt_pwd_conf_set);
@@ -92,7 +92,7 @@ public class create_account extends Fragment {
             @Override
             public void onClick(View v) {
                 if((username.getText().toString().equals(""))||(email.getText().toString().equals(""))||
-                        (birthday.getText().toString().equals(""))||(password.getText().toString().equals(""))
+                        /*(birthday.getText().toString().equals(""))||*/(password.getText().toString().equals(""))
                         ||(confirm_password.getText().toString().equals("")))
                 {
                     //Display Message
@@ -118,7 +118,7 @@ public class create_account extends Fragment {
                     alertDialog.show();
 
                     try {
-                    Navigation.findNavController(v).navigate(R.id.action_create_account_to_login);
+                    Navigation.findNavController(v).navigate(R.id.action_create_account_to_home);
                     } catch (Exception e){
                     getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
                     }
