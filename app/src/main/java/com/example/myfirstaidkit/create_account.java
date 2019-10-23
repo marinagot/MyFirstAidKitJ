@@ -3,6 +3,8 @@ package com.example.myfirstaidkit;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +20,9 @@ import android.widget.TextView;
 
 
 import androidx.navigation.Navigation;
+
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.User;
 
@@ -29,9 +34,11 @@ public class create_account extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     DataBaseOperations us;
-    EditText username, email,password, confirm_password;
-    ImageView avatar;
+    EditText username, email, password, confirm_password;
 
+    //Preferencias de la aplicación
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
 
     /**
      * A simple {@link Fragment} subclass.
@@ -85,7 +92,7 @@ public class create_account extends Fragment {
 
         password = viewCA.findViewById(R.id.txt_pwd_set);
         confirm_password = viewCA.findViewById(R.id.txt_pwd_conf_set);
-        avatar = viewCA.findViewById(R.id.image_profile_set);
+        /*avatar = viewCA.findViewById(R.id.image_profile_set);*/
         Button btnDone = viewCA.findViewById(R.id.btn_confirm_account);
 
         btnDone.setOnClickListener(new View.OnClickListener() {
@@ -101,29 +108,49 @@ public class create_account extends Fragment {
                     alertDialog.setMessage("All fields must be filled");
                     alertDialog.show();
                     int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                    TextView tv = (TextView) alertDialog.findViewById(textViewId);
+                    TextView tv = alertDialog.findViewById(textViewId);
                     tv.setTextColor(Color.RED);
-                    TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
+                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
 
                     User user = new User("0", username.getText().toString(), email.getText().toString(), /*birthday.getText().toString(),
                             avatar.toString(),*/ password.getText().toString());
-                    us.insertUser(user);
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("Successful!");
-                    alertDialog.setMessage("Account for " + username.getText().toString() + " created" );
-                    alertDialog.show();
+                    new ApiCallThread<User>(new AsyncResponse<User>(){
+                        @Override
+                        public User apiCall(Object... params) {
+                            return us.insertUser((User) params[1]);
+                        }
 
-                    try {
-                    Navigation.findNavController(v).navigate(R.id.action_create_account_to_home);
-                    } catch (Exception e){
-                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
-                    }
+                        @Override
+                        public void processFinish(View v, User result){
 
-                    getActivity().setTitle("Login");
+                            if(result != null) {
+                                edit.putString("username", result.getUsername());
+                                edit.putString("email", result.getEmail());
+                                /*edit.putBoolean("isLogged", true);*/
+                                edit.apply();
+                            }
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                            alertDialog.setTitle("Successful!");
+                            alertDialog.setMessage("Account for " + username.getText().toString() + " created" );
+                            alertDialog.show();
+
+                            Intent intent = new Intent(getContext(), LoggedActivity.class);
+                            startActivity(intent);
+
+                            /*try {
+                                Navigation.findNavController(v).navigate(R.id.action_create_account_to_home);
+                            } catch (Exception e){
+                                getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
+                            }*/
+
+                            /*getActivity().setTitle("Login");*/
+                        }
+                    }).execute(v, user);
+                    /*us.insertUser(user);*/
                 }
                 else{
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
@@ -158,6 +185,9 @@ public class create_account extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+
+            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
+            edit = prefs.edit();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

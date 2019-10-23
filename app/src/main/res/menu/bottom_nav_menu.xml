@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/nav_fak"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_menu_fak"
         android:title="@string/title_medicines" />
 
     <item
         android:id="@+id/nav_treatments"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/ic_menu_treatments"
         android:title="@string/title_treatments" />
 
 </menu>

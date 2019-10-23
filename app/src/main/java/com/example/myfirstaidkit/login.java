@@ -38,10 +38,8 @@ public class login extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    EditText username,password;
+    EditText username, password;
     DataBaseOperations us;
-    ApiCallThread apiCallThread;
-
 
     //Preferencias de la aplicación
     SharedPreferences prefs;
@@ -108,7 +106,7 @@ public class login extends Fragment {
                 }
                 else {
                     //Llamamos al back en un nuevo hilo
-                    new ApiCallThread(new AsyncResponse<User>(){
+                    new ApiCallThread<User>(new AsyncResponse<User>(){
                         @Override
                         public User apiCall(Object... params) {
                             return us.loginData((String) params[1], (String) params[2]);
@@ -123,7 +121,6 @@ public class login extends Fragment {
                                 edit.apply();
 
                                 Intent intent = new Intent(getContext(), LoggedActivity.class);
-                                /*Intent intent = new Intent(getContext(), MainActivity.class);*/
                                 startActivity(intent);
 
                                 /*try {

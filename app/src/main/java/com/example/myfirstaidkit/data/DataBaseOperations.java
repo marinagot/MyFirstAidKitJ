@@ -107,32 +107,24 @@ public final class DataBaseOperations {
         try {
             data.put("email", username);
             data.put("password", password);
-            //Falla
-            String o = callApi("/users/login", Request.Method.POST, data).toString();
-            return gson.fromJson(o, User.class);
-        } catch (Exception e) {
-            int i = 0;
-            Log.e("", "error: ", e);
-        }
+            String response = callApi("/users/login", Request.Method.POST, data).toString();
+            return gson.fromJson(response, User.class);
+        } catch (Exception e) {}
 
         return null;
     }
 
-    public String insertUser(User user){
-        /*SQLiteDatabase db= DataBase.getWritableDatabase();
-        ContentValues values = new ContentValues();
+    public User insertUser(User user){
+        final JSONObject data = new JSONObject();
 
+        try {
+            data.put("email", user.getEmail());
+            data.put("username", user.getUsername());
+            data.put("password", user.getPassword());
+            String response = callApi("/users/register", Request.Method.POST, data).toString();
+            return gson.fromJson(response, User.class);
+        } catch (Exception e) {}
 
-        values.put(UsersDb.PASSWORD,user.getPassword());
-        values.put(UsersDb.USERNAME,user.getUsername());
-        values.put(UsersDb.AVATAR,user.getAvatar());
-        values.put(UsersDb.BIRTHDAY, user.getBirthday());
-        values.put(UsersDb.EMAIL, user.getEmail());
-
-        long idUser=db.insertOrThrow(Tablas.USER,null,values);
-        db.close();
-
-        return idUser;*/
         return null;
     }
 
