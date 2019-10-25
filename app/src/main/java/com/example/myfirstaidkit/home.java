@@ -80,6 +80,10 @@ public class home extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Muestra la barra inferior de navegación
+        getActivity().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
+
         // Inflate the layout for this fragment
         View vlogin = inflater.inflate(R.layout.fragment_home, container, false);
         us = DataBaseOperations.get_Instance(getContext());

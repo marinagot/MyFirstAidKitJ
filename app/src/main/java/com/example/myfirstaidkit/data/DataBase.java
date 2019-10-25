@@ -57,22 +57,23 @@ public class DataBase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
 
-        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY AUTOINCREMENT," +
+
+        /*db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
                 "%s TEXT NOT NULL,%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,",
                 Tablas.USER, UsersDb.ID, UsersDb.USERNAME, UsersDb.EMAIL,
-                UsersDb.PASSWORD));
+                UsersDb.PASSWORD));*/
 
-        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY AUTOINCREMENT," +
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
                 "%s INTEGER NOT NULL,%s TEXT NOT NULL);",
                 Tablas.TREATMENT, UsersDb.ID, TreatmentsDb.ID_USER, TreatmentsDb.NAME));
 
-        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY AUTOINCREMENT," +
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
                 "%s TEXT NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
                 "%s DATETIME NOT NULL,%s INTEGER NOT NULL);",
                 Tablas.MEDICINE, UsersDb.ID, MedicinesDb.NAME,
                 MedicinesDb.ID_USER, MedicinesDb.TYPE, MedicinesDb.EXPIRATION_DATE,
                 MedicinesDb.DOSE_NUMBER));
-        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY AUTOINCREMENT," +
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
                 "%s INTEGER NOT NULL , %s INTEGER NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
                 "%s DATETIME NOT NULL);",
                 Tablas.RELATION_MED_TREATMENT, UsersDb.ID, MedTretRelDb.ID_TRAT,

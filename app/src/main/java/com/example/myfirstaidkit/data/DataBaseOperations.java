@@ -82,14 +82,16 @@ public final class DataBaseOperations {
         }
 
         try {
-            JSONObject response = future.get(5, TimeUnit.SECONDS); // this will block
+            JSONObject response = future.get(20, TimeUnit.SECONDS); // this will block
             return response;
         } catch (InterruptedException e) {
+            int i = 0;
             // exception handling
         } catch (ExecutionException e) {
             int i = 0;
             // exception handling
         } catch (TimeoutException e) {
+            int i = 0;
             // exception handling
         }
         return null;

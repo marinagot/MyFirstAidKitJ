@@ -93,9 +93,18 @@ public class create_account extends Fragment {
         password = viewCA.findViewById(R.id.txt_pwd_set);
         confirm_password = viewCA.findViewById(R.id.txt_pwd_conf_set);
         /*avatar = viewCA.findViewById(R.id.image_profile_set);*/
-        Button btnDone = viewCA.findViewById(R.id.btn_confirm_account);
 
-        btnDone.setOnClickListener(new View.OnClickListener() {
+        TextView logIn = viewCA.findViewById(R.id.sign_in_text);
+
+        logIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_create_account_to_login);
+            }
+        });
+        Button register = viewCA.findViewById(R.id.btn_confirm_account);
+
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if((username.getText().toString().equals(""))||(email.getText().toString().equals(""))||

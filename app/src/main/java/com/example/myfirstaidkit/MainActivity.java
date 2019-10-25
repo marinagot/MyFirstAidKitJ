@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         Fragment fragment = null;
-        Class fragmentClass = null;
+        Class fragmentClass;
 
         //noinspection SimplifiableIfStatement
         boolean logged = us.userIsLogged(prefs);

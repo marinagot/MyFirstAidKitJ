@@ -14,6 +14,8 @@ import android.widget.ListView;
 
 import androidx.navigation.Navigation;
 
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Medicine;
 
@@ -75,6 +77,8 @@ public class first_aid_kit extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Muestra la barra inferior de navegación
+        getActivity().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
 
         FloatingActionButton fab = view.findViewById(R.id.newMedicine);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +107,19 @@ public class first_aid_kit extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_first_aid_kit, container, false);
         us = DataBaseOperations.get_Instance(getContext());
 
-        if (us.userIsLogged(prefs))
-            medicineList = us.getMedicine_userId(us.getUser_Email(us.getUserLogged(prefs)).getId());
+        if (us.userIsLogged(prefs)) {
+            new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
+                @Override
+                public List<Medicine> apiCall(Object... params) {
+                    return us.getMedicine_userId(us.getUser_Email((String) params[1]).getId());
+                }
+
+                @Override
+                public void processFinish(View v, List<Medicine> result){
+                    medicineList = result;
+                }
+            }).execute(viewCA, us.getUserLogged(prefs));
+        }
 
         ListView list = viewCA.findViewById(R.id.list_user_medicines);
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);

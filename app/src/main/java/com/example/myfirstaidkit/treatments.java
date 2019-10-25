@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import androidx.navigation.Navigation;
 
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
@@ -121,6 +123,9 @@ public class treatments extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Muestra la barra inferior de navegación
+        getActivity().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
+
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_treatments, container, false);
         us = DataBaseOperations.get_Instance(getContext());
@@ -157,8 +162,19 @@ public class treatments extends Fragment {
         });
 
 
-        if (us.userIsLogged(prefs))
-            treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Email(us.getUserLogged(prefs)).getId()));
+        if (us.userIsLogged(prefs)) {
+            new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
+                @Override
+                public List<Treatment> apiCall(Object... params) {
+                    return getActiveTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+                }
+
+                @Override
+                public void processFinish(View v, List<Treatment> result){
+                    treatmentList = result;
+                }
+            }).execute(viewCA, us.getUserLogged(prefs));
+        }
 
         ListView list = viewCA.findViewById(R.id.list_user_treatments);
 

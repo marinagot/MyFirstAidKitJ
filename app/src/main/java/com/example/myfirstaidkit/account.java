@@ -6,8 +6,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -73,6 +77,15 @@ public class account extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setHasOptionsMenu(true);
+        getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 
     @Override
@@ -93,14 +106,14 @@ public class account extends Fragment {
                 builder.setView(alertView);
                 final AlertDialog popUpCP = builder.show();
 
-                old_password = ( EditText) alertView.findViewById(R.id.old_password);
-                new_password = ( EditText) alertView.findViewById(R.id.new_password);
-                confirm_password = ( EditText) alertView.findViewById(R.id.confirm_password_Ch);
+                old_password = alertView.findViewById(R.id.old_password);
+                new_password = alertView.findViewById(R.id.new_password);
+                confirm_password = alertView.findViewById(R.id.confirm_password_Ch);
 
                 us = DataBaseOperations.get_Instance(getContext());
 
-                Button btnDoneCh = (Button) alertView.findViewById(R.id.btn_ch_pwd_done);
-                Button btnCancelCh = (Button) alertView.findViewById(R.id.btn_ch_pwd_cancel);
+                Button btnDoneCh = alertView.findViewById(R.id.btn_ch_pwd_done);
+                Button btnCancelCh = alertView.findViewById(R.id.btn_ch_pwd_cancel);
 
                 btnDoneCh.setOnClickListener( new View.OnClickListener() {
                     @Override
@@ -123,9 +136,9 @@ public class account extends Fragment {
                                     alertDialog.setMessage("The new password and the confirm password does not match, try again");
                                     alertDialog.show();
                                     int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                                    TextView tv = (TextView) alertDialog.findViewById(textViewId);
+                                    TextView tv = alertDialog.findViewById(textViewId);
                                     tv.setTextColor(Color.RED);
-                                    TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
+                                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
                                     textViewMessage.setTextColor(Color.RED);
                                 }
                             }
@@ -136,9 +149,9 @@ public class account extends Fragment {
                                 alertDialog.setMessage("The current password introduced does not match with the one is registered, try again");
                                 alertDialog.show();
                                 int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                                TextView tv = (TextView) alertDialog.findViewById(textViewId);
+                                TextView tv = alertDialog.findViewById(textViewId);
                                 tv.setTextColor(Color.RED);
-                                TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
+                                TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
                                 textViewMessage.setTextColor(Color.RED);
                             }
                         }
@@ -171,12 +184,12 @@ public class account extends Fragment {
                 builder.setView(alertView);
                 final AlertDialog popUpCP = builder.show();
 
-                del_password = ( EditText) alertView.findViewById(R.id.pwd_del_acc);
+                del_password = alertView.findViewById(R.id.pwd_del_acc);
 
                 us = DataBaseOperations.get_Instance(getContext());
 
-                Button btnDoneDel = (Button) alertView.findViewById(R.id.btn_done_del);
-                Button btnCancelDel = (Button) alertView.findViewById(R.id.btn_cancel_del);
+                Button btnDoneDel = alertView.findViewById(R.id.btn_done_del);
+                Button btnCancelDel = alertView.findViewById(R.id.btn_cancel_del);
 
                 btnDoneDel.setOnClickListener( new View.OnClickListener() {
                 @Override
@@ -202,9 +215,9 @@ public class account extends Fragment {
                         alertDialog.setMessage("The current password introduced does not match with the one is registered, try again");
                         alertDialog.show();
                         int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                        TextView tv = (TextView) alertDialog.findViewById(textViewId);
+                        TextView tv = alertDialog.findViewById(textViewId);
                         tv.setTextColor(Color.RED);
-                        TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
+                        TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
                         textViewMessage.setTextColor(Color.RED);
                     }
                 }

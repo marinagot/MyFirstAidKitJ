@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/fragment_aid_kit"
-    tools:context=".first_aid_kit" >
+    tools:context=".first_aid_kit"
+    android:paddingBottom="?attr/actionBarSize" >
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/home">
+    app:startDestination="@id/first_aid_kit">
 
     <!--<fragment
         android:id="@+id/login"
@@ -30,21 +30,27 @@
     <fragment
         android:id="@+id/home"
         android:name="com.example.myfirstaidkit.home"
-        android:label="fragment_home"
+        android:label="Inicio"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/treatments"
         android:name="com.example.myfirstaidkit.treatments"
-        android:label="fragment_treatments"
+        android:label="Tratamientos"
         tools:layout="@layout/fragment_treatments" >
         <action
             android:id="@+id/action_treatments_to_treatment_edit"
             app:destination="@id/treatment_edit" />
+        <action
+            android:id="@+id/action_treatments_to_settings"
+            app:destination="@id/settings" />
+        <action
+            android:id="@+id/action_treatments_to_account"
+            app:destination="@id/account" />
     </fragment>
     <fragment
         android:id="@+id/treatment_edit"
         android:name="com.example.myfirstaidkit.treatment_edit"
-        android:label="fragment_treatment_edit"
+        android:label="Editar tratamiento"
         tools:layout="@layout/fragment_treatment_edit" >
         <action
             android:id="@+id/action_treatment_edit_to_treatments"
@@ -53,16 +59,22 @@
     <fragment
         android:id="@+id/first_aid_kit"
         android:name="com.example.myfirstaidkit.first_aid_kit"
-        android:label="fragment_first_aid_kit"
+        android:label="Botiquín"
         tools:layout="@layout/fragment_first_aid_kit" >
         <action
             android:id="@+id/action_first_aid_kit_to_medicine_edit"
             app:destination="@id/medicine_edit" />
+        <action
+            android:id="@+id/action_first_aid_kit_to_account"
+            app:destination="@id/account" />
+        <action
+            android:id="@+id/action_first_aid_kit_to_settings"
+            app:destination="@id/settings" />
     </fragment>
     <fragment
         android:id="@+id/medicine_edit"
         android:name="com.example.myfirstaidkit.medicine_edit"
-        android:label="fragment_medicine_edit"
+        android:label="Editar medicina"
         tools:layout="@layout/fragment_medicine_edit" >
         <action
             android:id="@+id/action_medicine_edit_to_first_aid_kit"
@@ -71,11 +83,11 @@
     <fragment
         android:id="@+id/settings"
         android:name="com.example.myfirstaidkit.settings"
-        android:label="settings"
+        android:label="Ajustes"
         tools:layout="@layout/fragment_settings"/>
     <fragment
         android:id="@+id/account"
         android:name="com.example.myfirstaidkit.account"
-        android:label="fragment_account"
+        android:label="Cuenta"
         tools:layout="@layout/fragment_account" />
 </navigation>

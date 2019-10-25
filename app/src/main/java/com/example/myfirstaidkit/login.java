@@ -62,7 +62,7 @@ public class login extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        username = v.findViewById(R.id.txt_username);
+        username = v.findViewById(R.id.txt_email);
         password = v.findViewById(R.id.txt_pwd);
 
         us = DataBaseOperations.get_Instance(getContext());
@@ -71,7 +71,7 @@ public class login extends Fragment {
 //        edit.putBoolean("isLogged", false);
 //        edit.apply();
 
-        Button btnRegister = v.findViewById(R.id.btn_sign_up);
+        TextView btnRegister = v.findViewById(R.id.text_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {
 
             @Override
