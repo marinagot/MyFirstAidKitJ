@@ -65,7 +65,9 @@ public class settings extends Fragment {
         }
 
         setHasOptionsMenu(true);
-        getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
+        try {
+            getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
+        } catch (Exception e) {}
     }
 
     @Override

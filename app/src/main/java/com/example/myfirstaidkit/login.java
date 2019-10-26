@@ -67,23 +67,12 @@ public class login extends Fragment {
 
         us = DataBaseOperations.get_Instance(getContext());
 
-        //Not logged
-//        edit.putBoolean("isLogged", false);
-//        edit.apply();
-
         TextView btnRegister = v.findViewById(R.id.text_sign_up);
         btnRegister.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // Crea el nuevo fragmento y la transacción.
-
-                try {
-                    Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
-                } catch (Exception e){
-                    getFragmentManager().beginTransaction().replace(R.id.content, new create_account()).commit();
-                }
-                getActivity().setTitle("Create Account");
+                Navigation.findNavController(v).navigate(R.id.action_login_to_create_account);
             }
         });
 
@@ -99,9 +88,9 @@ public class login extends Fragment {
                     alertDialog.setMessage("All fields must be filled");
                     alertDialog.show();
                     int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                    TextView tv = (TextView) alertDialog.findViewById(textViewId);
+                    TextView tv = alertDialog.findViewById(textViewId);
                     tv.setTextColor(Color.RED);
-                    TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
+                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else {
@@ -117,18 +106,12 @@ public class login extends Fragment {
                             if (result != null) {
                                 edit.putString("username", result.getUsername());
                                 edit.putString("email", result.getEmail());
-//                        edit.putBoolean("isLogged", true);
+                                edit.putString("id", result.getId());
                                 edit.apply();
 
                                 Intent intent = new Intent(getContext(), LoggedActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
-
-                                /*try {
-                                    Navigation.findNavController(v).navigate(R.id.action_login_to_home);
-                                } catch (Exception e){
-                                    getFragmentManager().beginTransaction().replace(R.id.content, new home()).commit();
-                                }
-                                getActivity().setTitle("Home");*/
                             } else {
                                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                                 alertDialog.setTitle("Something went wrong!");
@@ -142,8 +125,6 @@ public class login extends Fragment {
                             }
                         }
                     }).execute(v, username.getText().toString(), password.getText().toString());
-
-                    /*new loginThread().execute(v, username.getText().toString(), password.getText().toString());*/
                 }
 
 

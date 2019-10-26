@@ -130,6 +130,66 @@ public final class DataBaseOperations {
         return null;
     }
 
+    public User getUser_Email(String email) {
+        try {
+            return gson.fromJson(callApi("/user/?email=" + email, Request.Method.GET).toString(), User.class);
+        } catch (Exception e) {}
+
+        return null;
+    }
+
+    public String updateUserPassword(String email, String old_password, String new_password){
+        final JSONObject data = new JSONObject();
+
+        try {
+            data.put("email", email);
+            data.put("old_password", old_password);
+            data.put("new_password", new_password);
+            return callApi("/users/password", Request.Method.POST, data).getString("id");
+        } catch (Exception e) {}
+
+        return null;
+    }
+
+    public boolean userIsLogged(SharedPreferences prefs) {
+        return prefs.getString("username", null) != null;
+    }
+
+    public String getUsernameLogged(SharedPreferences prefs) {
+        return prefs.getString("username", null);
+    }
+
+    public String getIdLogged(SharedPreferences prefs) {
+        return prefs.getString("id", null);
+    }
+
+    public String getEmailLogged (SharedPreferences prefs) {
+        return prefs.getString("email", null);
+    }
+
+    public boolean deleteUser(String id, String password){
+        final JSONObject data = new JSONObject();
+
+        try {
+            data.put("password", password);
+            JSONObject res = callApi("/users/" + id, Request.Method.PUT, data);
+            if (res != null)
+                return true;
+        } catch (Exception e) {
+            int i = 0;
+        }
+
+        return false;
+        /*SQLiteDatabase db = DataBase.getWritableDatabase();
+
+        String whereClause = String.format("%s=?", UsersDb.PASSWORD);
+        final String[] whereArgs = {String.valueOf(password)};
+
+        int deleted = db.delete(Tablas.USER,whereClause, whereArgs);
+        db.close();
+        return deleted;*/
+    }
+
     public String insertMedicine(Medicine med){
         SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -180,17 +240,6 @@ public final class DataBaseOperations {
         db.close();
 
         return idTreatment;
-    }
-
-    public int deleteUser(String password){
-        SQLiteDatabase db = DataBase.getWritableDatabase();
-
-        String whereClause = String.format("%s=?", UsersDb.PASSWORD);
-        final String[] whereArgs = {String.valueOf(password)};
-
-        int deleted = db.delete(Tablas.USER,whereClause, whereArgs);
-        db.close();
-        return  deleted;
     }
 
     public int deleteMedicine (Medicine medicine){
@@ -264,18 +313,6 @@ public final class DataBaseOperations {
         db.close();
         return treatments;
 
-    }
-
-    public User getUser_Email(String email) {
-        final JSONObject data = new JSONObject();
-
-        try {
-            data.put("email", email);
-            User response = gson.fromJson(callApi("/user/?email=" + email, Request.Method.GET).toString(), User.class);
-            return response;
-        } catch (Exception e) {}
-
-        return null;
     }
 
     public Medicine getMedicine_medicineName(String medicineName) {
@@ -426,29 +463,6 @@ public final class DataBaseOperations {
         c.close();
         db.close();
         return relations;
-    }
-
-    public int updateUserPassword(String old_password, String new_password){
-        SQLiteDatabase db = DataBase.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(UsersDb.PASSWORD, new_password);
-
-        String whereClause = String.format("%s=?", UsersDb.PASSWORD);
-        final String[] whereArgs = {old_password};
-
-        int updated = db.update(Tablas.USER, values, whereClause, whereArgs);
-        db.close();
-        return updated;
-
-    }
-
-    public boolean userIsLogged(SharedPreferences prefs) {
-        return prefs.getString("username", null) != null;
-    }
-
-    public String getUserLogged (SharedPreferences prefs) {
-        return prefs.getString("username", null);
     }
 }
 

@@ -39,43 +39,52 @@ public class LoggedActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logged);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.first_aid_kit, R.id.treatments, R.id.home)
-                .build();
-        NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(activity, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-
-        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
         prefs = getApplicationContext().getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
         edit = prefs.edit();
         us = DataBaseOperations.get_Instance(getApplicationContext());
 
-        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        if (prefs.getString("id", null) == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+        else {
 
-                int id = menuItem.getItemId();
+            setContentView(R.layout.activity_logged);
+            BottomNavigationView navView = findViewById(R.id.nav_view);
+            // Passing each menu ID as a set of Ids because each
+            // menu should be considered as top level destinations.
+            AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.first_aid_kit, R.id.treatments, R.id.home)
+                    .build();
+            NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+            NavigationUI.setupActionBarWithNavController(activity, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(navView, navController);
 
-                switch (id) {
-                    case R.id.nav_fak:
-                        Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
-                        break;
-                    case R.id.nav_treatments:
-                        Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.treatments);
-                        break;
-                    default:
-                        return false;
+            /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);*/
+
+            navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                    int id = menuItem.getItemId();
+
+                    switch (id) {
+                        case R.id.nav_fak:
+                            Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
+                            break;
+                        case R.id.nav_treatments:
+                            Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.treatments);
+                            break;
+                        default:
+                            return false;
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -91,45 +100,25 @@ public class LoggedActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Fragment fragment = null;
-        Class fragmentClass = null;
 
         if (id == R.id.action_settings) {
-            fragmentClass = settings.class;
             setTitle(item.getTitle());
-            try {
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.settings);
-                /*fragment = (Fragment) fragmentClass.newInstance();*/
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.settings);
         } else if (id == R.id.action_account) {
-            fragmentClass = account.class;
-            setTitle(item.getTitle());
-            try {
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.account);
-                /*fragment = (Fragment) fragmentClass.newInstance();*/
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.account);
+
         } else if (id == R.id.action_logout) {
-            edit.remove("username");
+            edit.clear();
             edit.apply();
             Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
             Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
         }
 
-        /*if (fragmentClass != null) {
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-        }*/
-
         // Highlight the selected item has been done by NavigationView
-        item.setChecked(true);
-
+        /*item.setChecked(true);*/
 
         return true;
     }

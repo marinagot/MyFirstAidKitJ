@@ -84,9 +84,9 @@ public class first_aid_kit extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction().replace(R.id.content, new medicine_edit()).commit();
-                //Navigation.findNavController(view).navigate(R.id.action_first_aid_kit_to_medicine_edit);
-                getActivity().setTitle("New medicine");
+                Navigation.findNavController(view).navigate(R.id.action_first_aid_kit_to_medicine_edit);
+                /*getFragmentManager().beginTransaction().replace(R.id.content, new medicine_edit()).commit();
+                getActivity().setTitle("New medicine");*/
             }
         });
     }
@@ -118,7 +118,7 @@ public class first_aid_kit extends Fragment {
                 public void processFinish(View v, List<Medicine> result){
                     medicineList = result;
                 }
-            }).execute(viewCA, us.getUserLogged(prefs));
+            }).execute(viewCA, us.getEmailLogged(prefs));
         }
 
         ListView list = viewCA.findViewById(R.id.list_user_medicines);

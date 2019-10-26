@@ -2,6 +2,7 @@ package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -18,7 +19,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
+import com.example.myfirstaidkit.data.Medicine;
+
+import java.util.List;
 
 
 /**
@@ -79,7 +87,9 @@ public class account extends Fragment {
         }
 
         setHasOptionsMenu(true);
-        getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
+        try {
+            getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
+        } catch (Exception e) {}
     }
 
     @Override
@@ -118,47 +128,48 @@ public class account extends Fragment {
                 btnDoneCh.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        String user = prefs.getString("username",null);
-                        if (user != null){
-                            if ((us.getUser_Email(user).getPassword()).equals(old_password.getText().toString())) {
-                                if ((new_password.getText().toString()).equals(confirm_password.getText().toString())) {
-                                    us.updateUserPassword(old_password.getText().toString(), new_password.getText().toString());
-                                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                                    alertDialog.setTitle("Successful!");
-                                    alertDialog.setMessage("Password changed" );
-                                    alertDialog.show();
-                                    popUpCP.dismiss();
+                        // Si las contraseñas nuevas coinciden
+                        if ((new_password.getText().toString()).equals(confirm_password.getText().toString())) {
+                            new ApiCallThread<String>(new AsyncResponse<String>(){
+                                @Override
+                                public String apiCall(Object... params) {
+                                    return us.updateUserPassword((String) params[1], (String) params[2], (String) params[3]);
                                 }
-                                else {
-                                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                                    alertDialog.setTitle("Something went wrong!");
-                                    alertDialog.setMessage("The new password and the confirm password does not match, try again");
-                                    alertDialog.show();
-                                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                                    TextView tv = alertDialog.findViewById(textViewId);
-                                    tv.setTextColor(Color.RED);
-                                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                                    textViewMessage.setTextColor(Color.RED);
-                                }
-                            }
 
-                             else {
-                                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                                alertDialog.setTitle("Something went wrong!");
-                                alertDialog.setMessage("The current password introduced does not match with the one is registered, try again");
-                                alertDialog.show();
-                                int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                                TextView tv = alertDialog.findViewById(textViewId);
-                                tv.setTextColor(Color.RED);
-                                TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                                textViewMessage.setTextColor(Color.RED);
-                            }
+                                @Override
+                                public void processFinish(View v, String result){
+                                    if (result != null) {
+                                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                                        alertDialog.setTitle("Successful!");
+                                        alertDialog.setMessage("Password changed" );
+                                        alertDialog.show();
+                                        popUpCP.dismiss();
+                                    }
+                                    else {
+                                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                                        alertDialog.setTitle("Something went wrong!");
+                                        alertDialog.setMessage("The current password introduced does not match with the one is registered, try again");
+                                        alertDialog.show();
+                                        int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+                                        TextView tv = alertDialog.findViewById(textViewId);
+                                        tv.setTextColor(Color.RED);
+                                        TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+                                        textViewMessage.setTextColor(Color.RED);
+                                    }
+                                }
+                            }).execute(v, us.getEmailLogged(prefs), old_password.getText().toString(), new_password.getText().toString());
                         }
-
+                        // Si las contraseñas nuevas no coinciden
                         else {
-                            getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
-                            getActivity().setTitle("Login");
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                            alertDialog.setTitle("Something went wrong!");
+                            alertDialog.setMessage("The new password and the confirm password does not match, try again");
+                            alertDialog.show();
+                            int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+                            TextView tv = alertDialog.findViewById(textViewId);
+                            tv.setTextColor(Color.RED);
+                            TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+                            textViewMessage.setTextColor(Color.RED);
                         }
                     }
                 });
@@ -193,39 +204,42 @@ public class account extends Fragment {
 
                 btnDoneDel.setOnClickListener( new View.OnClickListener() {
                 @Override
-                 public void onClick(View v) {
+                public void onClick(View v) {
 
-                String user = prefs.getString("username",null);
-                if (user != null){
-                    if ((us.getUser_Email(user).getPassword()).equals(del_password.getText().toString())) {
-
-                        us.deleteUser(del_password.getText().toString());
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                        alertDialog.setTitle("Successful!");
-                        alertDialog.setMessage("Account deleted" );
-                        alertDialog.show();
-                        popUpCP.dismiss();
-                        getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
-                        getActivity().setTitle("Login");
+                new ApiCallThread<String>(new AsyncResponse<Boolean>(){
+                    @Override
+                    public Boolean apiCall(Object... params) {
+                        return us.deleteUser((String) params[1], (String) params[2]);
                     }
 
-                    else {
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                        alertDialog.setTitle("Something went wrong!");
-                        alertDialog.setMessage("The current password introduced does not match with the one is registered, try again");
-                        alertDialog.show();
-                        int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                        TextView tv = alertDialog.findViewById(textViewId);
-                        tv.setTextColor(Color.RED);
-                        TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                        textViewMessage.setTextColor(Color.RED);
-                    }
-                }
+                    @Override
+                    public void processFinish(View v, Boolean result){
+                        if (result) {
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                            alertDialog.setTitle("Successful!");
+                            alertDialog.setMessage("Account deleted" );
+                            alertDialog.show();
+                            popUpCP.dismiss();
 
-                else {
-                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
-                    getActivity().setTitle("Login");
-                }
+                            edit.clear();
+                            edit.apply();
+                            Intent intent = new Intent(getContext(), LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                        else {
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                            alertDialog.setTitle("Something went wrong!");
+                            alertDialog.setMessage("The current password introduced does not match with the one is registered, try again");
+                            alertDialog.show();
+                            int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+                            TextView tv = alertDialog.findViewById(textViewId);
+                            tv.setTextColor(Color.RED);
+                            TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+                            textViewMessage.setTextColor(Color.RED);
+                        }
+                    }
+                }).execute(v, us.getIdLogged(prefs), del_password.getText().toString());
             }
         });
 

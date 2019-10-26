@@ -104,9 +104,9 @@ public class treatments extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction().replace(R.id.content, new treatment_edit()).commit();
-                //Navigation.findNavController(view).navigate(R.id.action_treatments_to_treatment_edit);
-                getActivity().setTitle("New treatment");
+                Navigation.findNavController(view).navigate(R.id.action_treatments_to_treatment_edit);
+                /*getFragmentManager().beginTransaction().replace(R.id.content, new treatment_edit()).commit();
+                getActivity().setTitle("New treatment");*/
             }
         });
     }
@@ -135,21 +135,29 @@ public class treatments extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                if (us.userIsLogged(prefs))
-                    if (tab.getText().equals("Active")) {
-                        treatmentList = getActiveTreatments(us.getTreatment_userId(us.getUser_Email(us.getUserLogged(prefs)).getId()));
-                    }
-                    else if (tab.getText().equals("Ended")){
-                        treatmentList = getEndedTreatments(us.getTreatment_userId(us.getUser_Email(us.getUserLogged(prefs)).getId()));
-                    }
-                    else {
-                        treatmentList = us.getTreatment_userId(us.getUser_Email(us.getUserLogged(prefs)).getId());
-                        Collections.reverse(treatmentList);
+                new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
+                    @Override
+                    public List<Treatment> apiCall(Object... params) {
+                        switch (((String) params[2])) {
+                            case "Active":
+                                return getActiveTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+                            case "Ended":
+                                return getEndedTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+                            default:
+                                List<Treatment> aux = us.getTreatment_userId(us.getUser_Email((String) params[1]).getId());
+                                Collections.reverse(aux);
+                                return aux;
+                        }
                     }
 
-                ListView list = viewCA.findViewById(R.id.list_user_treatments);
-                adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
-                list.setAdapter(adapter);
+                    @Override
+                    public void processFinish(View v, List<Treatment> result){
+                        treatmentList = result;
+                        ListView list = viewCA.findViewById(R.id.list_user_treatments);
+                        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
+                        list.setAdapter(adapter);
+                    }
+                }).execute(viewCA, us.getEmailLogged(prefs), tab.getText());
             }
 
             @Override
@@ -173,7 +181,7 @@ public class treatments extends Fragment {
                 public void processFinish(View v, List<Treatment> result){
                     treatmentList = result;
                 }
-            }).execute(viewCA, us.getUserLogged(prefs));
+            }).execute(viewCA, us.getEmailLogged(prefs));
         }
 
         ListView list = viewCA.findViewById(R.id.list_user_treatments);

@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,6 +23,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
@@ -72,6 +76,9 @@ public class treatment_edit extends Fragment {
     EditText period;
     CalendarView endDate;
 
+    ArrayList<Medicine> listItems = new ArrayList<>();
+    ArrayAdapter<Medicine> adapter;
+
     public treatment_edit() {
         // Required empty public constructor
     }
@@ -116,10 +123,19 @@ public class treatment_edit extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setHasOptionsMenu(true);
+        try {
+            getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
+        } catch (Exception e) {}
     }
 
-    ArrayList<Medicine> listItems = new ArrayList<>();
-    ArrayAdapter<Medicine> adapter;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -131,8 +147,19 @@ public class treatment_edit extends Fragment {
         medicineList = new ArrayList<>();
         //Rellenar con campos de base de datos del kit del usuario
         User user = us.getUser_Email(prefs.getString("username",""));
-        if (user != null)
-            medicineList = us.getMedicine_userId(user.getId());
+        if (user != null) {
+            new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
+                @Override
+                public List<Medicine> apiCall(Object... params) {
+                    return us.getMedicine_userId(((User) params[1]).getId());
+                }
+
+                @Override
+                public void processFinish(View v, List<Medicine> result){
+                    medicineList = result;
+                }
+            }).execute(viewCA, user);
+        }
 
         ListView list = viewCA.findViewById(R.id.list);
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listItems);
@@ -146,8 +173,8 @@ public class treatment_edit extends Fragment {
 
                 alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
 
-                Button btnFinDate = (Button) alert.findViewById(R.id.btn_date_cale);
-                final TextView finalDateField = (TextView) alert.findViewById(R.id.final_date);
+                Button btnFinDate = alert.findViewById(R.id.btn_date_cale);
+                final TextView finalDateField = alert.findViewById(R.id.final_date);
                 btnFinDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view){

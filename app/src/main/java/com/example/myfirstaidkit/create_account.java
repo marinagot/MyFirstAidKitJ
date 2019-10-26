@@ -67,32 +67,8 @@ public class create_account extends Fragment {
         username = viewCA.findViewById(R.id.txt_username_set);
         email = viewCA.findViewById(R.id.txt_email_set);
 
-
-
-        /*Button btnBirthDate = (Button) viewCA.findViewById(R.id.btn_cale_birthday);
-        final EditText birthday = viewCA.findViewById(R.id.txt_birth_set);
-        btnBirthDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int day) {
-                                    month += 1;
-                                    birthday.setText(day + "/" + month + "/" + year);
-                            }
-                        },year,month,dayOfMonth);
-                datePickerDialog.show();
-            }
-        });*/
-
         password = viewCA.findViewById(R.id.txt_pwd_set);
         confirm_password = viewCA.findViewById(R.id.txt_pwd_conf_set);
-        /*avatar = viewCA.findViewById(R.id.image_profile_set);*/
 
         TextView logIn = viewCA.findViewById(R.id.sign_in_text);
 
@@ -107,8 +83,8 @@ public class create_account extends Fragment {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if((username.getText().toString().equals(""))||(email.getText().toString().equals(""))||
-                        /*(birthday.getText().toString().equals(""))||*/(password.getText().toString().equals(""))
+                if((username.getText().toString().equals(""))||(email.getText().toString().equals(""))
+                        ||(password.getText().toString().equals(""))
                         ||(confirm_password.getText().toString().equals("")))
                 {
                     //Display Message
@@ -124,8 +100,8 @@ public class create_account extends Fragment {
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
 
-                    User user = new User("0", username.getText().toString(), email.getText().toString(), /*birthday.getText().toString(),
-                            avatar.toString(),*/ password.getText().toString());
+                    User user = new User("0", username.getText().toString(),
+                            email.getText().toString(), password.getText().toString());
 
                     new ApiCallThread<User>(new AsyncResponse<User>(){
                         @Override
@@ -139,7 +115,7 @@ public class create_account extends Fragment {
                             if(result != null) {
                                 edit.putString("username", result.getUsername());
                                 edit.putString("email", result.getEmail());
-                                /*edit.putBoolean("isLogged", true);*/
+                                edit.putString("id", result.getId());
                                 edit.apply();
                             }
                             AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
@@ -148,18 +124,10 @@ public class create_account extends Fragment {
                             alertDialog.show();
 
                             Intent intent = new Intent(getContext(), LoggedActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
-
-                            /*try {
-                                Navigation.findNavController(v).navigate(R.id.action_create_account_to_home);
-                            } catch (Exception e){
-                                getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
-                            }*/
-
-                            /*getActivity().setTitle("Login");*/
                         }
                     }).execute(v, user);
-                    /*us.insertUser(user);*/
                 }
                 else{
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
@@ -167,13 +135,11 @@ public class create_account extends Fragment {
                     alertDialog.setMessage("The passwords does not match, try again");
                     alertDialog.show();
                     int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                    TextView tv = (TextView) alertDialog.findViewById(textViewId);
+                    TextView tv = alertDialog.findViewById(textViewId);
                     tv.setTextColor(Color.RED);
-                    TextView textViewMessage = (TextView) alertDialog.findViewById(android.R.id.message);
+                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
                     textViewMessage.setTextColor(Color.RED);
-
                 }
-
             }
         });
 
