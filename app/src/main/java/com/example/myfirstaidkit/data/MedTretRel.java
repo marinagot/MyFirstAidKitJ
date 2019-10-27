@@ -2,24 +2,31 @@ package com.example.myfirstaidkit.data;
 
 import android.arch.persistence.room.Entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
-@Entity(primaryKeys = {"idRelation"})
+@Entity(primaryKeys = {"id"})
 public class MedTretRel {
 
-    private String idRelation;
+    @SerializedName("_id")
+    private String id;
+    @SerializedName("treatment_id")
     private String idTreatment;
+    @SerializedName("medicine_id")
     private String idMedicine;
     private Integer frequency;
-    private Date initialDate;
-    private Date finalDate;
+    @SerializedName("date_start")
+    private Long initialDate;
+    @SerializedName("date_end")
+    private Long finalDate;
 
     public MedTretRel() {
 
     }
 
-    public MedTretRel(String idRelation, String idTreatment, String idMedicine, Integer frequency, Date initialDate, Date finalDate) {
-        this.idRelation = idRelation;
+    public MedTretRel(String idRelation, String idTreatment, String idMedicine, Integer frequency, Long initialDate, Long finalDate) {
+        this.id = idRelation;
         this.idTreatment = idTreatment;
         this.idMedicine = idMedicine;
         this.frequency = frequency;
@@ -27,12 +34,12 @@ public class MedTretRel {
         this.finalDate = finalDate;
     }
 
-    public String getIdRelation() {
-        return idRelation;
+    public String getId() {
+        return id;
     }
 
-    public void setIdRelation(String idRelation) {
-        this.idRelation = idRelation;
+    public void setId(String idRelation) {
+        this.id = idRelation;
     }
 
     public String getIdTreatment() {
@@ -59,19 +66,19 @@ public class MedTretRel {
         this.frequency = frequency;
     }
 
-    public Date getInitialDate() {
+    public Long getInitialDate() {
         return initialDate;
     }
 
-    public void setInitialDate(Date initialDate) {
+    public void setInitialDate(Long initialDate) {
         this.initialDate = initialDate;
     }
 
-    public Date getFinalDate() {
+    public Long getFinalDate() {
         return finalDate;
     }
 
-    public void setFinalDate(Date finalDate) {
+    public void setFinalDate(Long finalDate) {
         this.finalDate = finalDate;
     }
 }

@@ -169,22 +169,21 @@ public class treatments extends Fragment {
             }
         });
 
+        final ListView list = viewCA.findViewById(R.id.list_user_treatments);
 
-        if (us.userIsLogged(prefs)) {
-            new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
-                @Override
-                public List<Treatment> apiCall(Object... params) {
-                    return getActiveTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
-                }
+        new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
+            @Override
+            public List<Treatment> apiCall(Object... params) {
+                return getActiveTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+            }
 
-                @Override
-                public void processFinish(View v, List<Treatment> result){
-                    treatmentList = result;
-                }
-            }).execute(viewCA, us.getEmailLogged(prefs));
-        }
-
-        ListView list = viewCA.findViewById(R.id.list_user_treatments);
+            @Override
+            public void processFinish(View v, List<Treatment> result){
+                treatmentList = result;
+                adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
+                list.setAdapter(adapter);
+            }
+        }).execute(viewCA, us.getEmailLogged(prefs));
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -242,9 +241,6 @@ public class treatments extends Fragment {
             }
         });
 
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
-        list.setAdapter(adapter);
-
         return viewCA;
     }
 
@@ -271,10 +267,10 @@ public class treatments extends Fragment {
     }
 
     public Date getEndDate(List<MedTretRel> relations) {
-        Date lastDate = relations.get(0).getFinalDate();
+        Date lastDate = new Date(relations.get(0).getFinalDate());
         for (MedTretRel r : relations) {
-            if (lastDate.getTime() < r.getFinalDate().getTime())
-                lastDate = r.getFinalDate();
+            if (lastDate.getTime() < r.getFinalDate())
+                lastDate = new Date(r.getFinalDate());
         }
         return lastDate;
     }

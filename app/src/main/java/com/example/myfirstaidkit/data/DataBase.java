@@ -69,13 +69,13 @@ public class DataBase extends SQLiteOpenHelper {
 
         db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
                 "%s TEXT NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
-                "%s DATETIME NOT NULL,%s INTEGER NOT NULL);",
+                "%s TIMESTAMP NOT NULL,%s INTEGER NOT NULL);",
                 Tablas.MEDICINE, UsersDb.ID, MedicinesDb.NAME,
                 MedicinesDb.ID_USER, MedicinesDb.TYPE, MedicinesDb.EXPIRATION_DATE,
                 MedicinesDb.DOSE_NUMBER));
         db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
-                "%s INTEGER NOT NULL , %s INTEGER NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
-                "%s DATETIME NOT NULL);",
+                "%s INTEGER NOT NULL , %s INTEGER NOT NULL,%s INTEGER NOT NULL,%s TIMESTAMP NOT NULL," +
+                "%s TIMESTAMP NOT NULL);",
                 Tablas.RELATION_MED_TREATMENT, UsersDb.ID, MedTretRelDb.ID_TRAT,
                 MedTretRelDb.ID_MED, MedTretRelDb.FREQUENCY, MedTretRelDb.INITIAL_DATE,
                 MedTretRelDb.FINAL_DATE));

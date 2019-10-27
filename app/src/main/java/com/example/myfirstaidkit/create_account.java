@@ -100,7 +100,7 @@ public class create_account extends Fragment {
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
 
-                    User user = new User("0", username.getText().toString(),
+                    User user = new User(username.getText().toString(),
                             email.getText().toString(), password.getText().toString());
 
                     new ApiCallThread<User>(new AsyncResponse<User>(){
@@ -116,12 +116,13 @@ public class create_account extends Fragment {
                                 edit.putString("username", result.getUsername());
                                 edit.putString("email", result.getEmail());
                                 edit.putString("id", result.getId());
+                                edit.putString("sync_id", result.getSyncId());
                                 edit.apply();
                             }
-                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                            /*AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                             alertDialog.setTitle("Successful!");
                             alertDialog.setMessage("Account for " + username.getText().toString() + " created" );
-                            alertDialog.show();
+                            alertDialog.show();*/
 
                             Intent intent = new Intent(getContext(), LoggedActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

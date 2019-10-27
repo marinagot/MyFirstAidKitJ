@@ -2,23 +2,33 @@ package com.example.myfirstaidkit.data;
 
 import android.arch.persistence.room.Entity;
 
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity(primaryKeys = {"id"})
 public class Medicine {
 
+    @SerializedName("_id")
+
     private String id;
     private String name;
+    @SerializedName("user_id")
     private String idUser;
     private String type;
+    @SerializedName("dose_number")
     private Integer doseNumber;
-    private Date expirationDate;
+    @SerializedName("expiry_date")
+    private Long expirationDate;
 
     public Medicine() {
 
     }
 
-    public Medicine(String id, String name, String idUser, String type, Integer doseNumber, Date expirationDate) {
+    public Medicine(String id, String name, String idUser, String type, Integer doseNumber, Long expirationDate) {
         this.id = id;
         this.name = name;
         this.idUser = idUser;
@@ -67,11 +77,11 @@ public class Medicine {
         this.doseNumber = doseNumber;
     }
 
-    public Date getExpirationDate() {
+    public Long getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(Long expirationDate) {
         this.expirationDate = expirationDate;
     }
 

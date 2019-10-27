@@ -107,6 +107,7 @@ public class login extends Fragment {
                                 edit.putString("username", result.getUsername());
                                 edit.putString("email", result.getEmail());
                                 edit.putString("id", result.getId());
+                                edit.putString("sync_id", "0");
                                 edit.apply();
 
                                 Intent intent = new Intent(getContext(), LoggedActivity.class);

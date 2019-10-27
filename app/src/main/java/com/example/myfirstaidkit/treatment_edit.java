@@ -23,6 +23,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
@@ -31,6 +33,7 @@ import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
 import com.example.myfirstaidkit.data.User;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -146,91 +149,87 @@ public class treatment_edit extends Fragment {
 
         medicineList = new ArrayList<>();
         //Rellenar con campos de base de datos del kit del usuario
-        User user = us.getUser_Email(prefs.getString("username",""));
-        if (user != null) {
-            new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
-                @Override
-                public List<Medicine> apiCall(Object... params) {
-                    return us.getMedicine_userId(((User) params[1]).getId());
-                }
-
-                @Override
-                public void processFinish(View v, List<Medicine> result){
-                    medicineList = result;
-                }
-            }).execute(viewCA, user);
-        }
-
-        ListView list = viewCA.findViewById(R.id.list);
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listItems);
-        list.setAdapter(adapter);
-
-        Button btnAdd = viewCA.findViewById(R.id.btn_treatment_edit_add);
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
             @Override
-            public void onClick(View v) {
+            public List<Medicine> apiCall(Object... params) {
+                return us.getMedicine_userId(((String) params[1]));
+            }
 
-                alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
+            @Override
+            public void processFinish(View v, List<Medicine> result){
+                medicineList = result;
+                ListView list = viewCA.findViewById(R.id.list);
+                adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listItems);
+                list.setAdapter(adapter);
 
-                Button btnFinDate = alert.findViewById(R.id.btn_date_cale);
-                final TextView finalDateField = alert.findViewById(R.id.final_date);
-                btnFinDate.setOnClickListener(new View.OnClickListener() {
+                Button btnAdd = viewCA.findViewById(R.id.btn_treatment_edit_add);
+
+                btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view){
-                        Calendar calendar = Calendar.getInstance();
-                        int year = calendar.get(Calendar.YEAR);
-                        int month = calendar.get(Calendar.MONTH);
-                        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                                new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker view, int year, int month, int day) {
-                                        try {
-                                            month += 1;
-                                            finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year);
-                                            finalDateField.setText(day + "/" + month + "/" + year);
-                                        } catch (Exception e){ finalDate = null; }
+                    public void onClick(View v) {
+
+                        alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
+
+                        Button btnFinDate = alert.findViewById(R.id.btn_date_cale);
+                        final TextView finalDateField = alert.findViewById(R.id.final_date);
+                        btnFinDate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view){
+                                Calendar calendar = Calendar.getInstance();
+                                int year = calendar.get(Calendar.YEAR);
+                                int month = calendar.get(Calendar.MONTH);
+                                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                                        new DatePickerDialog.OnDateSetListener() {
+                                            @Override
+                                            public void onDateSet(DatePicker view, int year, int month, int day) {
+                                                try {
+                                                    month += 1;
+                                                    finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year);
+                                                    finalDateField.setText(day + "/" + month + "/" + year);
+                                                } catch (Exception e){ finalDate = null; }
+                                            }
+                                        },year,month,dayOfMonth);
+                                datePickerDialog.show();
+                            }
+                        });
+
+                        listMedicines = alert.findViewById(R.id.list_medicines);
+                        period = alert.findViewById(R.id.txt_edit_medicine_num);
+                        endDate = alert.findViewById(R.id.chosen_date);
+
+                        ArrayAdapter<Medicine> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, medicineList);
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        listMedicines.setAdapter(dataAdapter);
+
+
+                        new AlertDialog.Builder(getContext()).setView(alert)
+                                .setTitle("Insert new medicine")
+                                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        //Logica de guardado en la lista general
+                                        String a = period.getText().toString();
+                                        dialog.dismiss();
+
+                                        // this line adds the data of your Spinner and puts in your array
+                                        listItems.add((Medicine) listMedicines.getSelectedItem());
+
+                                        MedTretRel auxRel = new MedTretRel();
+                                        auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
+                                        auxRel.setInitialDate(new Date().getTime());
+                                        auxRel.setFinalDate(finalDate.getTime());
+                                        auxRel.setIdMedicine(((Medicine) listMedicines.getSelectedItem()).getId());
+                                        relations.add(auxRel);
+
+                                        // next thing you have to do is check if your adapter has changed
+                                        adapter.notifyDataSetChanged();
                                     }
-                                },year,month,dayOfMonth);
-                        datePickerDialog.show();
+                                }).show();
                     }
                 });
-
-                listMedicines = alert.findViewById(R.id.list_medicines);
-                period = alert.findViewById(R.id.txt_edit_medicine_num);
-                endDate = alert.findViewById(R.id.chosen_date);
-
-                ArrayAdapter<Medicine> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, medicineList);
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                listMedicines.setAdapter(dataAdapter);
-
-
-                new AlertDialog.Builder(getContext()).setView(alert)
-                .setTitle("Insert new medicine")
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        //Logica de guardado en la lista general
-                        String a = period.getText().toString();
-                        dialog.dismiss();
-
-                        // this line adds the data of your Spinner and puts in your array
-                        listItems.add((Medicine) listMedicines.getSelectedItem());
-
-                        MedTretRel auxRel = new MedTretRel();
-                        auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
-                        auxRel.setInitialDate(new Date());
-                        auxRel.setFinalDate(finalDate);
-                        auxRel.setIdMedicine(((Medicine) listMedicines.getSelectedItem()).getId());
-                        relations.add(auxRel);
-
-                        // next thing you have to do is check if your adapter has changed
-                        adapter.notifyDataSetChanged();
-                    }
-                }).show();
             }
-        });
+        }).execute(viewCA, us.getIdLogged(prefs));
 
         Button btnDone = viewCA.findViewById(R.id.btn_treatment_edit_done);
 
@@ -239,38 +238,39 @@ public class treatment_edit extends Fragment {
             public void onClick(View v) {
 
                 treatment.setName(((EditText) viewCA.findViewById(R.id.txt_treatment_name)).getText().toString());
-                String user = prefs.getString("username", null);
 
-                if (user != null) {
-                    treatment.setIdUser(us.getUser_Email(user).getId());
+                treatment.setIdUser(us.getIdLogged(prefs));
 
-                    if (treatment.getName().equals("") || relations.isEmpty()) {
-                        //Display Message
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                        alertDialog.setTitle("ALERT!");
-                        alertDialog.setMessage("All fields must be filled correctly");
-                        alertDialog.show();
-                        int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                        TextView tv = alertDialog.findViewById(textViewId);
-                        tv.setTextColor(Color.RED);
-                        TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                        textViewMessage.setTextColor(Color.RED);
-                    }
-                    else {
-                        treatment.setId(us.insertTreatment(treatment));
-                        for (MedTretRel rel : relations) {
-                            rel.setIdTreatment(treatment.getId());
-                            us.insertRelation(rel);
-                        }
-                        getFragmentManager().beginTransaction().replace(R.id.content, new treatments()).commit();
-                        getActivity().setTitle("Treatments");
-                    }
+                if (treatment.getName().equals("") || relations.isEmpty()) {
+                    //Display Message
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("ALERT!");
+                    alertDialog.setMessage("All fields must be filled correctly");
+                    alertDialog.show();
+                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+                    TextView tv = alertDialog.findViewById(textViewId);
+                    tv.setTextColor(Color.RED);
+                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+                    textViewMessage.setTextColor(Color.RED);
                 }
                 else {
+                    new ApiCallThread<Void>(new AsyncResponse<Void>() {
+                        @Override
+                        public Void apiCall(Object... params) {
+                            Treatment treatment = (Treatment) params[1];
+                            treatment.setId(us.insertTreatment(treatment));
+                            for (MedTretRel rel : relations) {
+                                rel.setIdTreatment(treatment.getId());
+                                us.insertRelation(rel);
+                            }
+                            return null;
+                        }
 
-//                         No esta logueado
-                    getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
-                    getActivity().setTitle("Login");
+                        @Override
+                        public void processFinish(View v, Void result) {
+                            Navigation.findNavController(v).navigate(R.id.action_treatment_edit_to_treatments);
+                        }
+                    }).execute(v, treatment);
                 }
             }
         });

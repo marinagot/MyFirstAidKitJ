@@ -37,9 +37,9 @@
         android:id="@+id/list_medicines"
         android:layout_width="347dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:spinnerMode="dropdown"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -89,37 +89,35 @@
         app:layout_constraintStart_toEndOf="@+id/txt_edit_medicine_num"
         app:layout_constraintTop_toBottomOf="@+id/list_medicines" />
 
+
     <TextView
         android:id="@+id/final_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="48dp"
         android:ems="5"
         android:text="dd/MM/yyyy"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/lbl_edit_medicine_type3"
-        app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
-        app:layout_constraintVertical_bias="0.04" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"
+        app:layout_constraintVertical_bias="0.077" />
 
     <Button
         android:id="@+id/btn_date_cale"
         android:layout_width="40dp"
         android:layout_height="42dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@android:drawable/dialog_holo_light_frame"
         android:drawableStart="@drawable/ic_calendar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintHorizontal_bias="0.017"
         app:layout_constraintStart_toEndOf="@+id/final_date"
-        app:layout_constraintTop_toBottomOf="@+id/txt_edit_medicine_num"
-        app:layout_constraintVertical_bias="0.016" />
+        app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"
+        app:layout_constraintVertical_bias="0.06" />
 
 
     <!--<<CalendarView

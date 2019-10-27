@@ -2,12 +2,16 @@ package com.example.myfirstaidkit.data;
 
 import android.arch.persistence.room.Entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 @Entity(primaryKeys = {"id"})
 public class Treatment{
 
+    @SerializedName("_id")
     private String id;
+    @SerializedName("user_id")
     private String idUser;
     private String name;
 

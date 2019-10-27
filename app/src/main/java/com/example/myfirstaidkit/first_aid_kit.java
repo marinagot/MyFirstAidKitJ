@@ -117,16 +117,12 @@ public class first_aid_kit extends Fragment {
                 @Override
                 public void processFinish(View v, List<Medicine> result){
                     medicineList = result;
+                    ListView list = viewCA.findViewById(R.id.list_user_medicines);
+                    adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);
+                    list.setAdapter(adapter);
                 }
             }).execute(viewCA, us.getEmailLogged(prefs));
         }
-
-        ListView list = viewCA.findViewById(R.id.list_user_medicines);
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);
-        list.setAdapter(adapter);
-
-
-
         return viewCA;
     }
 

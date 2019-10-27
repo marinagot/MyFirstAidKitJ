@@ -21,15 +21,7 @@ public class LoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         prefs = this.getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
-
-        /*if (prefs.getString("id", null) != null) {
-            Intent intent = new Intent(this, LoggedActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
-        else {*/
             setContentView(R.layout.activity_login);
-        /*}*/
     }
 
     @Override

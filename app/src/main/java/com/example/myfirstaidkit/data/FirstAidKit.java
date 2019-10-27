@@ -14,6 +14,7 @@ public class FirstAidKit{
         String USERNAME = "username";
         String EMAIL = "email";
         String PASSWORD = "password";
+        String SYNC_ID = "sync_id";
     }
 
 

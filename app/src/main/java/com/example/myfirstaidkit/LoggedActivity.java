@@ -13,13 +13,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
+import com.example.myfirstaidkit.data.User;
 
 public class LoggedActivity extends AppCompatActivity
         implements home.OnFragmentInteractionListener,
@@ -99,28 +103,52 @@ public class LoggedActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            setTitle(item.getTitle());
-            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.settings);
-        } else if (id == R.id.action_account) {
-            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.account);
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.settings);
+                break;
+            case R.id.action_account:
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.account);
+                break;
+            case R.id.action_logout:
+                edit.clear();
+                edit.apply();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
+            case R.id.action_refresh:
+                // Animar si es posible el icono para que gire
 
-        } else if (id == R.id.action_logout) {
-            edit.clear();
-            edit.apply();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else {
-            Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
+                //Hacer la llamada a base de datos
+                new ApiCallThread<String>(new AsyncResponse<String>(){
+                    @Override
+                    public String apiCall(Object... params) {
+                        return us.syncDabtabase((String) params[1], (String) params[2]);
+                    }
+
+                    @Override
+                    public void processFinish(View v, String result){
+                        us.setSyncIdLogged(prefs, result);
+                        // Recarga la página
+                        recreate();
+                    }
+                }).execute(null, us.getIdLogged(prefs), us.getSyncIdLogged(prefs));
+            default:
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
+                return false;
         }
 
         // Highlight the selected item has been done by NavigationView
         /*item.setChecked(true);*/
 
         return true;
+    }
+
+    @Override
+    public void recreate() {
+        super.recreate();
     }
 
     @Override

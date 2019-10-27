@@ -20,11 +20,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -120,8 +126,8 @@ public class medicine_edit extends Fragment {
 
         us = DataBaseOperations.get_Instance(getContext());
 
-        Button btnDate = (Button) viewCA.findViewById(R.id.btn_cale_medicine);
-        final TextView chosDate = (TextView) viewCA.findViewById(R.id.chosen_date);
+        Button btnDate = viewCA.findViewById(R.id.btn_cale_medicine);
+        final TextView chosDate = viewCA.findViewById(R.id.chosen_date);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -135,7 +141,8 @@ public class medicine_edit extends Fragment {
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         try {
                             month += 1;
-                            med.setExpirationDate(new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year));
+                            Timestamp timestamp = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year).getTime());
+                            med.setExpirationDate(timestamp.getTime());
                             chosDate.setText(day + "/" + month + "/" + year);
                         }
                         catch (Exception e) { med.setExpirationDate(null);  }
@@ -164,8 +171,8 @@ public class medicine_edit extends Fragment {
                 if(med.getName().equals("") || med.getExpirationDate() == null || med.getDoseNumber().equals(-1)) {
                     //Display Message
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("ALERT!");
-                    alertDialog.setMessage("All fields must be filled correctly");
+                    alertDialog.setTitle("ERROR!");
+                    alertDialog.setMessage("Debes rellenar todos los campos correctamente");
                     alertDialog.show();
                     int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
                     TextView tv = alertDialog.findViewById(textViewId);
@@ -175,26 +182,23 @@ public class medicine_edit extends Fragment {
                 }
                 else {
 
-                    String user = prefs.getString("username", null);
+                    med.setIdUser(us.getIdLogged(prefs));
 
-                    if (user != null) {
-                        //Llamas para obtener el userId
-                        med.setIdUser(us.getUser_Email(user).getId());
+                    new ApiCallThread<String>(new AsyncResponse<String>(){
+                        @Override
+                        public String apiCall(Object... params) {
+                            return us.insertMedicine((Medicine) params[1]);
+                        }
 
-                        us.insertMedicine(med);
-
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                        alertDialog.setTitle("Successful!");
-                        alertDialog.setMessage("Medicine created" );
-                        alertDialog.show();
-                        getFragmentManager().beginTransaction().replace(R.id.content, new first_aid_kit()).commit();
-                        getActivity().setTitle("My kit");
-                    }
-                    else {
-                        // No esta logueado
-                        getFragmentManager().beginTransaction().replace(R.id.content, new login()).commit();
-                        getActivity().setTitle("Login");
-                    }
+                        @Override
+                        public void processFinish(View v, String result){
+                            /*AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                            alertDialog.setTitle("Successful!");
+                            alertDialog.setMessage("Medicine created" );
+                            alertDialog.show();*/
+                            Navigation.findNavController(v).navigate(R.id.action_medicine_edit_to_first_aid_kit);
+                        }
+                    }).execute(viewCA, med);
                 }
             }
         });
