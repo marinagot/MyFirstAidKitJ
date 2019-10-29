@@ -130,7 +130,7 @@ public class treatments extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_treatments, container, false);
         us = DataBaseOperations.get_Instance(getContext());
 
-        TabLayout tab = viewCA.findViewById(R.id.tabTreatments);
+        /*TabLayout tab = viewCA.findViewById(R.id.tabTreatments);
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -167,7 +167,7 @@ public class treatments extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
-        });
+        });*/
 
         final ListView list = viewCA.findViewById(R.id.list_user_treatments);
 

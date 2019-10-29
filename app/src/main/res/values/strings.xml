@@ -84,6 +84,13 @@
         <item>Pastillas</item>
         <item>Jarabe</item>
     </string-array>
+
+    <string-array name="treatment_types">
+        <item>Activos</item>
+        <item>Terminados</item>
+        <item>Todos</item>
+    </string-array>
+
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_medicines">Botiquín</string>
     <string name="title_treatments">Tratamientos</string>

@@ -54,7 +54,9 @@ public final class DataBaseOperations {
 
     Gson gson = new Gson();
 
-    private static String base_url ="http://192.168.1.46:8080";
+    /*private static String base_url ="http://192.168.1.46:8080";*/
+    private static String base_url ="http://jdserver.ddns.net:3000";
+
 
     public static  DataBaseOperations instance = new  DataBaseOperations();
 
