@@ -21,8 +21,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:src="@tools:sample/avatars" />
+        app:srcCompat="@mipmap/ic_launcher_round"
+        tools:src="@tools:sample/avatars[3]" />
 
     <EditText
         android:id="@+id/txt_email_set"
@@ -80,7 +80,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/button_selector_primary"
         android:text="@string/btn_sign_up"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/colorIcons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -118,9 +118,10 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
             android:layout_marginRight="8dp"
-            android:text="¿Ya tienes cuenta?" />
+            android:layout_marginBottom="28dp"
+            android:text="¿Ya tienes cuenta?"
+            android:textColor="@color/colorSecondaryText" />
 
         <TextView
             android:id="@+id/sign_in_text"
@@ -129,7 +130,7 @@
             android:layout_marginBottom="28dp"
             android:text="Inicia sesión"
             android:textAllCaps="false"
-            android:textColor="#008577"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
 
     </LinearLayout>

@@ -1,9 +1,12 @@
 package com.example.myfirstaidkit;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -31,15 +34,14 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
-import com.example.myfirstaidkit.data.User;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.Context.ALARM_SERVICE;
 
 
 /**
@@ -81,6 +83,8 @@ public class treatment_edit extends Fragment {
 
     ArrayList<Medicine> listItems = new ArrayList<>();
     ArrayAdapter<Medicine> adapter;
+
+    final static int RQS_1 = 1;
 
     public treatment_edit() {
         // Required empty public constructor
@@ -275,8 +279,26 @@ public class treatment_edit extends Fragment {
             }
         });
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 17);
+        cal.set(Calendar.MINUTE, 20);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        setAlarm(cal);
+
         return viewCA;
 
+
+    }
+
+    public void setAlarm(Calendar targetCal) {
+
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                getContext(), RQS_1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(),
+                pendingIntent);
 
     }
 

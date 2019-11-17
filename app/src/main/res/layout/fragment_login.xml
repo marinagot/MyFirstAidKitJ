@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/ic_launcher"
+        app:srcCompat="@mipmap/ic_launcher_round"
         tools:src="@tools:sample/avatars" />
 
     <EditText
@@ -71,7 +71,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/button_selector_primary"
         android:text="@string/btn_sign_in"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/colorIcons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="28dp"
             android:text="Regístrate"
-            android:textColor="#008577"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
     </LinearLayout>
 

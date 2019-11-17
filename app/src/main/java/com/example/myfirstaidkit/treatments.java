@@ -1,9 +1,12 @@
 package com.example.myfirstaidkit;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +43,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import static android.content.Context.ALARM_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -130,44 +136,38 @@ public class treatments extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_treatments, container, false);
         us = DataBaseOperations.get_Instance(getContext());
 
-        /*TabLayout tab = viewCA.findViewById(R.id.tabTreatments);
-        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+        final Spinner spinner = viewCA.findViewById(R.id.spinner);
+        spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+           @Override
+           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
+                   @Override
+                   public List<Treatment> apiCall(Object... params) {
+                       switch (((String) params[2])) {
+                           case "Activos":
+                               return getActiveTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+                           case "Terminados":
+                               return getEndedTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+                           default:
+                               List<Treatment> aux = us.getTreatment_userId(us.getUser_Email((String) params[1]).getId());
+                               Collections.reverse(aux);
+                               return aux;
+                       }
+                   }
 
-                new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
-                    @Override
-                    public List<Treatment> apiCall(Object... params) {
-                        switch (((String) params[2])) {
-                            case "Active":
-                                return getActiveTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
-                            case "Ended":
-                                return getEndedTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
-                            default:
-                                List<Treatment> aux = us.getTreatment_userId(us.getUser_Email((String) params[1]).getId());
-                                Collections.reverse(aux);
-                                return aux;
-                        }
-                    }
-
-                    @Override
-                    public void processFinish(View v, List<Treatment> result){
-                        treatmentList = result;
-                        ListView list = viewCA.findViewById(R.id.list_user_treatments);
-                        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
-                        list.setAdapter(adapter);
-                    }
-                }).execute(viewCA, us.getEmailLogged(prefs), tab.getText());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+                   @Override
+                   public void processFinish(View v, List<Treatment> result){
+                       treatmentList = result;
+                       ListView list = viewCA.findViewById(R.id.list_user_treatments);
+                       adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
+                       list.setAdapter(adapter);
+                   }
+               }).execute(view, us.getEmailLogged(prefs), spinner.getSelectedItem());
+           }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });*/
+            public void onNothingSelected(AdapterView<?> parentView) { }
+       });
 
         final ListView list = viewCA.findViewById(R.id.list_user_treatments);
 
@@ -241,7 +241,26 @@ public class treatments extends Fragment {
             }
         });
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 17);
+        cal.set(Calendar.MINUTE, 33);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        setAlarm(cal);
+
+
         return viewCA;
+    }
+
+    public void setAlarm(Calendar targetCal) {
+
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                getContext(), 1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(),
+                pendingIntent);
+
     }
 
     public List<Treatment> getActiveTreatments(List<Treatment> input) {

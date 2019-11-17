@@ -54,8 +54,8 @@ public final class DataBaseOperations {
 
     Gson gson = new Gson();
 
-    /*private static String base_url ="http://192.168.1.46:8080";*/
-    private static String base_url ="http://jdserver.ddns.net:3000";
+    private static String base_url ="http://192.168.1.46:3000";
+    /*private static String base_url ="http://jdserver.ddns.net:3000";*/
 
 
     public static  DataBaseOperations instance = new  DataBaseOperations();
@@ -262,7 +262,7 @@ public final class DataBaseOperations {
             data.put("email", email);
             data.put("old_password", old_password);
             data.put("new_password", new_password);
-            return callApi("/users/password", Request.Method.POST, data).getString("id");
+            return callApi("/users/password", Request.Method.POST, data).getString("_id");
         } catch (Exception e) {}
 
         return null;
@@ -316,7 +316,7 @@ public final class DataBaseOperations {
 
         if (res != null) {
             try {
-                med.setId(res.getString("id"));
+                med.setId(res.getString("_id"));
             } catch (JSONException e) { }
 
             SQLiteDatabase db = DataBase.getWritableDatabase();
@@ -444,7 +444,7 @@ public final class DataBaseOperations {
 
         if (res != null) {
             try {
-                treatment.setId(res.getString("id"));
+                treatment.setId(res.getString("_id"));
             } catch (JSONException e) { }
 
             SQLiteDatabase db= DataBase.getWritableDatabase();
@@ -540,7 +540,7 @@ public final class DataBaseOperations {
 
         if (res != null) {
             try {
-                relation.setId(res.getString("id"));
+                relation.setId(res.getString("_id"));
             } catch (JSONException e) { }
 
             SQLiteDatabase db= DataBase.getWritableDatabase();

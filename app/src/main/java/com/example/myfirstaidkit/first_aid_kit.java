@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.navigation.Navigation;
@@ -50,7 +49,8 @@ public class first_aid_kit extends Fragment {
     View viewCA;
 
     List<Medicine> medicineList = new ArrayList<>();
-    ArrayAdapter<Medicine> adapter;
+    //ArrayAdapter<Medicine> adapter;
+    MedicinesListAdapter<Medicine> adapterNew;
 
     public first_aid_kit() {
         // Required empty public constructor
@@ -85,8 +85,6 @@ public class first_aid_kit extends Fragment {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.action_first_aid_kit_to_medicine_edit);
-                /*getFragmentManager().beginTransaction().replace(R.id.content, new medicine_edit()).commit();
-                getActivity().setTitle("New medicine");*/
             }
         });
     }
@@ -118,8 +116,10 @@ public class first_aid_kit extends Fragment {
                 public void processFinish(View v, List<Medicine> result){
                     medicineList = result;
                     ListView list = viewCA.findViewById(R.id.list_user_medicines);
-                    adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);
-                    list.setAdapter(adapter);
+                    //adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);
+                    adapterNew = new MedicinesListAdapter<>(getContext(), R.layout.row, medicineList);
+                    //list.setAdapter(adapter);
+                    list.setAdapter(adapterNew);
                 }
             }).execute(viewCA, us.getEmailLogged(prefs));
         }
