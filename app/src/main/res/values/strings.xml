@@ -58,9 +58,8 @@
     <string name="edit_treatment_btn_add">+</string>
 
     <string name="edit_medicine_name">Nombre</string>
-    <string name="edit_medicine_lbl_type">Selecciona un tipo</string>
-    <string name="edit_medicine_lbl_type2">Indica la fecha de expiración</string>
-    <string name="edit_medicine_txt_num">Número de dosis</string>
+    <string name="edit_medicine_lbl_type">Tipo</string>
+    <string name="edit_medicine_txt_num">Cantidad</string>
     <string name="edit_medicine_txt_exp_date">Fecha de expiración</string>
 
     <string name="settings_lbl_notif">Notificaciones</string>

@@ -11,8 +11,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
@@ -29,6 +31,7 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -126,7 +129,7 @@ public class medicine_edit extends Fragment {
 
         us = DataBaseOperations.get_Instance(getContext());
 
-        Button btnDate = viewCA.findViewById(R.id.btn_cale_medicine);
+        /*Button btnDate = viewCA.findViewById(R.id.btn_cale_medicine);
         final TextView chosDate = viewCA.findViewById(R.id.chosen_date);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +153,70 @@ public class medicine_edit extends Fragment {
                 },year,month,dayOfMonth);
                 datePickerDialog.show();
             }
+        });*/
+
+        final Spinner chosDate = viewCA.findViewById(R.id.chosen_date);
+        chosDate.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    Calendar calendar = Calendar.getInstance();
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH);
+                    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int day) {
+                                    try {
+                                        month += 1;
+                                        String finalDate = day + "/" + month + "/" + year;
+                                        Timestamp timestamp = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(finalDate).getTime());
+                                        med.setExpirationDate(timestamp.getTime());
+                                        final List<String> plantsList = new ArrayList<>();
+                                        plantsList.add(finalDate);
+                                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, plantsList);
+                                        chosDate.setAdapter(spinnerArrayAdapter);
+                                        chosDate.setSelection(0);
+                                    }
+                                    catch (Exception e) { med.setExpirationDate(null);  }
+                                }
+                            },year,month,dayOfMonth);
+                    datePickerDialog.show();
+                }
+                return true;
+            }
         });
+        /*spinner.setOnKeyListener(Spinner_OnKey);*/
+
+        /*chosDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int day) {
+                                try {
+                                    month += 1;
+                                    String finalDate = day + "/" + month + "/" + year;
+                                    Timestamp timestamp = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(finalDate).getTime());
+                                    med.setExpirationDate(timestamp.getTime());
+                                    final List<String> plantsList = new ArrayList<>();
+                                    plantsList.add(finalDate);
+                                    final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), R.layout.row, plantsList);
+                                    chosDate.setAdapter(spinnerArrayAdapter);
+                                    chosDate.setSelection(0);
+                                }
+                                catch (Exception e) { med.setExpirationDate(null);  }
+                            }
+                        },year,month,dayOfMonth);
+                datePickerDialog.show();
+            }
+        });*/
+
 
 
         Button btnDone = viewCA.findViewById(R.id.btn_create_medicine);
