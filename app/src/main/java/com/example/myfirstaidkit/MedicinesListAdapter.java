@@ -5,8 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 
+import com.example.myfirstaidkit.data.ApiCallThread;
+import com.example.myfirstaidkit.data.AsyncResponse;
+import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Medicine;
 
 import java.text.SimpleDateFormat;
@@ -19,6 +25,8 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
     List<T> data;
     int style;
     private static LayoutInflater inflater = null;
+
+    DataBaseOperations us;
 
     public MedicinesListAdapter(Context context, int layoutId, List<T> data) {
         // TODO Auto-generated constructor stub
@@ -49,9 +57,10 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         View vi = convertView;
+        us = DataBaseOperations.get_Instance(getContext());
         if (vi == null)
             vi = inflater.inflate(style, null);
         TextView header = vi.findViewById(R.id.list_item_header);
@@ -63,6 +72,31 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
         String dateText = new SimpleDateFormat("dd MMM yyyy").format(new Date(((Medicine) data.get(position)).getExpirationDate()));
         expiryDate.setText("Caducidad: " + dateText);
+
+        ImageButton editImageView = vi.findViewById(R.id.list_item_edit);
+        editImageView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+            }
+        });
+
+        ImageButton deleteImageView = vi.findViewById(R.id.list_item_delete);
+        deleteImageView.setOnClickListener(new View.OnClickListener() {
+            T me = data.get(position);
+            public void onClick(View v) {
+                new ApiCallThread<String>(new AsyncResponse<String>(){
+                    @Override
+                    public String apiCall(Object... params) {
+                        return us.deleteMedicine((Medicine) params[1]);
+                    }
+
+                    @Override
+                    public void processFinish(View v, String result){
+
+                    }
+                }).execute(v, data.get(position));
+            }
+        });
         return vi;
     }
 }

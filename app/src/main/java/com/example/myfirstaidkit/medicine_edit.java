@@ -33,6 +33,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -156,6 +158,8 @@ public class medicine_edit extends Fragment {
         });*/
 
         final Spinner chosDate = viewCA.findViewById(R.id.chosen_date);
+        Date d = new Date();
+        setTime(chosDate, new SimpleDateFormat("dd MMM yyyy").format(d.getTime()));
         chosDate.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -168,19 +172,15 @@ public class medicine_edit extends Fragment {
                                 @Override
                                 public void onDateSet(DatePicker view, int year, int month, int day) {
                                     try {
-                                        month += 1;
-                                        String finalDate = day + "/" + month + "/" + year;
-                                        Timestamp timestamp = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(finalDate).getTime());
+                                        Calendar calendar = new GregorianCalendar(year, month, day);
+                                        String finalDate = new SimpleDateFormat("dd MMM yyyy").format(calendar.getTime());
+                                        Timestamp timestamp = new Timestamp(new SimpleDateFormat("dd MMM yyyy").parse(finalDate).getTime());
                                         med.setExpirationDate(timestamp.getTime());
-                                        final List<String> plantsList = new ArrayList<>();
-                                        plantsList.add(finalDate);
-                                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, plantsList);
-                                        chosDate.setAdapter(spinnerArrayAdapter);
-                                        chosDate.setSelection(0);
+                                        setTime(chosDate, finalDate);
                                     }
                                     catch (Exception e) { med.setExpirationDate(null);  }
                                 }
-                            },year,month,dayOfMonth);
+                            }, year, month, dayOfMonth);
                     datePickerDialog.show();
                 }
                 return true;
@@ -270,6 +270,14 @@ public class medicine_edit extends Fragment {
         });
 
         return viewCA;
+    }
+
+    private void setTime(Spinner chosDate, String finalDate) {
+        final List<String> plantsList = new ArrayList<>();
+        plantsList.add(finalDate);
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, plantsList);
+        chosDate.setAdapter(spinnerArrayAdapter);
+        chosDate.setSelection(0);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

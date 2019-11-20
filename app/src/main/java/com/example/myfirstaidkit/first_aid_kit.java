@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.navigation.Navigation;
@@ -116,10 +117,14 @@ public class first_aid_kit extends Fragment {
                 public void processFinish(View v, List<Medicine> result){
                     medicineList = result;
                     ListView list = viewCA.findViewById(R.id.list_user_medicines);
-                    //adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, medicineList);
                     adapterNew = new MedicinesListAdapter<>(getContext(), R.layout.row, medicineList);
-                    //list.setAdapter(adapter);
                     list.setAdapter(adapterNew);
+
+                    /*list.setOnItemClickListener(new ListView.OnItemClickListener() {
+                        public void onItemClick(AdapterView<?> adapterList, View v, final int pos, long id) {
+                            int i = 0;
+                        }
+                    });*/
                 }
             }).execute(viewCA, us.getEmailLogged(prefs));
         }

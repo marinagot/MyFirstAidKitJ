@@ -152,6 +152,7 @@ public final class DataBaseOperations {
         SQLiteDatabase db = DataBase.getWritableDatabase();
 
         // Medicinas
+        db.delete(Tablas.MEDICINE, null, null);
         for (Medicine medicine: medicineList) {
 
             ContentValues values = new ContentValues();
@@ -170,7 +171,7 @@ public final class DataBaseOperations {
                 db.update(Tablas.MEDICINE, values, whereClause, whereArgs);
             }
         }
-
+        db.execSQL("delete from "+ Tablas.TREATMENT);
         // Tratamientos
         for (Treatment treatment: treatmentList) {
 
@@ -187,7 +188,7 @@ public final class DataBaseOperations {
                 db.update(Tablas.TREATMENT, values, whereClause, whereArgs);
             }
         }
-
+        db.execSQL("delete from "+ Tablas.RELATION_MED_TREATMENT);
         // Relaciones
         for (MedTretRel relation: relationList) {
 
@@ -418,15 +419,26 @@ public final class DataBaseOperations {
 
     }
 
-    public int deleteMedicine (Medicine medicine){
-        SQLiteDatabase db= DataBase.getWritableDatabase();
+    public String deleteMedicine (Medicine med){
 
-        String whereClause = String.format("%s=?", MedicinesDb.ID);
-        final String[] whereArgs = {String.valueOf(medicine.getId())};
+        JSONObject res = callApi("/medicines/" + med.getId(), Request.Method.PUT);
 
-        int deleted = db.delete(Tablas.MEDICINE,whereClause, whereArgs);
-        db.close();
-        return  deleted;
+        if (res != null) {
+            try {
+                med.setId(res.getString("_id"));
+            } catch (JSONException e) { }
+
+            SQLiteDatabase db= DataBase.getWritableDatabase();
+
+            String whereClause = String.format("%s=?", MedicinesDb.ID);
+            String[] whereArgs = {String.valueOf(med.getId())};
+            db.delete(Tablas.MEDICINE, whereClause, whereArgs);
+            db.close();
+
+            return med.getId();
+        }
+
+        return null;
     }
 
     /* MEDICINE operations */
