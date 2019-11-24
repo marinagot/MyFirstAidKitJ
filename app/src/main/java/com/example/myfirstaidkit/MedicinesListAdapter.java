@@ -1,5 +1,6 @@
 package com.example.myfirstaidkit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,13 +77,13 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         ImageButton editImageView = vi.findViewById(R.id.list_item_edit);
         editImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                add(data.get(position));
+                notifyDataSetChanged();
             }
         });
 
         ImageButton deleteImageView = vi.findViewById(R.id.list_item_delete);
         deleteImageView.setOnClickListener(new View.OnClickListener() {
-            T me = data.get(position);
             public void onClick(View v) {
                 new ApiCallThread<String>(new AsyncResponse<String>(){
                     @Override
@@ -92,11 +93,17 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
 
                     @Override
                     public void processFinish(View v, String result){
-
+                        remove(data.get(position));
+                        notifyDataSetChanged();
                     }
                 }).execute(v, data.get(position));
             }
         });
         return vi;
+    }
+
+    public void refresh() {
+        clear();
+        notifyDataSetChanged();
     }
 }

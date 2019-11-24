@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -159,6 +158,7 @@ public class medicine_edit extends Fragment {
 
         final Spinner chosDate = viewCA.findViewById(R.id.chosen_date);
         Date d = new Date();
+        med.setExpirationDate(d.getTime());
         setTime(chosDate, new SimpleDateFormat("dd MMM yyyy").format(d.getTime()));
         chosDate.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -174,7 +174,7 @@ public class medicine_edit extends Fragment {
                                     try {
                                         Calendar calendar = new GregorianCalendar(year, month, day);
                                         String finalDate = new SimpleDateFormat("dd MMM yyyy").format(calendar.getTime());
-                                        Timestamp timestamp = new Timestamp(new SimpleDateFormat("dd MMM yyyy").parse(finalDate).getTime());
+                                        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
                                         med.setExpirationDate(timestamp.getTime());
                                         setTime(chosDate, finalDate);
                                     }
@@ -186,41 +186,8 @@ public class medicine_edit extends Fragment {
                 return true;
             }
         });
-        /*spinner.setOnKeyListener(Spinner_OnKey);*/
-
-        /*chosDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int day) {
-                                try {
-                                    month += 1;
-                                    String finalDate = day + "/" + month + "/" + year;
-                                    Timestamp timestamp = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(finalDate).getTime());
-                                    med.setExpirationDate(timestamp.getTime());
-                                    final List<String> plantsList = new ArrayList<>();
-                                    plantsList.add(finalDate);
-                                    final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), R.layout.row, plantsList);
-                                    chosDate.setAdapter(spinnerArrayAdapter);
-                                    chosDate.setSelection(0);
-                                }
-                                catch (Exception e) { med.setExpirationDate(null);  }
-                            }
-                        },year,month,dayOfMonth);
-                datePickerDialog.show();
-            }
-        });*/
-
-
 
         Button btnDone = viewCA.findViewById(R.id.btn_create_medicine);
-
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

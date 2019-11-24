@@ -124,6 +124,7 @@ public final class DataBaseOperations {
             } catch (JSONException e) { }
 
             // Comprueba que el SyncId sea distinto
+            // Si lo es, significa que hay discrepancias en las bases de datos
             if (!syncId.equals(syncIdResp)) {
                 try {
                     syncIdResp = response.getString("sync_id");

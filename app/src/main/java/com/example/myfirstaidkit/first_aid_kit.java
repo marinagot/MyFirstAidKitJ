@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.navigation.Navigation;
@@ -18,6 +17,7 @@ import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,15 +110,27 @@ public class first_aid_kit extends Fragment {
             new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
                 @Override
                 public List<Medicine> apiCall(Object... params) {
-                    return us.getMedicine_userId(us.getUser_Email((String) params[1]).getId());
+                    User u = us.getUser_Email((String) params[1]);
+                    if (u != null)
+                        return us.getMedicine_userId(u.getId());
+                    return null;
                 }
 
                 @Override
                 public void processFinish(View v, List<Medicine> result){
-                    medicineList = result;
-                    ListView list = viewCA.findViewById(R.id.list_user_medicines);
-                    adapterNew = new MedicinesListAdapter<>(getContext(), R.layout.row, medicineList);
-                    list.setAdapter(adapterNew);
+                    if (result == null) {
+                        ListView list = viewCA.findViewById(R.id.list_user_medicines);
+                        List error = new ArrayList<>();
+                        error.add("Se ha producido un error de sincronización");
+                        ErrorAdapter adapterNew = new ErrorAdapter<>(getContext(), R.layout.error_sync, error);
+                        list.setAdapter(adapterNew);
+                    }
+                    else {
+                        medicineList = result;
+                        ListView list = viewCA.findViewById(R.id.list_user_medicines);
+                        adapterNew = new MedicinesListAdapter<>(getContext(), R.layout.row, medicineList);
+                        list.setAdapter(adapterNew);
+                    }
 
                     /*list.setOnItemClickListener(new ListView.OnItemClickListener() {
                         public void onItemClick(AdapterView<?> adapterList, View v, final int pos, long id) {
@@ -156,6 +168,10 @@ public class first_aid_kit extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void refreshList() {
+        adapterNew.refresh();
     }
 
     /**

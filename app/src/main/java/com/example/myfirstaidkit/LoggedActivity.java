@@ -1,6 +1,5 @@
 package com.example.myfirstaidkit;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,7 +25,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
-import com.example.myfirstaidkit.data.User;
 
 public class LoggedActivity extends AppCompatActivity
         implements home.OnFragmentInteractionListener,
@@ -120,6 +121,12 @@ public class LoggedActivity extends AppCompatActivity
                 break;
             case R.id.action_refresh:
                 // Animar si es posible el icono para que gire
+                Animation animation = new RotateAnimation(0.0f, 360.0f,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                        0.5f);
+                animation.setRepeatCount(-1);
+                animation.setDuration(2000);
+                findViewById(R.id.action_refresh).setAnimation(animation);
 
                 //Hacer la llamada a base de datos
                 new ApiCallThread<String>(new AsyncResponse<String>(){
@@ -130,9 +137,10 @@ public class LoggedActivity extends AppCompatActivity
 
                     @Override
                     public void processFinish(View v, String result){
-                        us.setSyncIdLogged(prefs, result);
+                       us.setSyncIdLogged(prefs, result);
                         // Recarga la página
-                        recreate();
+                        Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
+                        // recreate();
                     }
                 }).execute(null, us.getIdLogged(prefs), us.getSyncIdLogged(prefs));
             default:
