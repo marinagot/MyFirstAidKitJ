@@ -105,6 +105,19 @@ public class LoggedActivity extends AppCompatActivity
                 onOptionsItemSelected(syncMenuItem);
             }
         });
+
+        new ApiCallThread<Boolean>(new AsyncResponse<Boolean>(){
+            @Override
+            public Boolean apiCall(Object... params) {
+                return us.ping();
+            }
+
+            @Override
+            public void processFinish(View v, Boolean result){
+                networkStateChange(result);
+            }
+        }).execute(null, "");
+
         syncMenuItem.getActionView().animate();
         return true;
     }
@@ -153,9 +166,12 @@ public class LoggedActivity extends AppCompatActivity
                     public void processFinish(View v, String result){
                        us.setSyncIdLogged(prefs, result);
                         // Recarga la página
-                        if (result == null)
+                        if (result == null) {
+                            networkStateChange(false);
                             item.getActionView().clearAnimation();
+                        }
                         else {
+                            networkStateChange(true);
                             Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
                         }
                         // recreate();
@@ -170,6 +186,30 @@ public class LoggedActivity extends AppCompatActivity
         /*item.setChecked(true);*/
 
         return true;
+    }
+
+    public void networkStateChange(boolean connected) {
+        //bannerNetworkDisconnected.setVisibility(connected ? View.GONE : View.VISIBLE);
+
+        if (findViewById(R.id.banner_network_disconnected) != null && findViewById(R.id.banner_network_connected) != null) {
+
+            /*findViewById(R.id.banner_network_disconnected).clearAnimation();
+            findViewById(R.id.banner_network_connected).clearAnimation();*/
+
+            if (connected && findViewById(R.id.banner_network_disconnected).getVisibility() == View.VISIBLE) {
+                findViewById(R.id.banner_network_container).setVisibility(View.VISIBLE);
+                findViewById(R.id.banner_network_connected).setVisibility(View.VISIBLE);
+                findViewById(R.id.banner_network_disconnected).setVisibility(View.GONE);
+            } else if (!connected) {
+                findViewById(R.id.banner_network_container).setVisibility(View.VISIBLE);
+                findViewById(R.id.banner_network_connected).setVisibility(View.GONE);
+                findViewById(R.id.banner_network_disconnected).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.banner_network_container).setVisibility(View.GONE);
+                findViewById(R.id.banner_network_connected).setVisibility(View.GONE);
+                findViewById(R.id.banner_network_disconnected).setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override

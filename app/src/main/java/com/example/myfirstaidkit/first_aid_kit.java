@@ -113,20 +113,17 @@ public class first_aid_kit extends Fragment {
             new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
                 @Override
                 public List<Medicine> apiCall(Object... params) {
-                    User u = us.getUser_Email((String) params[1]);
-                    if (u != null)
-                        return us.getMedicine_userId(u.getId());
-                    return null;
+                    return us.getMedicine_userId((String) params[1]);
                 }
 
                 @Override
                 public void processFinish(View v, List<Medicine> result){
                     if (result == null) {
-                        ListView list = viewCA.findViewById(R.id.list_user_medicines);
+                        /*ListView list = viewCA.findViewById(R.id.list_user_medicines);
                         List error = new ArrayList<>();
-                        error.add("Se ha producido un error de sincronización");
+                        error.add("Parece que no hay conexión.");
                         ErrorAdapter adapterNew = new ErrorAdapter<>(getContext(), R.layout.error_sync, error);
-                        list.setAdapter(adapterNew);
+                        list.setAdapter(adapterNew);*/
                     }
                     else {
                         medicineList = result;
@@ -141,7 +138,7 @@ public class first_aid_kit extends Fragment {
                         }
                     });*/
                 }
-            }).execute(viewCA, us.getEmailLogged(prefs));
+            }).execute(viewCA, us.getIdLogged(prefs));
         }
         return viewCA;
     }

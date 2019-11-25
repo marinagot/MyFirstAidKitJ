@@ -109,6 +109,23 @@ public final class DataBaseOperations {
 
     /* SYNC operations */
 
+    String status = "active";
+    public boolean ping() {
+        switch (status){
+            case "active":
+                status = "secondactive";
+                return true;
+            case "secondactive":
+                status = "inactive";
+                return true;
+            case "inactive":
+                status = "active";
+                return false;
+            default:
+                return false;
+        }
+    }
+
     public String syncDabtabase(String id, String syncId) {
         // Llamada a la api
         JSONObject response = callApi("/sync/" + id + "?sync_id=" + syncId, Request.Method.GET);

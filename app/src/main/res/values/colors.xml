@@ -11,5 +11,6 @@
     <color name="grey">#808080</color>
     <color name="silver">#C0C0C0</color>
     <color name="alert">#E53935</color>
+    <color name="conexion">#44BB44</color>
 
 </resources>

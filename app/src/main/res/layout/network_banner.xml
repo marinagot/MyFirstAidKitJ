@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/banner_network_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:visibility="visible">
+
+    <TextView
+        android:id="@+id/banner_network_disconnected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No connection. Retrying..."
+        android:textAlignment="center"
+        android:textColor="#F0F0F0"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/banner_network_connected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#44bb44"
+        android:text="Reconnected!"
+        android:textAlignment="center"
+        android:textColor="#F0F0F0"
+        android:visibility="visible"/>
+</RelativeLayout>
