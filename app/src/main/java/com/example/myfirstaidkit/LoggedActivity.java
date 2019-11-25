@@ -10,12 +10,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -93,9 +94,18 @@ public class LoggedActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        final MenuItem syncMenuItem = menu.findItem(R.id.action_refresh);
+        FrameLayout rootView = (FrameLayout) syncMenuItem.getActionView();
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(syncMenuItem);
+            }
+        });
+        syncMenuItem.getActionView().animate();
         return true;
     }
 
@@ -120,18 +130,22 @@ public class LoggedActivity extends AppCompatActivity
                 startActivity(intent);
                 break;
             case R.id.action_refresh:
-                // Animar si es posible el icono para que gire
-                Animation animation = new RotateAnimation(0.0f, 360.0f,
+                // Animar el icono para que gire
+                item.getActionView().clearAnimation();
+                Animation animation = new RotateAnimation(360.0f, 0.0f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                         0.5f);
                 animation.setRepeatCount(-1);
                 animation.setDuration(2000);
-                findViewById(R.id.action_refresh).setAnimation(animation);
+                item.getActionView().setAnimation(animation);
 
-                //Hacer la llamada a base de datos
+                // Hacer la llamada a base de datos
                 new ApiCallThread<String>(new AsyncResponse<String>(){
+                    MenuItem item;
+
                     @Override
                     public String apiCall(Object... params) {
+                        item = (MenuItem) params[3];
                         return us.syncDabtabase((String) params[1], (String) params[2]);
                     }
 
@@ -139,10 +153,14 @@ public class LoggedActivity extends AppCompatActivity
                     public void processFinish(View v, String result){
                        us.setSyncIdLogged(prefs, result);
                         // Recarga la página
-                        Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
+                        if (result == null)
+                            item.getActionView().clearAnimation();
+                        else {
+                            Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
+                        }
                         // recreate();
                     }
-                }).execute(null, us.getIdLogged(prefs), us.getSyncIdLogged(prefs));
+                }).execute(null, us.getIdLogged(prefs), us.getSyncIdLogged(prefs), item);
             default:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
                 return false;

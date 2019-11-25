@@ -5,10 +5,10 @@
     <item
         android:id="@+id/action_refresh"
         android:enabled="true"
-        android:icon="@drawable/ic_sync_white_24dp"
+        app:actionLayout="@layout/refresh_icon"
+        android:orderInCategory="100"
         android:title="Sincronizar"
         app:showAsAction="ifRoom"/>
-        <!--app:actionViewClass="android.widget.ImageView"-->
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
