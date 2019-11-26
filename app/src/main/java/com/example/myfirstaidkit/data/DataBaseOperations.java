@@ -90,7 +90,7 @@ public final class DataBaseOperations {
         }
 
         try {
-            JSONObject response = future.get(20, TimeUnit.SECONDS); // this will block
+            JSONObject response = future.get(10, TimeUnit.SECONDS); // this will block
             return response;
         } catch (InterruptedException e) {
             int i = 0;
@@ -109,8 +109,14 @@ public final class DataBaseOperations {
 
     /* SYNC operations */
 
-    String status = "active";
+
     public boolean ping() {
+
+        if(callApi("/", Request.Method.GET) == null)
+            return false;
+        return true;
+
+        /*String status = "active";
         switch (status){
             case "active":
                 status = "secondactive";
@@ -123,7 +129,7 @@ public final class DataBaseOperations {
                 return false;
             default:
                 return false;
-        }
+        }*/
     }
 
     public String syncDabtabase(String id, String syncId) {

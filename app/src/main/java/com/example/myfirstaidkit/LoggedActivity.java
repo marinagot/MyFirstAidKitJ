@@ -1,5 +1,7 @@
 package com.example.myfirstaidkit;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -93,6 +95,20 @@ public class LoggedActivity extends AppCompatActivity
         }
     }
 
+    public void status() {
+        new ApiCallThread<Boolean>(new AsyncResponse<Boolean>(){
+            @Override
+            public Boolean apiCall(Object... params) {
+                return us.ping();
+            }
+
+            @Override
+            public void processFinish(View v, Boolean result){
+                networkStateChange(result);
+            }
+        }).execute(null, "");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -106,17 +122,12 @@ public class LoggedActivity extends AppCompatActivity
             }
         });
 
-        new ApiCallThread<Boolean>(new AsyncResponse<Boolean>(){
-            @Override
-            public Boolean apiCall(Object... params) {
-                return us.ping();
-            }
 
-            @Override
-            public void processFinish(View v, Boolean result){
-                networkStateChange(result);
+        new Thread(new Runnable() {
+            public void run() {
+                status();
             }
-        }).execute(null, "");
+        }).start();
 
         syncMenuItem.getActionView().animate();
         return true;
@@ -164,16 +175,16 @@ public class LoggedActivity extends AppCompatActivity
 
                     @Override
                     public void processFinish(View v, String result){
-                       us.setSyncIdLogged(prefs, result);
                         // Recarga la página
                         if (result == null) {
                             networkStateChange(false);
-                            item.getActionView().clearAnimation();
                         }
                         else {
+                            us.setSyncIdLogged(prefs, result);
                             networkStateChange(true);
                             Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
                         }
+                        item.getActionView().clearAnimation();
                         // recreate();
                     }
                 }).execute(null, us.getIdLogged(prefs), us.getSyncIdLogged(prefs), item);
@@ -193,23 +204,52 @@ public class LoggedActivity extends AppCompatActivity
 
         if (findViewById(R.id.banner_network_disconnected) != null && findViewById(R.id.banner_network_connected) != null) {
 
-            /*findViewById(R.id.banner_network_disconnected).clearAnimation();
-            findViewById(R.id.banner_network_connected).clearAnimation();*/
+            // findViewById(R.id.banner_network_disconnected).clearAnimation();
+            findViewById(R.id.banner_network_connected).clearAnimation();
 
             if (connected && findViewById(R.id.banner_network_disconnected).getVisibility() == View.VISIBLE) {
-                findViewById(R.id.banner_network_container).setVisibility(View.VISIBLE);
-                findViewById(R.id.banner_network_connected).setVisibility(View.VISIBLE);
-                findViewById(R.id.banner_network_disconnected).setVisibility(View.GONE);
+                crossfade();
             } else if (!connected) {
                 findViewById(R.id.banner_network_container).setVisibility(View.VISIBLE);
                 findViewById(R.id.banner_network_connected).setVisibility(View.GONE);
                 findViewById(R.id.banner_network_disconnected).setVisibility(View.VISIBLE);
-            } else {
-                findViewById(R.id.banner_network_container).setVisibility(View.GONE);
-                findViewById(R.id.banner_network_connected).setVisibility(View.GONE);
-                findViewById(R.id.banner_network_disconnected).setVisibility(View.GONE);
             }
         }
+    }
+
+    private void dissapearFadding() {
+        findViewById(R.id.banner_network_connected).animate()
+            .alpha(0f)
+            .setDuration(300)
+            .setStartDelay(1500)
+            .setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    findViewById(R.id.banner_network_disconnected).setVisibility(View.GONE);
+                    findViewById(R.id.banner_network_container).setVisibility(View.GONE);
+                    findViewById(R.id.banner_network_connected).setVisibility(View.GONE);
+                }
+            });
+    }
+
+    private void crossfade() {
+        final int animationDuration = 600;
+
+        // Set the view to 0% opacity but visible, so that it is visible (but fully transparent) during the animation.
+        findViewById(R.id.banner_network_connected).setAlpha(0f);
+        findViewById(R.id.banner_network_connected).setVisibility(View.VISIBLE);
+        findViewById(R.id.banner_network_disconnected).setVisibility(View.GONE);
+
+        findViewById(R.id.banner_network_connected).animate()
+            .alpha(1f)
+            .setDuration(animationDuration)
+            .setStartDelay(0)
+            .setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    dissapearFadding();
+                }
+            });
     }
 
     @Override
