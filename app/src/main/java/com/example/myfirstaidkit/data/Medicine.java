@@ -2,12 +2,8 @@ package com.example.myfirstaidkit.data;
 
 import android.arch.persistence.room.Entity;
 
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity(primaryKeys = {"id"})
 public class Medicine {

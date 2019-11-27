@@ -1,7 +1,6 @@
 package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,9 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -25,10 +22,6 @@ import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.User;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 
 public class create_account extends Fragment {
 

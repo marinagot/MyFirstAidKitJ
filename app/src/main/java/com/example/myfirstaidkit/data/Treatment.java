@@ -4,8 +4,6 @@ import android.arch.persistence.room.Entity;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 @Entity(primaryKeys = {"id"})
 public class Treatment{
 

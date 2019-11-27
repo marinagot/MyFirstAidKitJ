@@ -2,6 +2,7 @@ package com.example.myfirstaidkit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,16 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Medicine;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -77,8 +84,19 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         ImageButton editImageView = vi.findViewById(R.id.list_item_edit);
         editImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                add(data.get(position));
-                notifyDataSetChanged();
+
+                Gson gson = new Gson();
+                String medicine = null;
+                try {
+                    medicine = new JSONObject(gson.toJson(data.get(position))).toString();
+                } catch (Exception e) {}
+
+                first_aid_kitDirections.ActionFirstAidKitToMedicineEdit action =
+                        first_aid_kitDirections.actionFirstAidKitToMedicineEdit(medicine);
+                Navigation.findNavController(v).navigate(action);
+
+                /*add(data.get(position));
+                notifyDataSetChanged();*/
             }
         });
 

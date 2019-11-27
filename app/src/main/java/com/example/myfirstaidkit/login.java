@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,15 +17,10 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
-import com.android.volley.Request;
 import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
-import com.example.myfirstaidkit.create_account;
 import com.example.myfirstaidkit.data.User;
-
-import org.json.JSONObject;
-
 
 /**
  * A simple {@link Fragment} subclass.

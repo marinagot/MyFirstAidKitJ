@@ -63,7 +63,11 @@
         tools:layout="@layout/fragment_first_aid_kit" >
         <action
             android:id="@+id/action_first_aid_kit_to_medicine_edit"
-            app:destination="@id/medicine_edit" />
+            app:destination="@id/medicine_edit" >
+            <argument
+                android:name="medicine"
+                app:argType="string"/>
+         </action>
         <action
             android:id="@+id/action_first_aid_kit_to_account"
             app:destination="@id/account" />

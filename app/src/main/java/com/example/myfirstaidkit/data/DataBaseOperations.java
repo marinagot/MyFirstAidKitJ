@@ -1,14 +1,10 @@
 package com.example.myfirstaidkit.data;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Relation;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -19,7 +15,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.myfirstaidkit.data.DataBase.Tablas;
 import com.example.myfirstaidkit.data.FirstAidKit.MedicinesDb;
 import com.example.myfirstaidkit.data.FirstAidKit.TreatmentsDb;
-import com.example.myfirstaidkit.data.FirstAidKit.UsersDb;
 import com.example.myfirstaidkit.data.FirstAidKit.MedTretRelDb;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,12 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

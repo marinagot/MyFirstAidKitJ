@@ -27,7 +27,10 @@ import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.DataBaseOperations;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -91,6 +94,12 @@ public class medicine_edit extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        String med = savedInstanceState.getString("medicine");
+
+        Gson gson = new Gson();
+        Type medicineType = new TypeToken<List<Medicine>>(){}.getType();
+        Medicine medicine = gson.fromJson(med, medicineType);
+
 //        Button btnOk = view.findViewById(R.id.btn_edit_medicine);
 //
 //        btnOk.setOnClickListener(new View.OnClickListener() {
@@ -129,32 +138,6 @@ public class medicine_edit extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_medicine_edit, container, false);
 
         us = DataBaseOperations.get_Instance(getContext());
-
-        /*Button btnDate = viewCA.findViewById(R.id.btn_cale_medicine);
-        final TextView chosDate = viewCA.findViewById(R.id.chosen_date);
-        btnDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int day) {
-                        try {
-                            month += 1;
-                            Timestamp timestamp = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year).getTime());
-                            med.setExpirationDate(timestamp.getTime());
-                            chosDate.setText(day + "/" + month + "/" + year);
-                        }
-                        catch (Exception e) { med.setExpirationDate(null);  }
-                    }
-                },year,month,dayOfMonth);
-                datePickerDialog.show();
-            }
-        });*/
 
         final Spinner chosDate = viewCA.findViewById(R.id.chosen_date);
         Date d = new Date();
@@ -225,10 +208,6 @@ public class medicine_edit extends Fragment {
 
                         @Override
                         public void processFinish(View v, String result){
-                            /*AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                            alertDialog.setTitle("Successful!");
-                            alertDialog.setMessage("Medicine created" );
-                            alertDialog.show();*/
                             Navigation.findNavController(v).navigate(R.id.action_medicine_edit_to_first_aid_kit);
                         }
                     }).execute(viewCA, med);
