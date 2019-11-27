@@ -91,9 +91,14 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
                     medicine = new JSONObject(gson.toJson(data.get(position))).toString();
                 } catch (Exception e) {}
 
-                first_aid_kitDirections.ActionFirstAidKitToMedicineEdit action =
+                Bundle bundle = new Bundle();
+                bundle.putString("medicine", medicine);
+
+                Navigation.findNavController(v).navigate(R.id.action_first_aid_kit_to_medicine_edit, bundle);
+
+                /*first_aid_kitDirections.ActionFirstAidKitToMedicineEdit action =
                         first_aid_kitDirections.actionFirstAidKitToMedicineEdit(medicine);
-                Navigation.findNavController(v).navigate(action);
+                Navigation.findNavController(v).navigate(action);*/
 
                 /*add(data.get(position));
                 notifyDataSetChanged();*/

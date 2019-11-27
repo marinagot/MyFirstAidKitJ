@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -94,11 +95,19 @@ public class medicine_edit extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String med = savedInstanceState.getString("medicine");
+        String med = getArguments().getString("medicine");
 
         Gson gson = new Gson();
-        Type medicineType = new TypeToken<List<Medicine>>(){}.getType();
+        Type medicineType = new TypeToken<Medicine>(){}.getType();
         Medicine medicine = gson.fromJson(med, medicineType);
+
+        ((EditText) viewCA.findViewById(R.id.txt_medicine_name)).setText(medicine.getName());
+        ((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).setText(String.valueOf(medicine.getDoseNumber()));
+
+        Long date = medicine.getExpirationDate();
+        String dateString = new SimpleDateFormat("dd MMM yyyy").format(date);
+        setTime((Spinner) viewCA.findViewById(R.id.chosen_date), dateString);
+        ((Spinner) viewCA.findViewById(R.id.list_medicine)).setSelection(getSelectedMedicineIndex(medicine.getType()));
 
 //        Button btnOk = view.findViewById(R.id.btn_edit_medicine);
 //
@@ -109,6 +118,14 @@ public class medicine_edit extends Fragment {
 //                getActivity().setTitle("My kit");
 //            }
 //        });
+    }
+
+    private int getSelectedMedicineIndex(String type) {
+        switch (type) {
+            case "Jarabe":
+                return 1;
+            default: return 0;
+        }
     }
 
     @Override
