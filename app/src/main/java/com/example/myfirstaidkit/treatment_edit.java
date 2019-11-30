@@ -233,7 +233,7 @@ public class treatment_edit extends Fragment {
                     }
                 });
             }
-        }).execute(viewCA, us.getIdLogged(prefs));
+        }).execute(viewCA, us.getIdLogged());
 
         Button btnDone = viewCA.findViewById(R.id.btn_treatment_edit_done);
 
@@ -243,7 +243,7 @@ public class treatment_edit extends Fragment {
 
                 treatment.setName(((EditText) viewCA.findViewById(R.id.txt_treatment_name)).getText().toString());
 
-                treatment.setIdUser(us.getIdLogged(prefs));
+                treatment.setIdUser(us.getIdLogged());
 
                 if (treatment.getName().equals("") || relations.isEmpty()) {
                     //Display Message

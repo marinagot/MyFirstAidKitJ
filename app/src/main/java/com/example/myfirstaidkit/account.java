@@ -151,7 +151,7 @@ public class account extends Fragment {
                                         textViewMessage.setTextColor(Color.RED);
                                     }
                                 }
-                            }).execute(v, us.getEmailLogged(prefs), old_password.getText().toString(), new_password.getText().toString());
+                            }).execute(v, us.getEmailLogged(), old_password.getText().toString(), new_password.getText().toString());
                         }
                         // Si las contraseñas nuevas no coinciden
                         else {
@@ -233,7 +233,7 @@ public class account extends Fragment {
                             textViewMessage.setTextColor(Color.RED);
                         }
                     }
-                }).execute(v, us.getIdLogged(prefs), del_password.getText().toString());
+                }).execute(v, us.getIdLogged(), del_password.getText().toString());
             }
         });
 

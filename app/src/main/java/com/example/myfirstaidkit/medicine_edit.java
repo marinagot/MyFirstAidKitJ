@@ -68,6 +68,7 @@ public class medicine_edit extends Fragment {
     DataBaseOperations us;
     Medicine med = new Medicine();
     View viewCA;
+    boolean isEdit = false;
     
     public medicine_edit() {
         // Required empty public constructor
@@ -95,19 +96,22 @@ public class medicine_edit extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String med = getArguments().getString("medicine");
 
-        Gson gson = new Gson();
-        Type medicineType = new TypeToken<Medicine>(){}.getType();
-        Medicine medicine = gson.fromJson(med, medicineType);
+        if (getArguments() != null) {
+            isEdit = true;
+            String medString = getArguments().getString("medicine");
+            Gson gson = new Gson();
+            Type medicineType = new TypeToken<Medicine>(){}.getType();
+            med = gson.fromJson(medString, medicineType);
 
-        ((EditText) viewCA.findViewById(R.id.txt_medicine_name)).setText(medicine.getName());
-        ((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).setText(String.valueOf(medicine.getDoseNumber()));
+            ((EditText) viewCA.findViewById(R.id.txt_medicine_name)).setText(med.getName());
+            ((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).setText(String.valueOf(med.getDoseNumber()));
 
-        Long date = medicine.getExpirationDate();
-        String dateString = new SimpleDateFormat("dd MMM yyyy").format(date);
-        setTime((Spinner) viewCA.findViewById(R.id.chosen_date), dateString);
-        ((Spinner) viewCA.findViewById(R.id.list_medicine)).setSelection(getSelectedMedicineIndex(medicine.getType()));
+            Long date = med.getExpirationDate();
+            String dateString = new SimpleDateFormat("dd MMM yyyy").format(date);
+            setTime((Spinner) viewCA.findViewById(R.id.chosen_date), dateString);
+            ((Spinner) viewCA.findViewById(R.id.list_medicine)).setSelection(getSelectedMedicineIndex(med.getType()));
+        }
 
 //        Button btnOk = view.findViewById(R.id.btn_edit_medicine);
 //
@@ -215,12 +219,15 @@ public class medicine_edit extends Fragment {
                 }
                 else {
 
-                    med.setIdUser(us.getIdLogged(prefs));
+                    med.setIdUser(us.getIdLogged());
 
                     new ApiCallThread<String>(new AsyncResponse<String>(){
                         @Override
                         public String apiCall(Object... params) {
-                            return us.insertMedicine((Medicine) params[1]);
+                            Medicine medAux = (Medicine) params[1];
+                            if (isEdit)
+                                return us.updateMedicine(medAux);
+                            return us.insertMedicine(medAux);
                         }
 
                         @Override

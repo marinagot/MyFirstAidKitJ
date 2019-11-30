@@ -154,7 +154,7 @@ public class treatments extends Fragment {
                        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
                        list.setAdapter(adapter);
                    }
-               }).execute(view, us.getEmailLogged(prefs), spinner.getSelectedItem());
+               }).execute(view, us.getEmailLogged(), spinner.getSelectedItem());
            }
 
             @Override
@@ -175,7 +175,7 @@ public class treatments extends Fragment {
                 adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
                 list.setAdapter(adapter);
             }
-        }).execute(viewCA, us.getEmailLogged(prefs));
+        }).execute(viewCA, us.getEmailLogged());
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,

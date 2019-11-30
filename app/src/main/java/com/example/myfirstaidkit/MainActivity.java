@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity
         Class fragmentClass;
 
         //noinspection SimplifiableIfStatement
-        boolean logged = us.userIsLogged(prefs);
+        boolean logged = us.userIsLogged();
 
         if (!logged){
             fragmentClass = login.class;
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity
         Class fragmentClass = null;
 
         int id = item.getItemId();
-        boolean logged = us.userIsLogged(prefs);
+        boolean logged = us.userIsLogged();
         if (!logged){
             fragmentClass = login.class;
             setTitle("Login");

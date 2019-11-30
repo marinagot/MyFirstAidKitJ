@@ -40,7 +40,7 @@ public final class DataBaseOperations {
 
     private static DataBase DataBase;
     private static RequestQueue queue;
-    private static Context contexto;
+    private static SharedPreferences prefs;
 
     Gson gson = new Gson();
 
@@ -51,7 +51,7 @@ public final class DataBaseOperations {
     public static  DataBaseOperations instance = new  DataBaseOperations();
 
     public static  DataBaseOperations get_Instance(Context context) {
-        contexto = context;
+        prefs = context.getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
         if (DataBase == null) {
             DataBase = new DataBase(context);
         }
@@ -140,7 +140,6 @@ public final class DataBaseOperations {
             // Si lo es, significa que hay discrepancias en las bases de datos
             if (!syncId.equals(syncIdResp)) {
                 try {
-                    syncIdResp = response.getString("sync_id");
                     medicines = response.getJSONArray("medicines");
                     treatments = response.getJSONArray("treatments");
                     relations = response.getJSONArray("relations");
@@ -224,7 +223,7 @@ public final class DataBaseOperations {
         }
     }
 
-    public void setSyncIdLogged(SharedPreferences prefs, String syncId) {
+    public void setSyncIdLogged(String syncId) {
         SharedPreferences.Editor edit = prefs.edit();
         edit.putString("sync_id", syncId);
         edit.apply();
@@ -283,23 +282,23 @@ public final class DataBaseOperations {
         return null;
     }
 
-    public boolean userIsLogged(SharedPreferences prefs) {
+    public boolean userIsLogged() {
         return prefs.getString("username", null) != null;
     }
 
-    public String getUsernameLogged(SharedPreferences prefs) {
+    public String getUsernameLogged() {
         return prefs.getString("username", null);
     }
 
-    public String getIdLogged(SharedPreferences prefs) {
+    public String getIdLogged() {
         return prefs.getString("id", null);
     }
 
-    public String getEmailLogged (SharedPreferences prefs) {
+    public String getEmailLogged () {
         return prefs.getString("email", null);
     }
 
-    public String getSyncIdLogged(SharedPreferences prefs) {
+    public String getSyncIdLogged() {
         return prefs.getString("sync_id", null);
     }
 
@@ -432,6 +431,46 @@ public final class DataBaseOperations {
         return medicines;
 
     }
+
+    public String updateMedicine(Medicine med){
+
+        JSONObject data = null;
+        try {
+            data = new JSONObject(gson.toJson(med));
+        } catch (JSONException e) { }
+
+        JSONObject res = callApi("/medicines/" + med.getId(), Request.Method.POST, data);
+
+        if (res != null) {
+            String syncId = "";
+            try {
+                syncId = res.get("syncId").toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (syncId != null)
+                setSyncIdLogged(syncId);
+
+            SQLiteDatabase db = DataBase.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(MedicinesDb.ID_USER, med.getIdUser());
+            values.put(MedicinesDb.DOSE_NUMBER, med.getDoseNumber());
+            values.put(MedicinesDb.EXPIRATION_DATE, med.getExpirationDate());
+            values.put(MedicinesDb.NAME, med.getName());
+            values.put(MedicinesDb.TYPE, med.getType());
+
+            String whereClause = String.format("%s=?", MedicinesDb.ID);
+            final String[] whereArgs = { med.getId() };
+
+            db.update(Tablas.MEDICINE, values, whereClause, whereArgs);
+
+            return med.getId();
+        }
+
+        return null;
+    }
+
 
     public String deleteMedicine (Medicine med){
 

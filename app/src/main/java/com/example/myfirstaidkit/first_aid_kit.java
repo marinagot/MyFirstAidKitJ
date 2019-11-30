@@ -105,7 +105,7 @@ public class first_aid_kit extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_first_aid_kit, container, false);
         us = DataBaseOperations.get_Instance(getContext());
 
-        if (us.userIsLogged(prefs)) {
+        if (us.userIsLogged()) {
             new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
                 @Override
                 public List<Medicine> apiCall(Object... params) {
@@ -134,7 +134,7 @@ public class first_aid_kit extends Fragment {
                         }
                     });*/
                 }
-            }).execute(viewCA, us.getIdLogged(prefs));
+            }).execute(viewCA, us.getIdLogged());
         }
         return viewCA;
     }

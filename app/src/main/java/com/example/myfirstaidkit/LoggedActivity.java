@@ -177,14 +177,14 @@ public class LoggedActivity extends AppCompatActivity
                             networkStateChange(false);
                         }
                         else {
-                            us.setSyncIdLogged(prefs, result);
+                            us.setSyncIdLogged(result);
                             networkStateChange(true);
                             Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
                         }
                         item.getActionView().clearAnimation();
                         // recreate();
                     }
-                }).execute(null, us.getIdLogged(prefs), us.getSyncIdLogged(prefs), item);
+                }).execute(null, us.getIdLogged(), us.getSyncIdLogged(), item);
             default:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
                 return false;
