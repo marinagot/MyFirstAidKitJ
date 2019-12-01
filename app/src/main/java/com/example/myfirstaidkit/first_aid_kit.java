@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -80,13 +81,13 @@ public class first_aid_kit extends Fragment {
         // Muestra la barra inferior de navegación
         getActivity().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
 
-        FloatingActionButton fab = view.findViewById(R.id.newMedicine);
+        /*FloatingActionButton fab = view.findViewById(R.id.newMedicine);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.action_first_aid_kit_to_medicine_edit);
             }
-        });
+        });*/
     }
 
     @Override
@@ -96,6 +97,7 @@ public class first_aid_kit extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -137,6 +139,16 @@ public class first_aid_kit extends Fragment {
             }).execute(viewCA, us.getIdLogged());
         }
         return viewCA;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Navigation.findNavController(viewCA).navigate(R.id.action_first_aid_kit_to_medicine_edit);
+                return true;
+        }
+        return false;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

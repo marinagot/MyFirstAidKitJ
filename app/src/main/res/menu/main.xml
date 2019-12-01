@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_add"
+        android:enabled="true"
+        android:icon="@drawable/ic_add_black_24dp"
+        android:orderInCategory="100"
+        android:title="Nuevo"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_refresh"
         android:enabled="true"
         app:actionLayout="@layout/refresh_icon"

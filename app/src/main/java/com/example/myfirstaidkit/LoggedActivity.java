@@ -185,6 +185,8 @@ public class LoggedActivity extends AppCompatActivity
                         // recreate();
                     }
                 }).execute(null, us.getIdLogged(), us.getSyncIdLogged(), item);
+            case R.id.action_add:
+                return false;
             default:
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp();
                 return false;

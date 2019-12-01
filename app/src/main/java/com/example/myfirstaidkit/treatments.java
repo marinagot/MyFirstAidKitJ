@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -98,15 +99,15 @@ public class treatments extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FloatingActionButton fab = view.findViewById(R.id.newTreatment);
+        /*FloatingActionButton fab = view.findViewById(R.id.newTreatment);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.action_treatments_to_treatment_edit);
-                /*getFragmentManager().beginTransaction().replace(R.id.content, new treatment_edit()).commit();
-                getActivity().setTitle("New treatment");*/
+                *//*getFragmentManager().beginTransaction().replace(R.id.content, new treatment_edit()).commit();
+                getActivity().setTitle("New treatment");*//*
             }
-        });
+        });*/
     }
 
     @Override
@@ -116,6 +117,7 @@ public class treatments extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -242,6 +244,16 @@ public class treatments extends Fragment {
 
 
         return viewCA;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Navigation.findNavController(viewCA).navigate(R.id.action_treatments_to_treatment_edit);
+                return true;
+        }
+        return false;
     }
 
     public void setAlarm(Calendar targetCal) {

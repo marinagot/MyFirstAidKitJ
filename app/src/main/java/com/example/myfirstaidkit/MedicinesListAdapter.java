@@ -2,12 +2,15 @@ package com.example.myfirstaidkit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -74,12 +77,56 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         TextView header = vi.findViewById(R.id.list_item_header);
         TextView text = vi.findViewById(R.id.list_item_text);
         TextView dose = vi.findViewById(R.id.list_item_dose);
+        ImageView doseWarning = vi.findViewById(R.id.dose_warning);
         TextView expiryDate = vi.findViewById(R.id.list_item_expiry_date);
+        ImageView expirationWarning = vi.findViewById(R.id.expiration_warning);
+        LinearLayout rowContainer = vi.findViewById(R.id.row_container);
         header.setText(((Medicine) data.get(position)).getName());
         text.setText(((Medicine) data.get(position)).getType());
-        dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
         String dateText = new SimpleDateFormat("dd MMM yyyy").format(new Date(((Medicine) data.get(position)).getExpirationDate()));
-        expiryDate.setText("Caducidad: " + dateText);
+
+        if (((Medicine)data.get(position)).getDoseNumber() <= 5) {
+            doseWarning.setVisibility(View.VISIBLE);
+        }
+        else {
+            doseWarning.setVisibility(View.GONE);
+        }
+
+        Date dateAfter = new Date(System.currentTimeMillis() + 7 * 24 * 3600 * 1000 );
+        if (((Medicine) data.get(position)).getExpirationDate() <= dateAfter.getTime()) {
+            expirationWarning.setVisibility(View.VISIBLE);
+        }
+        else {
+            expirationWarning.setVisibility(View.GONE);
+        }
+
+        if (((Medicine)data.get(position)).getDoseNumber() < 1 || ((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis()) {
+            rowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item_disabled));
+            if (((Medicine)data.get(position)).getDoseNumber() < 1 ) {
+                dose.setTextColor(ContextCompat.getColor(context, R.color.alert));
+                dose.setText("AGOTADO");
+                doseWarning.setVisibility(View.GONE);
+                expirationWarning.setVisibility(View.GONE);
+            } else {
+                dose.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
+                dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
+            }
+            if (((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis()) {
+                expiryDate.setTextColor(ContextCompat.getColor(context, R.color.alert));
+                expiryDate.setText("CADUCADO");
+                doseWarning.setVisibility(View.GONE);
+                expirationWarning.setVisibility(View.GONE);
+            } else {
+                expiryDate.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
+                expiryDate.setText("Caducidad: " + dateText);
+            }
+        } else {
+            rowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item));
+            expiryDate.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
+            dose.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
+            expiryDate.setText("Caducidad: " + dateText);
+            dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
+        }
 
         ImageButton editImageView = vi.findViewById(R.id.list_item_edit);
         editImageView.setOnClickListener(new View.OnClickListener() {

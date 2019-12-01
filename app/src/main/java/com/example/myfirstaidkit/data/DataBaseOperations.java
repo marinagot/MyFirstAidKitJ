@@ -229,6 +229,16 @@ public final class DataBaseOperations {
         edit.apply();
     }
 
+    public void resetSyncId(JSONObject res) {
+        String syncId = "";
+                try {
+            syncId = res.get("sync_id").toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (syncId != null)
+            setSyncIdLogged(syncId);
+    }
     /* SYNC operations */
 
     /* USER operations */
@@ -329,6 +339,8 @@ public final class DataBaseOperations {
         JSONObject res = callApi("/medicines/new", Request.Method.POST, data);
 
         if (res != null) {
+            resetSyncId(res);
+
             try {
                 med.setId(res.getString("_id"));
             } catch (JSONException e) { }
@@ -442,14 +454,7 @@ public final class DataBaseOperations {
         JSONObject res = callApi("/medicines/" + med.getId(), Request.Method.POST, data);
 
         if (res != null) {
-            String syncId = "";
-            try {
-                syncId = res.get("syncId").toString();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (syncId != null)
-                setSyncIdLogged(syncId);
+            resetSyncId(res);
 
             SQLiteDatabase db = DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -477,6 +482,8 @@ public final class DataBaseOperations {
         JSONObject res = callApi("/medicines/" + med.getId(), Request.Method.PUT);
 
         if (res != null) {
+            resetSyncId(res);
+
             try {
                 med.setId(res.getString("_id"));
             } catch (JSONException e) { }
