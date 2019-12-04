@@ -16,7 +16,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".LoggedActivity" >
+            android:name=".LoggedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,6 +31,10 @@
             </intent-filter>-->
         </activity>
         <receiver android:name=".AlarmReceiver" android:process=":remote" />
+        <service
+            android:name=".AlarmBootService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -100,7 +100,7 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
             expirationWarning.setVisibility(View.GONE);
         }
 
-        if (((Medicine)data.get(position)).getDoseNumber() < 1 || ((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis()) {
+        if (((Medicine)data.get(position)).getDoseNumber() < 1 || ((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis() - 24 * 3600 * 1000) {
             rowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item_disabled));
             if (((Medicine)data.get(position)).getDoseNumber() < 1 ) {
                 dose.setTextColor(ContextCompat.getColor(context, R.color.alert));
@@ -111,6 +111,8 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
                 dose.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
                 dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
             }
+
+
             if (((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis()) {
                 expiryDate.setTextColor(ContextCompat.getColor(context, R.color.alert));
                 expiryDate.setText("CADUCADO");

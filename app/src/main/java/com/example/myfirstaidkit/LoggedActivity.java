@@ -2,6 +2,8 @@ package com.example.myfirstaidkit;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +27,8 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
+
+import java.util.Calendar;
 
 public class LoggedActivity extends AppCompatActivity
         implements home.OnFragmentInteractionListener,
@@ -90,6 +94,19 @@ public class LoggedActivity extends AppCompatActivity
                 }
             });
         }
+        if (!prefs.getBoolean("dailyAlarm", false)) {
+            startAlarm();
+        }
+        /*else {
+            AlarmManager manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+            Intent myIntent = new Intent(LoggedActivity.this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+            manager.cancel(pendingIntent);
+
+            edit.putBoolean("dailyAlarm", false);
+            edit.apply();
+        }*/
     }
 
     public void status() {
@@ -263,6 +280,29 @@ public class LoggedActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Uri uri){
+
+    }
+
+    //Notificaciones
+
+    private void startAlarm() {
+        AlarmManager manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent myIntent;
+        PendingIntent pendingIntent;
+
+        // SET TIME HERE
+        Calendar calendar = Calendar.getInstance();
+        // calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+
+
+        myIntent = new Intent(LoggedActivity.this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+
+        manager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+
+        edit.putBoolean("dailyAlarm", true);
+        edit.apply();
 
     }
 }
