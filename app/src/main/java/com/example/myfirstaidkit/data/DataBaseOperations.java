@@ -44,7 +44,7 @@ public final class DataBaseOperations {
 
     Gson gson = new Gson();
 
-    private static String base_url ="http://192.168.1.46:3000";
+    private static String base_url ="http://192.168.1.49:3000";
     /*private static String base_url ="http://jdserver.ddns.net:3000";*/
 
 
@@ -476,7 +476,6 @@ public final class DataBaseOperations {
         return null;
     }
 
-
     public String deleteMedicine (Medicine med){
 
         JSONObject res = callApi("/medicines/" + med.getId(), Request.Method.PUT);
@@ -535,6 +534,34 @@ public final class DataBaseOperations {
         return null;
     }
 
+    public String updateTreatment(Treatment treatment, List<MedTretRel> relations){
+        JSONObject data = null;
+        try {
+            data.put("treatment", new JSONObject(gson.toJson(treatment)));
+            data.put("relations", new JSONArray(gson.toJson(relations)));
+        } catch (JSONException e) { }
+
+        JSONObject res = callApi("/treatments/" + treatment.getId(), Request.Method.POST, data);
+
+        if (res != null) {
+            resetSyncId(res);
+
+            SQLiteDatabase db = DataBase.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(MedicinesDb.NAME, treatment.getName());
+
+            String whereClause = String.format("%s=?", TreatmentsDb.ID);
+            final String[] whereArgs = { treatment.getId() };
+
+            db.update(Tablas.TREATMENT, values, whereClause, whereArgs);
+
+            return treatment.getId();
+        }
+
+        return null;
+    }
+
     public Treatment getTreatment_treatmentName(String treatmentName) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
@@ -585,16 +612,29 @@ public final class DataBaseOperations {
 
     }
 
-    public int deleteTreatment ( Treatment treatment){
+    // TODO: Logica (o no)
+    public String deleteTreatment (Treatment treatment){
 
-        SQLiteDatabase db = DataBase.getWritableDatabase();
+        JSONObject res = callApi("/treatments/" + treatment.getId(), Request.Method.PUT);
 
-        String whereClause = String.format("%s=?", TreatmentsDb.ID);
-        final String[] whereArgs = {String.valueOf(treatment.getId())};
+        if (res != null) {
+            resetSyncId(res);
 
-        int deleted = db.delete(Tablas.TREATMENT, whereClause, whereArgs);
-        db.close();
-        return  deleted;
+            try {
+                treatment.setId(res.getString("_id"));
+            } catch (JSONException e) { }
+
+            SQLiteDatabase db= DataBase.getWritableDatabase();
+
+            String whereClause = String.format("%s=?", TreatmentsDb.ID);
+            String[] whereArgs = {String.valueOf(treatment.getId())};
+            db.delete(Tablas.TREATMENT, whereClause, whereArgs);
+            db.close();
+
+            return treatment.getId();
+        }
+
+        return null;
     }
 
     /* TREATMENT operations */

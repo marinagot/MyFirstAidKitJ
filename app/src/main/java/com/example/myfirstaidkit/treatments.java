@@ -1,15 +1,11 @@
 package com.example.myfirstaidkit;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,12 +28,9 @@ import com.example.myfirstaidkit.data.Treatment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import static android.content.Context.ALARM_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,8 +59,10 @@ public class treatments extends Fragment {
     View viewCA, alert, alert2;
 
     List<Treatment> treatmentList = new ArrayList<>();
-    ArrayAdapter<Treatment> adapter;
+    // ArrayAdapter<Treatment> adapter;
+    TreatmentsListAdapter<Treatment> adapter;
     ArrayAdapter<Medicine> adapterMed;
+
 
     List<Medicine> list_med = new ArrayList<>();
     List<MedTretRel> listrel = new ArrayList<>();
@@ -130,7 +125,13 @@ public class treatments extends Fragment {
         viewCA = inflater.inflate(R.layout.fragment_treatments, container, false);
         us = DataBaseOperations.get_Instance(getContext());
 
+        ArrayAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.treatment_types, R.layout.spinner_item);
+
         final Spinner spinner = viewCA.findViewById(R.id.spinner);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+
         spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
            @Override
            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -139,11 +140,11 @@ public class treatments extends Fragment {
                    public List<Treatment> apiCall(Object... params) {
                        switch (((String) params[2])) {
                            case "Activos":
-                               return getActiveTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+                               return getActiveTreatments(us.getTreatment_userId((String) params[1]));
                            case "Terminados":
-                               return getEndedTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+                               return getEndedTreatments(us.getTreatment_userId((String) params[1]));
                            default:
-                               List<Treatment> aux = us.getTreatment_userId(us.getUser_Email((String) params[1]).getId());
+                               List<Treatment> aux = us.getTreatment_userId((String) params[1]);
                                Collections.reverse(aux);
                                return aux;
                        }
@@ -153,10 +154,11 @@ public class treatments extends Fragment {
                    public void processFinish(View v, List<Treatment> result){
                        treatmentList = result;
                        ListView list = viewCA.findViewById(R.id.list_user_treatments);
-                       adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
+                       adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_item, treatmentList);
+                       // adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
                        list.setAdapter(adapter);
                    }
-               }).execute(view, us.getEmailLogged(), spinner.getSelectedItem());
+               }).execute(view, us.getIdLogged(), spinner.getSelectedItem());
            }
 
             @Override
@@ -168,16 +170,16 @@ public class treatments extends Fragment {
         new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
             @Override
             public List<Treatment> apiCall(Object... params) {
-                return getActiveTreatments(us.getTreatment_userId(us.getUser_Email((String) params[1]).getId()));
+                return getActiveTreatments(us.getTreatment_userId((String) params[1]));
             }
 
             @Override
             public void processFinish(View v, List<Treatment> result){
                 treatmentList = result;
-                adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
+                adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_item, treatmentList);
                 list.setAdapter(adapter);
             }
-        }).execute(viewCA, us.getEmailLogged());
+        }).execute(viewCA, us.getIdLogged());
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -186,7 +188,7 @@ public class treatments extends Fragment {
                 final Treatment t = treatmentList.get(position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater inflaterl = getActivity().getLayoutInflater();
-                alert = inflaterl.inflate(R.layout.fragment_treatment_medicine_list_pop_up, null);
+                alert = inflaterl.inflate(R.layout.popup_treatment_medicine_list, null);
                 ListView lv_med = alert.findViewById(R.id.list_treat_medicines);
                 listrel = us.getRelations_treatmentId(t.getId());
                 for (MedTretRel mtr : listrel ) {
@@ -235,14 +237,6 @@ public class treatments extends Fragment {
             }
         });
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 17);
-        cal.set(Calendar.MINUTE, 33);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        setAlarm(cal);
-
-
         return viewCA;
     }
 
@@ -256,36 +250,29 @@ public class treatments extends Fragment {
         return false;
     }
 
-    public void setAlarm(Calendar targetCal) {
-
-        Intent intent = new Intent(getContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                getContext(), 1, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(),
-                pendingIntent);
-
-    }
-
     public List<Treatment> getActiveTreatments(List<Treatment> input) {
         List<Treatment> resp = new ArrayList<>();
-        for (Treatment t : input) {
-            if (getEndDate(us.getRelations_treatmentId(t.getId())).getTime() >= new Date().getTime()) {
-                resp.add(t);
+        if (!input.isEmpty()) {
+            for (Treatment t : input) {
+                if (getEndDate(us.getRelations_treatmentId(t.getId())).getTime() >= new Date().getTime()) {
+                    resp.add(t);
+                }
             }
+            Collections.reverse(resp);
         }
-        Collections.reverse(resp);
         return resp;
     }
 
     public List<Treatment> getEndedTreatments(List<Treatment> input) {
         List<Treatment> resp = new ArrayList<>();
-        for (Treatment t : input) {
-            if (getEndDate(us.getRelations_treatmentId(t.getId())).getTime() < new Date().getTime()) {
-                resp.add(t);
+        if (!input.isEmpty()) {
+            for (Treatment t : input) {
+                if (getEndDate(us.getRelations_treatmentId(t.getId())).getTime() < new Date().getTime()) {
+                    resp.add(t);
+                }
             }
+            Collections.reverse(resp);
         }
-        Collections.reverse(resp);
         return resp;
     }
 

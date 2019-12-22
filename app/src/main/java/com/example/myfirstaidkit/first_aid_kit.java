@@ -49,8 +49,7 @@ public class first_aid_kit extends Fragment {
     View viewCA;
 
     List<Medicine> medicineList = new ArrayList<>();
-    //ArrayAdapter<Medicine> adapter;
-    MedicinesListAdapter<Medicine> adapterNew;
+    MedicinesListAdapter<Medicine> adapter;
 
     public first_aid_kit() {
         // Required empty public constructor
@@ -119,14 +118,14 @@ public class first_aid_kit extends Fragment {
                         /*ListView list = viewCA.findViewById(R.id.list_user_medicines);
                         List error = new ArrayList<>();
                         error.add("Parece que no hay conexión.");
-                        ErrorAdapter adapterNew = new ErrorAdapter<>(getContext(), R.layout.error_sync, error);
-                        list.setAdapter(adapterNew);*/
+                        ErrorAdapter adapter = new ErrorAdapter<>(getContext(), R.layout.error_sync, error);
+                        list.setAdapter(adapter);*/
                     }
                     else {
                         medicineList = result;
                         ListView list = viewCA.findViewById(R.id.list_user_medicines);
-                        adapterNew = new MedicinesListAdapter<>(getContext(), R.layout.row, medicineList);
-                        list.setAdapter(adapterNew);
+                        adapter = new MedicinesListAdapter<>(getContext(), R.layout.medicine_list_item, medicineList);
+                        list.setAdapter(adapter);
                     }
 
                     /*list.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -178,7 +177,7 @@ public class first_aid_kit extends Fragment {
     }
 
     public void refreshList() {
-        adapterNew.refresh();
+        adapter.refresh();
     }
 
     /**

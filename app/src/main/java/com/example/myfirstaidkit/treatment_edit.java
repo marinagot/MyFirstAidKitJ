@@ -34,7 +34,10 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,6 +87,8 @@ public class treatment_edit extends Fragment {
     ArrayList<Medicine> listItems = new ArrayList<>();
     ArrayAdapter<Medicine> adapter;
 
+    boolean isEdit = false;
+
     final static int RQS_1 = 1;
 
     public treatment_edit() {
@@ -111,6 +116,26 @@ public class treatment_edit extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (getArguments() != null) {
+            isEdit = true;
+            String treatmentString = getArguments().getString("treatment");
+            String medicinesString = getArguments().getString("medicines");
+            String relationsString = getArguments().getString("relations");
+
+            Gson gson = new Gson();
+            Type treatmentType = new TypeToken<Treatment>(){}.getType();
+            Type medicinesType = new TypeToken<List<Medicine>>(){}.getType();
+            Type relationsType = new TypeToken<List<MedTretRel>>(){}.getType();
+
+            treatment = gson.fromJson(treatmentString, treatmentType);
+            listItems = gson.fromJson(medicinesString, medicinesType);
+            relations = gson.fromJson(relationsString, relationsType);
+
+            ((EditText) viewCA.findViewById(R.id.txt_treatment_name)).setText(treatment.getName());
+        }
+
+
 
 //        Button btnOk = view.findViewById(R.id.btn_treatment_edit_done);
 //
@@ -148,7 +173,7 @@ public class treatment_edit extends Fragment {
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_treatment_edit, container, false);
-        alert = inflater.inflate(R.layout.alert_treatments, null, false);
+        alert = inflater.inflate(R.layout.popup_treatment_edit_add_new_medicine, null, false);
         us = DataBaseOperations.get_Instance(getContext());
 
         medicineList = new ArrayList<>();
@@ -172,7 +197,7 @@ public class treatment_edit extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        alert = LayoutInflater.from(getContext()).inflate(R.layout.alert_treatments, null);
+                        alert = LayoutInflater.from(getContext()).inflate(R.layout.popup_treatment_edit_add_new_medicine, null);
 
                         Button btnFinDate = alert.findViewById(R.id.btn_date_cale);
                         final TextView finalDateField = alert.findViewById(R.id.final_date);
@@ -208,8 +233,8 @@ public class treatment_edit extends Fragment {
 
 
                         new AlertDialog.Builder(getContext()).setView(alert)
-                                .setTitle("Insert new medicine")
-                                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                .setTitle("Insertar nueva medicina")
+                                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
 
                                         //Logica de guardado en la lista general
@@ -262,10 +287,15 @@ public class treatment_edit extends Fragment {
                         @Override
                         public Void apiCall(Object... params) {
                             Treatment treatment = (Treatment) params[1];
-                            treatment.setId(us.insertTreatment(treatment));
-                            for (MedTretRel rel : relations) {
-                                rel.setIdTreatment(treatment.getId());
-                                us.insertRelation(rel);
+                            if (isEdit) {
+                                treatment.setId(us.updateTreatment(treatment, relations));
+                            }
+                            else {
+                                treatment.setId(us.insertTreatment(treatment));
+                                for (MedTretRel rel : relations) {
+                                    rel.setIdTreatment(treatment.getId());
+                                    us.insertRelation(rel);
+                                }
                             }
                             return null;
                         }

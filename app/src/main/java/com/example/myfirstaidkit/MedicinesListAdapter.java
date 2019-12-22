@@ -1,8 +1,6 @@
 package com.example.myfirstaidkit;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -12,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.TextView;
 
 import androidx.navigation.Navigation;
@@ -23,7 +20,6 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Medicine;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -74,6 +70,7 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         us = DataBaseOperations.get_Instance(getContext());
         if (vi == null)
             vi = inflater.inflate(style, null);
+
         TextView header = vi.findViewById(R.id.list_item_header);
         TextView text = vi.findViewById(R.id.list_item_text);
         TextView dose = vi.findViewById(R.id.list_item_dose);
