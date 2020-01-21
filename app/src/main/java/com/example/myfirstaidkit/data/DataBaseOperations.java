@@ -44,7 +44,7 @@ public final class DataBaseOperations {
 
     Gson gson = new Gson();
 
-    private static String base_url ="http://192.168.1.49:3000";
+    private static String base_url ="http://192.168.1.36:3000";
     /*private static String base_url ="http://jdserver.ddns.net:3000";*/
 
 
@@ -535,7 +535,7 @@ public final class DataBaseOperations {
     }
 
     public String updateTreatment(Treatment treatment, List<MedTretRel> relations){
-        JSONObject data = null;
+        JSONObject data = new JSONObject();
         try {
             data.put("treatment", new JSONObject(gson.toJson(treatment)));
             data.put("relations", new JSONArray(gson.toJson(relations)));
@@ -664,7 +664,6 @@ public final class DataBaseOperations {
             values.put(MedTretRelDb.FREQUENCY, relation.getFrequency());
             values.put(MedTretRelDb.INITIAL_DATE, relation.getInitialDate());
             values.put(MedTretRelDb.FINAL_DATE, relation.getFinalDate());
-
 
             db.insertOrThrow(Tablas.RELATION_MED_TREATMENT, null, values);
             db.close();
