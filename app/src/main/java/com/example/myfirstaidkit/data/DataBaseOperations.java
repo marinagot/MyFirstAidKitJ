@@ -534,11 +534,11 @@ public final class DataBaseOperations {
         return null;
     }
 
-    public String updateTreatment(Treatment treatment, List<MedTretRel> relations){
+    public String updateTreatment(Treatment treatment, List<MedTretRel> removedRelations){
         JSONObject data = new JSONObject();
         try {
             data.put("treatment", new JSONObject(gson.toJson(treatment)));
-            data.put("relations", new JSONArray(gson.toJson(relations)));
+            data.put("removed_relations", new JSONArray(gson.toJson(removedRelations)));
         } catch (JSONException e) { }
 
         JSONObject res = callApi("/treatments/" + treatment.getId(), Request.Method.POST, data);
@@ -546,15 +546,18 @@ public final class DataBaseOperations {
         if (res != null) {
             resetSyncId(res);
 
+            // Tratamiento
             SQLiteDatabase db = DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
 
             values.put(MedicinesDb.NAME, treatment.getName());
 
             String whereClause = String.format("%s=?", TreatmentsDb.ID);
-            final String[] whereArgs = { treatment.getId() };
+            final String[] whereArgs = {treatment.getId()};
 
             db.update(Tablas.TREATMENT, values, whereClause, whereArgs);
+
+            // Relaciones
 
             return treatment.getId();
         }

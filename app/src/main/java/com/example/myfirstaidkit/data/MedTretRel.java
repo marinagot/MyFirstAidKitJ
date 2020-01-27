@@ -18,6 +18,7 @@ public class MedTretRel {
     private Long initialDate;
     @SerializedName("date_end")
     private Long finalDate;
+    private boolean isNew;
 
     public MedTretRel() {
 
@@ -30,6 +31,7 @@ public class MedTretRel {
         this.frequency = frequency;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
+        this.isNew = false;
     }
 
     public String getId() {
@@ -78,5 +80,13 @@ public class MedTretRel {
 
     public void setFinalDate(Long finalDate) {
         this.finalDate = finalDate;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setIsNew(boolean isNew) {
+        this.isNew = isNew;
     }
 }

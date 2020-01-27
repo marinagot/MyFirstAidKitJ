@@ -119,18 +119,12 @@ public class treatment_edit extends Fragment {
 
         if (getArguments() != null) {
             isEdit = true;
-            String treatmentString = getArguments().getString("treatment");
-            String medicinesString = getArguments().getString("medicines");
-            String relationsString = getArguments().getString("relations");
 
             Gson gson = new Gson();
-            Type treatmentType = new TypeToken<Treatment>(){}.getType();
-            Type medicinesType = new TypeToken<List<Medicine>>(){}.getType();
-            Type relationsType = new TypeToken<List<MedTretRel>>(){}.getType();
 
-            treatment = gson.fromJson(treatmentString, treatmentType);
-            listItems = gson.fromJson(medicinesString, medicinesType);
-            relations = gson.fromJson(relationsString, relationsType);
+            treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
+            listItems = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
+            relations = gson.fromJson(getArguments().getString("relations"), new TypeToken<List<MedTretRel>>(){}.getType());
 
             ((EditText) viewCA.findViewById(R.id.txt_treatment_name)).setText(treatment.getName());
         }
@@ -238,7 +232,7 @@ public class treatment_edit extends Fragment {
                                     public void onClick(DialogInterface dialog, int id) {
 
                                         //Logica de guardado en la lista general
-                                        String a = period.getText().toString();
+                                        // String a = period.getText().toString();
                                         dialog.dismiss();
 
                                         // this line adds the data of your Spinner and puts in your array
@@ -249,6 +243,10 @@ public class treatment_edit extends Fragment {
                                         auxRel.setInitialDate(new Date().getTime());
                                         auxRel.setFinalDate(finalDate.getTime());
                                         auxRel.setIdMedicine(((Medicine) listMedicines.getSelectedItem()).getId());
+                                        if (isEdit) {
+                                            auxRel.setIdTreatment(treatment.getId());
+                                            auxRel.setIsNew(true);
+                                        }
                                         relations.add(auxRel);
 
                                         // next thing you have to do is check if your adapter has changed
@@ -288,7 +286,12 @@ public class treatment_edit extends Fragment {
                         public Void apiCall(Object... params) {
                             Treatment treatment = (Treatment) params[1];
                             if (isEdit) {
-                                treatment.setId(us.updateTreatment(treatment, relations));
+                                for (MedTretRel rel : relations) {
+                                    if (rel.isNew()) {
+                                        us.insertRelation(rel);
+                                    }
+                                }
+                                us.updateTreatment(treatment,  null);
                             }
                             else {
                                 treatment.setId(us.insertTreatment(treatment));
