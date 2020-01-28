@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -73,7 +74,6 @@ public class treatment_edit extends Fragment {
 
     DataBaseOperations us;
     Treatment treatment = new Treatment();
-    MedTretRel relation = new MedTretRel();
     List<MedTretRel> relations = new ArrayList<>();
     View viewCA, alert;
 
@@ -86,6 +86,8 @@ public class treatment_edit extends Fragment {
 
     ArrayList<Medicine> listItems = new ArrayList<>();
     ArrayAdapter<Medicine> adapter;
+
+    List<MedTretRel> removedRelations = new ArrayList<>();
 
     boolean isEdit = false;
 
@@ -182,7 +184,14 @@ public class treatment_edit extends Fragment {
             public void processFinish(View v, List<Medicine> result){
                 medicineList = result;
                 ListView list = viewCA.findViewById(R.id.list);
-                adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listItems);
+                List adapterData = new ArrayList(){
+                    {
+                        add(listItems);
+                        add(relations);
+                        add(removedRelations);
+                    }
+                };
+                adapter = new TreatmentMedicinesListAdapter<>(getContext(), R.layout.treatment_edit_list_item, adapterData);
                 list.setAdapter(adapter);
 
                 Button btnAdd = viewCA.findViewById(R.id.btn_treatment_edit_add);
@@ -290,6 +299,9 @@ public class treatment_edit extends Fragment {
                                     if (rel.isNew()) {
                                         us.insertRelation(rel);
                                     }
+                                }
+                                for (MedTretRel rel : removedRelations) {
+                                    us.deleteRelation(rel);
                                 }
                                 us.updateTreatment(treatment,  null);
                             }

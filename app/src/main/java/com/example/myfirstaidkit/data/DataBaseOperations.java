@@ -623,10 +623,6 @@ public final class DataBaseOperations {
         if (res != null) {
             resetSyncId(res);
 
-            try {
-                treatment.setId(res.getString("_id"));
-            } catch (JSONException e) { }
-
             SQLiteDatabase db= DataBase.getWritableDatabase();
 
             String whereClause = String.format("%s=?", TreatmentsDb.ID);
@@ -683,7 +679,6 @@ public final class DataBaseOperations {
                 Tablas.RELATION_MED_TREATMENT, MedTretRelDb.ID_TRAT);
 
         String[] selectionArgs = {String.valueOf(treatmentId)};
-        Log.d("Valor", String.valueOf(selectionArgs));
         Cursor c = db.rawQuery(sql, selectionArgs);
 
         List<MedTretRel> relations = new ArrayList<>();
@@ -691,6 +686,7 @@ public final class DataBaseOperations {
         while (c.moveToNext()) {
             MedTretRel relation = new MedTretRel();
 
+            relation.setId(c.getString(0));
             relation.setIdTreatment(c.getString(1));
             relation.setIdMedicine(c.getString(2));
             relation.setFrequency(c.getInt(3));
@@ -703,6 +699,26 @@ public final class DataBaseOperations {
         c.close();
         db.close();
         return relations;
+    }
+
+    public String deleteRelation(MedTretRel relation){
+
+        JSONObject res = callApi("/relations/" + relation.getId(), Request.Method.PUT);
+
+        if (res != null) {
+            resetSyncId(res);
+
+            SQLiteDatabase db= DataBase.getWritableDatabase();
+
+            String whereClause = String.format("%s=?", MedTretRelDb.ID);
+            String[] whereArgs = { String.valueOf(relation.getId()) };
+            db.delete(Tablas.RELATION_MED_TREATMENT, whereClause, whereArgs);
+            db.close();
+
+            return relation.getId();
+        }
+
+        return null;
     }
 
     /* RELATION operations */

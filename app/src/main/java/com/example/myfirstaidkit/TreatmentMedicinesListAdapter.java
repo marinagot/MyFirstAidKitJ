@@ -25,20 +25,24 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-class TreatmentsListAdapter<T> extends ArrayAdapter<T> {
+class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
 
     Context context;
     List<T> data;
+    List<T> relations;
+    List<T> removedRelations;
     int style;
     private static LayoutInflater inflater = null;
 
     DataBaseOperations us;
 
-    public TreatmentsListAdapter(Context context, int layoutId, List<T> data) {
+    public TreatmentMedicinesListAdapter(Context context, int layoutId, List<List<T>> data) {
         // TODO Auto-generated constructor stub
-        super(context, 0 , data);
+        super(context, 0 , data.get(0));
         this.context = context;
-        this.data = data;
+        this.data = data.get(0);
+        this.relations = data.get(1);
+        this.removedRelations = data.get(2);
         this.style = layoutId;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -71,16 +75,13 @@ class TreatmentsListAdapter<T> extends ArrayAdapter<T> {
             vi = inflater.inflate(style, null);
         }
 
-        TextView header = vi.findViewById(R.id.treatment_item_header);
-        TextView text = vi.findViewById(R.id.treatment_item_text);
-        header.setText(((Treatment) data.get(position)).getName());
-        text.setText(((Treatment) data.get(position)).getIdUser());
+        TextView header = vi.findViewById(R.id.treatment_list_item_header);
+        header.setText(((Medicine) data.get(position)).getName());
 
-        ImageButton editImageView = vi.findViewById(R.id.treatment_item_edit);
+        ImageButton editImageView = vi.findViewById(R.id.treatment_list_item_edit);
         editImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                Gson gson = new Gson();
+                /*Gson gson = new Gson();
 
                 String treatment = null;
                 Treatment t = (Treatment) data.get(position);
@@ -98,32 +99,26 @@ class TreatmentsListAdapter<T> extends ArrayAdapter<T> {
                     treatment = new JSONObject(gson.toJson(data.get(position))).toString();
                     medicines = new JSONArray(gson.toJson(list_med)).toString();
                     relations = new JSONArray(gson.toJson(list_rel)).toString();
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                    int i = 0;
+                }
 
                 Bundle bundle = new Bundle();
                 bundle.putString("treatment", treatment);
                 bundle.putString("medicines", medicines);
                 bundle.putString("relations", relations);
 
-                Navigation.findNavController(v).navigate(R.id.action_treatments_to_treatment_edit, bundle);
+                Navigation.findNavController(v).navigate(R.id.action_treatments_to_treatment_edit, bundle);*/
             }
         });
 
-        ImageButton deleteImageView = vi.findViewById(R.id.treatment_item_delete);
+        ImageButton deleteImageView = vi.findViewById(R.id.treatment_list_item_delete);
         deleteImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new ApiCallThread<String>(new AsyncResponse<String>(){
-                    @Override
-                    public String apiCall(Object... params) {
-                        return us.deleteTreatment((Treatment) params[1]);
-                    }
-
-                    @Override
-                    public void processFinish(View v, String result){
-                        remove(data.get(position));
-                        notifyDataSetChanged();
-                    }
-                }).execute(v, data.get(position));
+                remove(data.get(position));
+                removedRelations.add(relations.get(position));
+                relations.remove(position);
+                notifyDataSetChanged();
             }
         });
 

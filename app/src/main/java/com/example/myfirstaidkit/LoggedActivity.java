@@ -95,7 +95,7 @@ public class LoggedActivity extends AppCompatActivity
             });
         }
 
-        startAlarm();
+        // startAlarm();
 
         /*if (!prefs.getBoolean("dailyAlarm", false)) {
         }*/
