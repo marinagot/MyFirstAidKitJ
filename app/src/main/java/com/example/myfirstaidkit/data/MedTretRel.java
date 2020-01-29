@@ -19,6 +19,7 @@ public class MedTretRel {
     @SerializedName("date_end")
     private Long finalDate;
     private boolean isNew;
+    private boolean isEdited;
 
     public MedTretRel() {
 
@@ -32,6 +33,7 @@ public class MedTretRel {
         this.initialDate = initialDate;
         this.finalDate = finalDate;
         this.isNew = false;
+        this.isEdited = false;
     }
 
     public String getId() {
@@ -88,5 +90,13 @@ public class MedTretRel {
 
     public void setIsNew(boolean isNew) {
         this.isNew = isNew;
+    }
+
+    public boolean isEdited() {
+        return isEdited;
+    }
+
+    public void setisEdited(boolean isEdited) {
+        this.isNew = isEdited;
     }
 }

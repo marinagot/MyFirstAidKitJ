@@ -672,6 +672,38 @@ public final class DataBaseOperations {
         return null;
     }
 
+    public String updateRelation(MedTretRel relation){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("relation", new JSONObject(gson.toJson(relation)));
+        } catch (JSONException e) { }
+
+        JSONObject res = callApi("/relations/" + relation.getId(), Request.Method.POST, data);
+
+        if (res != null) {
+            resetSyncId(res);
+
+            // Tratamiento
+            SQLiteDatabase db = DataBase.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(MedTretRelDb.FINAL_DATE, relation.getFinalDate());
+            values.put(MedTretRelDb.ID_MED, relation.getIdMedicine());
+            values.put(MedTretRelDb.FREQUENCY, relation.getFrequency());
+
+            String whereClause = String.format("%s=?", MedTretRelDb.ID);
+            final String[] whereArgs = {relation.getId()};
+
+            db.update(Tablas.RELATION_MED_TREATMENT, values, whereClause, whereArgs);
+
+            // Relaciones
+
+            return relation.getId();
+        }
+
+        return null;
+    }
+
     public List<MedTretRel> getRelations_treatmentId(String treatmentId) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 

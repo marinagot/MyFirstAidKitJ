@@ -17,10 +17,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -38,7 +36,6 @@ import com.example.myfirstaidkit.data.Treatment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,12 +79,12 @@ public class treatment_edit extends Fragment {
 
     Spinner listMedicines;
     EditText period;
-    CalendarView endDate;
 
     ArrayList<Medicine> listItems = new ArrayList<>();
     ArrayAdapter<Medicine> adapter;
 
     List<MedTretRel> removedRelations = new ArrayList<>();
+    List<MedTretRel> editedRelations = new ArrayList<>();
 
     boolean isEdit = false;
 
@@ -189,6 +186,8 @@ public class treatment_edit extends Fragment {
                         add(listItems);
                         add(relations);
                         add(removedRelations);
+                        add(editedRelations);
+                        add(medicineList);
                     }
                 };
                 adapter = new TreatmentMedicinesListAdapter<>(getContext(), R.layout.treatment_edit_list_item, adapterData);
@@ -228,7 +227,6 @@ public class treatment_edit extends Fragment {
 
                         listMedicines = alert.findViewById(R.id.list_medicines);
                         period = alert.findViewById(R.id.txt_edit_medicine_num);
-                        endDate = alert.findViewById(R.id.chosen_date);
 
                         ArrayAdapter<Medicine> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, medicineList);
                         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -241,7 +239,6 @@ public class treatment_edit extends Fragment {
                                     public void onClick(DialogInterface dialog, int id) {
 
                                         //Logica de guardado en la lista general
-                                        // String a = period.getText().toString();
                                         dialog.dismiss();
 
                                         // this line adds the data of your Spinner and puts in your array
@@ -299,6 +296,9 @@ public class treatment_edit extends Fragment {
                                     if (rel.isNew()) {
                                         us.insertRelation(rel);
                                     }
+                                    if (rel.isEdited()) {
+                                        us.updateRelation(rel);
+                                    }
                                 }
                                 for (MedTretRel rel : removedRelations) {
                                     us.deleteRelation(rel);
@@ -324,12 +324,12 @@ public class treatment_edit extends Fragment {
             }
         });
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 17);
-        cal.set(Calendar.MINUTE, 20);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        setAlarm(cal);
+        // Calendar cal = Calendar.getInstance();
+        // cal.set(Calendar.HOUR_OF_DAY, 17);
+        // cal.set(Calendar.MINUTE, 20);
+        // cal.set(Calendar.SECOND, 0);
+        // cal.set(Calendar.MILLISECOND, 0);
+        // setAlarm(cal);
 
         return viewCA;
 
