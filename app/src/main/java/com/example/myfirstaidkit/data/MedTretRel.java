@@ -97,6 +97,6 @@ public class MedTretRel {
     }
 
     public void setisEdited(boolean isEdited) {
-        this.isNew = isEdited;
+        this.isEdited = isEdited;
     }
 }

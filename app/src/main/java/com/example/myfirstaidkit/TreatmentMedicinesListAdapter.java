@@ -155,11 +155,15 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
                                 dialog.dismiss();
 
                                 // this line adds the data of your Spinner and puts in your array
-                                ((List<Medicine>) listItems).add((Medicine) listMedicines.getSelectedItem());
+                                // ((List<Medicine>) listItems).add((Medicine) listMedicines.getSelectedItem());
+
+                                ((List<Medicine>) listItems).set(position, (Medicine) listMedicines.getSelectedItem());
 
                                 MedTretRel auxRel = new MedTretRel();
                                 auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
                                 auxRel.setInitialDate(oldRelation.getInitialDate());
+                                auxRel.setId(oldRelation.getId());
+                                auxRel.setIdTreatment(oldRelation.getIdTreatment());
                                 auxRel.setFinalDate(finalDate.getTime());
                                 auxRel.setIdMedicine(((Medicine) listMedicines.getSelectedItem()).getId());
                                 auxRel.setisEdited(true);

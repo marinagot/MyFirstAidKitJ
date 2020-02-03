@@ -683,7 +683,6 @@ public final class DataBaseOperations {
         if (res != null) {
             resetSyncId(res);
 
-            // Tratamiento
             SQLiteDatabase db = DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
 
@@ -695,8 +694,6 @@ public final class DataBaseOperations {
             final String[] whereArgs = {relation.getId()};
 
             db.update(Tablas.RELATION_MED_TREATMENT, values, whereClause, whereArgs);
-
-            // Relaciones
 
             return relation.getId();
         }
