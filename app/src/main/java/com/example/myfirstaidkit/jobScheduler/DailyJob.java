@@ -3,35 +3,18 @@ package com.example.myfirstaidkit.jobScheduler;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.job.JobInfo;
 import android.app.job.JobParameters;
-import android.app.job.JobScheduler;
 import android.app.job.JobService;
-import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.example.myfirstaidkit.R;
 
+import static com.example.myfirstaidkit.helpers.Utils.schedule;
+
 public class DailyJob extends JobService {
-    private static final int JOB_ID = 1;
-
     private NotificationManager notifManager;
-
-    public static void schedule(Context context, long intervalMillis) {
-
-        JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
-        ComponentName componentName =
-                new ComponentName(context, DailyJob.class);
-        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, componentName);
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
-        builder.setMinimumLatency(intervalMillis);
-        builder.setPersisted(true);
-        builder.setBackoffCriteria(5000, JobInfo.BACKOFF_POLICY_LINEAR);
-        jobScheduler.schedule(builder.build());
-
-    }
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {

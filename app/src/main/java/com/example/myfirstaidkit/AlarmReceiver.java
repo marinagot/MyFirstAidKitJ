@@ -11,8 +11,6 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import static android.app.PendingIntent.FLAG_ONE_SHOT;
-
 public class AlarmReceiver extends BroadcastReceiver {
 
     private NotificationManager notifManager;

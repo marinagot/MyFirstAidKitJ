@@ -4,9 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,11 +27,12 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
-import com.example.myfirstaidkit.jobScheduler.DailyJob;
 
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
+
+import static com.example.myfirstaidkit.helpers.Utils.getMilisecondsToNextThreePM;
+import static com.example.myfirstaidkit.helpers.Utils.isJobServiceOn;
+import static com.example.myfirstaidkit.helpers.Utils.schedule;
 
 public class LoggedActivity extends AppCompatActivity
         implements home.OnFragmentInteractionListener,
@@ -102,14 +100,9 @@ public class LoggedActivity extends AppCompatActivity
         }
 
         // Daily job
-        // Calcular la hora actual del dia y restar lo que le falte para las 12 de la mañana del dia siguiente
-
-        Calendar midDay = Calendar.getInstance();
-        midDay.set(Calendar.HOUR_OF_DAY, 12);
-
-
         if (!isJobServiceOn(this))
-            DailyJob.schedule(this, midDay.getTimeInMillis() + 86400000 - Calendar.getInstance().getTimeInMillis());
+            schedule(this, getMilisecondsToNextThreePM());
+
 
 
         // startAlarm();
@@ -126,21 +119,6 @@ public class LoggedActivity extends AppCompatActivity
             edit.putBoolean("dailyAlarm", false);
             edit.apply();
         }*/
-    }
-
-    public static boolean isJobServiceOn( Context context ) {
-        JobScheduler scheduler = (JobScheduler) context.getSystemService( Context.JOB_SCHEDULER_SERVICE ) ;
-
-        boolean hasBeenScheduled = false ;
-
-        for ( JobInfo jobInfo : scheduler.getAllPendingJobs() ) {
-            if ( jobInfo.getId() == 1 ) {
-                hasBeenScheduled = true ;
-                break ;
-            }
-        }
-
-        return hasBeenScheduled ;
     }
 
     public void status() {
