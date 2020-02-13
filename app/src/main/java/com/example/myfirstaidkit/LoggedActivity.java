@@ -99,8 +99,10 @@ public class LoggedActivity extends AppCompatActivity
             });
         }
 
+
+
         // Daily job
-        if (!isJobServiceOn(this))
+        // if (!isJobServiceOn(this))
             schedule(this, getMilisecondsToNextThreePM());
 
 
