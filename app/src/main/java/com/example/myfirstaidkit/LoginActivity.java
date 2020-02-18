@@ -6,6 +6,9 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import static com.example.myfirstaidkit.helpers.Utils.MEDICINES_JOB_ID;
+import static com.example.myfirstaidkit.helpers.Utils.removeSchedule;
+
 
 public class LoginActivity extends AppCompatActivity
         implements login.OnFragmentInteractionListener,
@@ -21,7 +24,10 @@ public class LoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         prefs = this.getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
-            setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login);
+
+        // Elimina todos los jobs
+        removeSchedule(this);
     }
 
     @Override

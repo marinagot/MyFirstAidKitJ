@@ -30,7 +30,8 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
 
 import java.util.Calendar;
 
-import static com.example.myfirstaidkit.helpers.Utils.getMilisecondsToNextThreePM;
+import static com.example.myfirstaidkit.helpers.Utils.MEDICINES_JOB_ID;
+import static com.example.myfirstaidkit.helpers.Utils.getMilisecondsToNextHour;
 import static com.example.myfirstaidkit.helpers.Utils.isJobServiceOn;
 import static com.example.myfirstaidkit.helpers.Utils.schedule;
 
@@ -102,8 +103,9 @@ public class LoggedActivity extends AppCompatActivity
 
 
         // Daily job
-        // if (!isJobServiceOn(this))
-            schedule(this, getMilisecondsToNextThreePM());
+        if (!isJobServiceOn(this, MEDICINES_JOB_ID))
+            schedule(this, getMilisecondsToNextHour(9));
+//            schedule(this, 5000);
 
 
 
