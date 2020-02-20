@@ -6,11 +6,13 @@ import android.app.job.JobService;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Medicine;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.example.myfirstaidkit.helpers.Utils.fireNotification;
 import static com.example.myfirstaidkit.helpers.Utils.prepareNotification;
-import static com.example.myfirstaidkit.helpers.Utils.schedule;
+import static com.example.myfirstaidkit.helpers.Utils.scheduleDaily;
 
 public class DailyJob extends JobService {
 
@@ -33,17 +35,25 @@ public class DailyJob extends JobService {
             }
             if (notifType != 0){
                 prepareNotification(
-                        getApplicationContext(),
-                        i,
-                        notifType,
-                        meds.get(i)
+                    getApplicationContext(),
+                    i,
+                    notifType,
+                    meds.get(i)
                 );
             }
         }
 
+        fireNotification(
+            getApplicationContext(),
+            meds.size() + 1,
+            "Son las " + new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTimeInMillis()),
+            "hora del dia",
+            android.R.drawable.ic_menu_my_calendar
+        );
+
         // aqui cosas
         jobFinished(jobParameters, true);
-        schedule(getApplicationContext(), 86400000);
+        scheduleDaily(getApplicationContext(), 86400000);
         return false;
     }
 

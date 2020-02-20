@@ -8,19 +8,24 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
+import android.os.PersistableBundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
 import com.example.myfirstaidkit.jobScheduler.DailyJob;
+import com.example.myfirstaidkit.jobScheduler.DoseJob;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class Utils {
 
     public static final int MEDICINES_JOB_ID = 1;
+    public static final int DOSE_JOB_ID = 2;
 
     public static boolean isJobServiceOn(Context context, int id) {
         JobScheduler scheduler = context.getSystemService(JobScheduler.class);
@@ -32,7 +37,7 @@ public class Utils {
         return false;
     }
 
-    public static void schedule(Context context, long intervalMillis) {
+    public static void scheduleDaily(Context context, long intervalMillis) {
         JobScheduler scheduler = context.getSystemService(JobScheduler.class);
         ComponentName componentName = new ComponentName(context, DailyJob.class);
 
@@ -41,6 +46,19 @@ public class Utils {
         builder.setMinimumLatency(intervalMillis);
         builder.setPersisted(true);
         builder.setBackoffCriteria(5000, JobInfo.BACKOFF_POLICY_LINEAR);
+
+        scheduler.schedule(builder.build());
+    }
+
+    public static void scheduleDose(Context context, PersistableBundle bundle) {
+        JobScheduler scheduler = context.getSystemService(JobScheduler.class);
+        ComponentName componentName = new ComponentName(context, DoseJob.class);
+
+        JobInfo.Builder builder = new JobInfo.Builder(bundle.getString("rel_id").hashCode(), componentName);
+        builder.setMinimumLatency(bundle.getInt("rel_frequency") * 3600000); // ms
+        builder.setPersisted(true);
+        builder.setBackoffCriteria(500, JobInfo.BACKOFF_POLICY_LINEAR);
+        builder.setExtras(bundle);
 
         scheduler.schedule(builder.build());
     }
@@ -110,11 +128,10 @@ public class Utils {
             default: content = "";
         }
 
-
         fireNotification(context, NOTIFY_ID, content, med.getName(), icon);
     }
 
-    private static void fireNotification(Context context, int NOTIFY_ID, String content, String title, int icon) {
+    public static void fireNotification(Context context, int NOTIFY_ID, String content, String title, int icon) {
 
         String channel_id = "default_notification_channel_id";          // default_channel_id
         String channel_title = "default_notification_channel_title";    // Default Channel

@@ -577,10 +577,31 @@ public final class DataBaseOperations {
         Treatment treatment = new Treatment();
 
         if (c.moveToFirst()) {
-
             treatment.setId(c.getString(0));
-            treatment.setName(c.getColumnName(1));
-            treatment.setIdUser(c.getString(2));
+            treatment.setIdUser(c.getString(1));
+            treatment.setName(c.getString(2));
+        }
+        c.close();
+        db.close();
+        return treatment;
+
+    }
+
+    public Treatment getTreatment_treatmentId(String treatmentId) {
+        SQLiteDatabase db = DataBase.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.TREATMENT, TreatmentsDb.ID);
+
+        String[] selectionArgs = {treatmentId};
+        Cursor c = db.rawQuery(sql, selectionArgs);
+
+        Treatment treatment = new Treatment();
+
+        if (c.moveToFirst()) {
+            treatment.setId(c.getString(0));
+            treatment.setIdUser(c.getString(1));
+            treatment.setName(c.getString(2));
         }
         c.close();
         db.close();

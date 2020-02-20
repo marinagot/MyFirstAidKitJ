@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import static com.example.myfirstaidkit.helpers.Utils.getMilisecondsToNextHour;
 import static com.example.myfirstaidkit.helpers.Utils.isJobServiceOn;
-import static com.example.myfirstaidkit.helpers.Utils.schedule;
+import static com.example.myfirstaidkit.helpers.Utils.scheduleDaily;
 
 /**
  * Created by azem on 11/3/17.
@@ -25,7 +25,7 @@ public class BootReceiver extends BroadcastReceiver
 
         // Completamente innecesario
         if (!isJobServiceOn(context, 1))
-            schedule(context, getMilisecondsToNextHour(15));
+            scheduleDaily(context, getMilisecondsToNextHour(15));
 
         /*
         Intent i = new Intent(context, AlarmBootService.class);

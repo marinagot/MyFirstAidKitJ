@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +44,8 @@ import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.ALARM_SERVICE;
+import static com.example.myfirstaidkit.helpers.Utils.removeSchedule;
+import static com.example.myfirstaidkit.helpers.Utils.scheduleDose;
 
 
 /**
@@ -294,14 +297,37 @@ public class treatment_edit extends Fragment {
                             if (isEdit) {
                                 for (MedTretRel rel : relations) {
                                     if (rel.isNew()) {
-                                        us.insertRelation(rel);
+                                        if (us.insertRelation(rel) != null) {
+                                            PersistableBundle bundle = new PersistableBundle();
+
+                                            bundle.putString("rel_id", rel.getId());
+                                            bundle.putInt("rel_frequency", rel.getFrequency());
+                                            bundle.putString("rel_med_id", rel.getIdMedicine());
+                                            bundle.putString("rel_treat_id", rel.getIdTreatment());
+                                            bundle.putLong("rel_end_date", rel.getFinalDate());
+
+                                            scheduleDose(getContext(), bundle);
+                                        }
                                     }
                                     if (rel.isEdited()) {
-                                        us.updateRelation(rel);
+                                        if (us.updateRelation(rel) != null) {
+                                            PersistableBundle bundle = new PersistableBundle();
+
+                                            bundle.putString("rel_id", rel.getId());
+                                            bundle.putInt("rel_frequency", rel.getFrequency());
+                                            bundle.putString("rel_med_id", rel.getIdMedicine());
+                                            bundle.putString("rel_treat_id", rel.getIdTreatment());
+                                            bundle.putLong("rel_end_date", rel.getFinalDate());
+
+                                            scheduleDose(getContext(), bundle);
+                                        }
                                     }
                                 }
                                 for (MedTretRel rel : removedRelations) {
-                                    us.deleteRelation(rel);
+                                    if (us.deleteRelation(rel) != null) {
+                                        removeSchedule(getContext(), rel.getId().hashCode());
+                                    }
+
                                 }
                                 us.updateTreatment(treatment,  null);
                             }
@@ -309,7 +335,17 @@ public class treatment_edit extends Fragment {
                                 treatment.setId(us.insertTreatment(treatment));
                                 for (MedTretRel rel : relations) {
                                     rel.setIdTreatment(treatment.getId());
-                                    us.insertRelation(rel);
+                                    if (us.insertRelation(rel) != null) {
+                                        PersistableBundle bundle = new PersistableBundle();
+
+                                        bundle.putString("rel_id", rel.getId());
+                                        bundle.putInt("rel_frequency", rel.getFrequency());
+                                        bundle.putString("rel_med_id", rel.getIdMedicine());
+                                        bundle.putString("rel_treat_id", rel.getIdTreatment());
+                                        bundle.putLong("rel_end_date", rel.getFinalDate());
+
+                                        scheduleDose(getContext(), bundle);
+                                    }
                                 }
                             }
                             return null;
