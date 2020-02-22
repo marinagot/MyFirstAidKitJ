@@ -1,12 +1,7 @@
 package com.example.myfirstaidkit;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -20,10 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.navigation.Navigation;
@@ -37,13 +30,12 @@ import com.example.myfirstaidkit.data.Treatment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.text.SimpleDateFormat;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import static android.content.Context.ALARM_SERVICE;
 import static com.example.myfirstaidkit.helpers.Utils.removeSchedule;
 import static com.example.myfirstaidkit.helpers.Utils.scheduleDose;
 
@@ -63,8 +55,8 @@ public class treatment_edit extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+//    private String mParam1;
+//    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -77,21 +69,15 @@ public class treatment_edit extends Fragment {
     List<MedTretRel> relations = new ArrayList<>();
     View viewCA, alert;
 
-    List<Medicine> medicineList;
-    Date finalDate;
+    List<Medicine> userMedicines;
 
-    Spinner listMedicines;
-    EditText period;
-
-    ArrayList<Medicine> listItems = new ArrayList<>();
+    List<Medicine> treatmentMedicines = new ArrayList<>();
     ArrayAdapter<Medicine> adapter;
 
     List<MedTretRel> removedRelations = new ArrayList<>();
     List<MedTretRel> editedRelations = new ArrayList<>();
 
     boolean isEdit = false;
-
-    final static int RQS_1 = 1;
 
     public treatment_edit() {
         // Required empty public constructor
@@ -119,20 +105,6 @@ public class treatment_edit extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null) {
-            isEdit = true;
-
-            Gson gson = new Gson();
-
-            treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
-            listItems = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
-            relations = gson.fromJson(getArguments().getString("relations"), new TypeToken<List<MedTretRel>>(){}.getType());
-
-            ((EditText) viewCA.findViewById(R.id.txt_treatment_name)).setText(treatment.getName());
-        }
-
-
-
 //        Button btnOk = view.findViewById(R.id.btn_treatment_edit_done);
 //
 //        btnOk.setOnClickListener(new View.OnClickListener() {
@@ -147,10 +119,10 @@ public class treatment_edit extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
 
         setHasOptionsMenu(true);
         try {
@@ -167,12 +139,28 @@ public class treatment_edit extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_treatment_edit, container, false);
         alert = inflater.inflate(R.layout.popup_treatment_edit_add_new_medicine, null, false);
         us = DataBaseOperations.get_Instance(getContext());
 
-        medicineList = new ArrayList<>();
+        if (getArguments() != null) {
+            Gson gson = new Gson();
+
+            if (getArguments().getString("treatment") != null) {
+                isEdit = true;
+                treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
+            }
+
+            treatmentMedicines = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
+            relations = gson.fromJson(getArguments().getString("relations"), new TypeToken<List<MedTretRel>>(){}.getType());
+
+            ((EditText) viewCA.findViewById(R.id.txt_treatment_name)).setText(treatment.getName());
+//            adapter.notifyDataSetChanged();
+        }
+
+        userMedicines = new ArrayList<>();
         //Rellenar con campos de base de datos del kit del usuario
         new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
             @Override
@@ -182,15 +170,15 @@ public class treatment_edit extends Fragment {
 
             @Override
             public void processFinish(View v, List<Medicine> result){
-                medicineList = result;
+                userMedicines = result;
                 ListView list = viewCA.findViewById(R.id.list);
                 List adapterData = new ArrayList(){
                     {
-                        add(listItems);
+                        add(treatmentMedicines);
                         add(relations);
                         add(removedRelations);
                         add(editedRelations);
-                        add(medicineList);
+                        add(userMedicines);
                     }
                 };
                 adapter = new TreatmentMedicinesListAdapter<>(getContext(), R.layout.treatment_edit_list_item, adapterData);
@@ -201,67 +189,28 @@ public class treatment_edit extends Fragment {
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Gson gson = new Gson();
 
-                        alert = LayoutInflater.from(getContext()).inflate(R.layout.popup_treatment_edit_add_new_medicine, null);
+                        String rels = null;
+                        String treat = null;
+                        String listMed = null;
+                        String userMeds = null;
+                        try {
+                            treat = new JSONObject(gson.toJson(treatment)).toString();
+                            rels = new JSONArray(gson.toJson(relations)).toString();
+                            listMed = new JSONArray(gson.toJson(treatmentMedicines)).toString();
+                            userMeds = new JSONArray(gson.toJson(userMedicines)).toString();
+                        } catch (Exception e) {
+                            int i = 0;
+                        }
 
-                        Button btnFinDate = alert.findViewById(R.id.btn_date_cale);
-                        final TextView finalDateField = alert.findViewById(R.id.final_date);
-                        btnFinDate.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view){
-                                Calendar calendar = Calendar.getInstance();
-                                int year = calendar.get(Calendar.YEAR);
-                                int month = calendar.get(Calendar.MONTH);
-                                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                                        new DatePickerDialog.OnDateSetListener() {
-                                            @Override
-                                            public void onDateSet(DatePicker view, int year, int month, int day) {
-                                                try {
-                                                    month += 1;
-                                                    finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year);
-                                                    finalDateField.setText(day + "/" + month + "/" + year);
-                                                } catch (Exception e){ finalDate = null; }
-                                            }
-                                        },year,month,dayOfMonth);
-                                datePickerDialog.show();
-                            }
-                        });
+                        Bundle bundle = new Bundle();
+                        bundle.putString("treatment", treat);
+                        bundle.putString("relations", rels);
+                        bundle.putString("medicines", listMed);
+                        bundle.putString("userMedicines", userMeds);
 
-                        listMedicines = alert.findViewById(R.id.list_medicines);
-                        period = alert.findViewById(R.id.txt_edit_medicine_num);
-
-                        ArrayAdapter<Medicine> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, medicineList);
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        listMedicines.setAdapter(dataAdapter);
-
-
-                        new AlertDialog.Builder(getContext()).setView(alert)
-                                .setTitle("Insertar nueva medicina")
-                                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-
-                                        //Logica de guardado en la lista general
-                                        dialog.dismiss();
-
-                                        // this line adds the data of your Spinner and puts in your array
-                                        listItems.add((Medicine) listMedicines.getSelectedItem());
-
-                                        MedTretRel auxRel = new MedTretRel();
-                                        auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
-                                        auxRel.setInitialDate(new Date().getTime());
-                                        auxRel.setFinalDate(finalDate.getTime());
-                                        auxRel.setIdMedicine(((Medicine) listMedicines.getSelectedItem()).getId());
-                                        if (isEdit) {
-                                            auxRel.setIdTreatment(treatment.getId());
-                                            auxRel.setIsNew(true);
-                                        }
-                                        relations.add(auxRel);
-
-                                        // next thing you have to do is check if your adapter has changed
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }).show();
+                        Navigation.findNavController(v).navigate(R.id.action_treatment_edit_to_treatment_edit_add_medicine, bundle);
                     }
                 });
             }
@@ -369,17 +318,6 @@ public class treatment_edit extends Fragment {
 
         return viewCA;
 
-
-    }
-
-    public void setAlarm(Calendar targetCal) {
-
-        Intent intent = new Intent(getContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                getContext(), RQS_1, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(),
-                pendingIntent);
 
     }
 

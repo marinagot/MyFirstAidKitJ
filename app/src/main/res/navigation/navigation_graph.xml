@@ -55,6 +55,18 @@
         <action
             android:id="@+id/action_treatment_edit_to_treatments"
             app:destination="@id/treatments" />
+        <action
+            android:id="@+id/action_treatment_edit_to_treatment_edit_add_medicine"
+            app:destination="@id/treatment_edit_add_medicine" />
+    </fragment>
+    <fragment
+        android:id="@+id/treatment_edit_add_medicine"
+        android:name="com.example.myfirstaidkit.treatment_edit_add_medicine"
+        android:label="Añadir medicina"
+        tools:layout="@layout/fragment_treatment_edit_add_medicine" >
+        <action
+            android:id="@+id/action_treatment_edit_add_medicine_to_treatment_edit"
+            app:destination="@id/treatment_edit" />
     </fragment>
     <fragment
         android:id="@+id/first_aid_kit"

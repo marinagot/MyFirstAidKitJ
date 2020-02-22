@@ -42,7 +42,8 @@ public class LoggedActivity extends AppCompatActivity
         settings.OnFragmentInteractionListener,
         account.OnFragmentInteractionListener,
         treatment_edit.OnFragmentInteractionListener,
-        medicine_edit.OnFragmentInteractionListener {
+        medicine_edit.OnFragmentInteractionListener,
+        treatment_edit_add_medicine.OnFragmentInteractionListener {
 
 
     SharedPreferences prefs;

@@ -155,7 +155,7 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
                                 dialog.dismiss();
 
                                 // this line adds the data of your Spinner and puts in your array
-                                // ((List<Medicine>) listItems).add((Medicine) listMedicines.getSelectedItem());
+                                // ((List<Medicine>) treatmentMedicines).add((Medicine) spinnerMedicines.getSelectedItem());
 
                                 ((List<Medicine>) listItems).set(position, (Medicine) listMedicines.getSelectedItem());
 
