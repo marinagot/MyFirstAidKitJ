@@ -101,6 +101,7 @@ class TreatmentsListAdapter<T> extends ArrayAdapter<T> {
                 } catch (Exception e) { }
 
                 Bundle bundle = new Bundle();
+                bundle.putBoolean("isTreatmentEdit", true);
                 bundle.putString("treatment", treatment);
                 bundle.putString("medicines", medicines);
                 bundle.putString("relations", relations);

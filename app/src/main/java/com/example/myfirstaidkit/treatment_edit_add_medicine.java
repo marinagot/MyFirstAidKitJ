@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
+import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.Treatment;
@@ -50,7 +53,9 @@ public class treatment_edit_add_medicine extends Fragment {
 //    private String mParam1;
 //    private String mParam2;
 
-    Treatment treatment = new Treatment();
+    DataBaseOperations dbo;
+
+    Treatment treatment;
     ArrayList<Medicine> treatmentMedicines = new ArrayList<>();
     List<MedTretRel> relations = new ArrayList<>();
 
@@ -62,7 +67,12 @@ public class treatment_edit_add_medicine extends Fragment {
     Spinner spinnerMedicines;
     EditText period;
 
-    boolean isEdit = false;
+    MedTretRel oldRelation;
+
+    int position;
+
+    boolean isTreatmentEdit = false;
+    boolean isMedicineEdit = false;
 
     private OnFragmentInteractionListener mListener;
 
@@ -101,6 +111,16 @@ public class treatment_edit_add_medicine extends Fragment {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
+        setHasOptionsMenu(true);
+        try {
+            getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
+        } catch (Exception e) {}
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 
     @Override
@@ -108,23 +128,25 @@ public class treatment_edit_add_medicine extends Fragment {
                              Bundle savedInstanceState) {
 
         viewCA = inflater.inflate(R.layout.fragment_treatment_edit_add_medicine, container, false);
+        dbo = DataBaseOperations.get_Instance(getContext());
 
         if (getArguments() != null) {
             Gson gson = new Gson();
 
-            if (getArguments().getString("treatment") != null) {
-                isEdit = true;
-                treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
-            }
-            if (getArguments().getString("userMedicines") != null) {
-                userMedicines = gson.fromJson(getArguments().getString("userMedicines"), new TypeToken<List<Medicine>>(){}.getType());
-            }
-
-            treatmentMedicines = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
+            isTreatmentEdit = getArguments().getBoolean("isTreatmentEdit");
+            isMedicineEdit = getArguments().getBoolean("isMedicineEdit");
             relations = gson.fromJson(getArguments().getString("relations"), new TypeToken<List<MedTretRel>>(){}.getType());
+            if (isMedicineEdit) {
+                position = getArguments().getInt("position");
+                oldRelation = relations.get(position);
+            }
+            treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
+            userMedicines = gson.fromJson(getArguments().getString("userMedicines"), new TypeToken<List<Medicine>>(){}.getType());
+            treatmentMedicines = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
         }
 
         Button btnFinDate = viewCA.findViewById(R.id.btn_date_cale);
+
         final TextView finalDateField = viewCA.findViewById(R.id.final_date);
         btnFinDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,42 +178,50 @@ public class treatment_edit_add_medicine extends Fragment {
         spinnerMedicines.setAdapter(dataAdapter);
 
 
+        if (isMedicineEdit) {
+            spinnerMedicines.setSelection(position);
+            period.setText(oldRelation.getFrequency().toString());
+            finalDateField.setText(new SimpleDateFormat("dd/MM/yyyy").format(oldRelation.getFinalDate()));
+            finalDate = new Date(oldRelation.getFinalDate());
+        }
 
         Button btnAdd = viewCA.findViewById(R.id.btn_add_medicine_add);
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // this line adds the data of your Spinner and puts in your array
-                treatmentMedicines.add((Medicine) spinnerMedicines.getSelectedItem());
-
                 MedTretRel auxRel = new MedTretRel();
                 auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
-                auxRel.setInitialDate(new Date().getTime());
                 auxRel.setFinalDate(finalDate.getTime());
                 auxRel.setIdMedicine(((Medicine) spinnerMedicines.getSelectedItem()).getId());
-                if (isEdit) {
+                if (isTreatmentEdit) {
                     auxRel.setIdTreatment(treatment.getId());
-                    auxRel.setIsNew(true);
                 }
-                relations.add(auxRel);
-
-                // next thing you have to do is check if your adapter has changed
-                // adapter.notifyDataSetChanged();
-
-                Gson gson = new Gson();
-
-                String rels = null;
-                String listMed = null;
-                try {
-                    rels = new JSONArray(gson.toJson(relations)).toString();
-                    listMed = new JSONArray(gson.toJson(treatmentMedicines)).toString();
-                } catch (Exception e) {}
+                if (isMedicineEdit) {
+                    auxRel.setInitialDate(oldRelation.getInitialDate());
+                    auxRel.setId(oldRelation.getId());
+                    auxRel.setIdTreatment(oldRelation.getIdTreatment());
+                    auxRel.setisEdited(true);
+                    relations.set(position, auxRel);
+                    // this line adds the data of your Spinner and puts in your array
+                    ((List<Medicine>) treatmentMedicines).set(position, (Medicine) spinnerMedicines.getSelectedItem());
+                } else {
+                    auxRel.setInitialDate(new Date().getTime());
+                    auxRel.setIsNew(true);
+                    relations.add(auxRel);
+                    // this line adds the data of your Spinner and puts in your array
+                    treatmentMedicines.add((Medicine) spinnerMedicines.getSelectedItem());
+                }
 
                 Bundle bundle = new Bundle();
-                bundle.putString("relations", rels);
-                bundle.putString("medicines", listMed);
+                Gson gson = new Gson();
+
+                try {
+                    bundle.putString("relations", new JSONArray(gson.toJson(relations)).toString());
+                    bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
+                    bundle.putString("treatment", new JSONObject(gson.toJson(treatment)).toString());
+                    bundle.putBoolean("isTreatmentEdit", isTreatmentEdit);
+                } catch (Exception e) {}
 
                 Navigation.findNavController(v).navigate(R.id.action_treatment_edit_add_medicine_to_treatment_edit, bundle);
             }

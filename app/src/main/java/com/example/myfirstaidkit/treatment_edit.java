@@ -77,7 +77,7 @@ public class treatment_edit extends Fragment {
     List<MedTretRel> removedRelations = new ArrayList<>();
     List<MedTretRel> editedRelations = new ArrayList<>();
 
-    boolean isEdit = false;
+    boolean isTreatmentEdit = false;
 
     public treatment_edit() {
         // Required empty public constructor
@@ -148,11 +148,10 @@ public class treatment_edit extends Fragment {
         if (getArguments() != null) {
             Gson gson = new Gson();
 
-            if (getArguments().getString("treatment") != null) {
-                isEdit = true;
-                treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
+            if (getArguments().getBoolean("isTreatmentEdit")) {
+                isTreatmentEdit = true;
             }
-
+            treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
             treatmentMedicines = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
             relations = gson.fromJson(getArguments().getString("relations"), new TypeToken<List<MedTretRel>>(){}.getType());
 
@@ -179,6 +178,8 @@ public class treatment_edit extends Fragment {
                         add(removedRelations);
                         add(editedRelations);
                         add(userMedicines);
+                        add(treatment);
+                        add(isTreatmentEdit);
                     }
                 };
                 adapter = new TreatmentMedicinesListAdapter<>(getContext(), R.layout.treatment_edit_list_item, adapterData);
@@ -189,26 +190,22 @@ public class treatment_edit extends Fragment {
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        treatment.setName(((EditText) viewCA.findViewById(R.id.txt_treatment_name)).getText().toString());
+
+                        Bundle bundle = new Bundle();
                         Gson gson = new Gson();
 
-                        String rels = null;
-                        String treat = null;
-                        String listMed = null;
-                        String userMeds = null;
+                        bundle.putBoolean("isMedicineEdit", false);
+                        bundle.putBoolean("isTreatmentEdit", isTreatmentEdit);
                         try {
-                            treat = new JSONObject(gson.toJson(treatment)).toString();
-                            rels = new JSONArray(gson.toJson(relations)).toString();
-                            listMed = new JSONArray(gson.toJson(treatmentMedicines)).toString();
-                            userMeds = new JSONArray(gson.toJson(userMedicines)).toString();
+                            bundle.putString("treatment",  new JSONObject(gson.toJson(treatment)).toString());
+                            bundle.putString("relations", new JSONArray(gson.toJson(relations)).toString());
+                            bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
+                            bundle.putString("userMedicines", new JSONArray(gson.toJson(userMedicines)).toString());
                         } catch (Exception e) {
                             int i = 0;
                         }
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("treatment", treat);
-                        bundle.putString("relations", rels);
-                        bundle.putString("medicines", listMed);
-                        bundle.putString("userMedicines", userMeds);
 
                         Navigation.findNavController(v).navigate(R.id.action_treatment_edit_to_treatment_edit_add_medicine, bundle);
                     }
@@ -243,7 +240,7 @@ public class treatment_edit extends Fragment {
                         @Override
                         public Void apiCall(Object... params) {
                             Treatment treatment = (Treatment) params[1];
-                            if (isEdit) {
+                            if (isTreatmentEdit) {
                                 for (MedTretRel rel : relations) {
                                     if (rel.isNew()) {
                                         if (us.insertRelation(rel) != null) {

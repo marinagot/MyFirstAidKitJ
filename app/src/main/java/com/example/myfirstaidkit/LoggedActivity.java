@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,9 +90,11 @@ public class LoggedActivity extends AppCompatActivity
 
                     switch (id) {
                         case R.id.nav_fak:
+                            Navigation.findNavController(activity, R.id.nav_host_fragment).popBackStack(R.id.treatments, true);
                             Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
                             break;
                         case R.id.nav_treatments:
+                            Navigation.findNavController(activity, R.id.nav_host_fragment).popBackStack(R.id.first_aid_kit, true);
                             Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.treatments);
                             break;
                         default:
@@ -213,7 +217,14 @@ public class LoggedActivity extends AppCompatActivity
                         else {
                             us.setSyncIdLogged(result);
                             networkStateChange(true);
-                            Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.first_aid_kit);
+
+                            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                            if (currentFragment instanceof treatments) {
+                                FragmentTransaction fragTransaction =  getSupportFragmentManager().beginTransaction();
+                                fragTransaction.detach(currentFragment);
+                                fragTransaction.attach(currentFragment);
+                                fragTransaction.commit();
+                            }
                         }
                         item.getActionView().clearAnimation();
                         // recreate();

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -19,8 +18,6 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
-import com.example.myfirstaidkit.data.ApiCallThread;
-import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
@@ -31,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -39,29 +35,33 @@ import java.util.List;
 class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
 
     Context context;
-    private List<T> listItems;
+    private List<T> treatmentMedicines;
     private List<MedTretRel> relations;
     private List<MedTretRel> removedRelations;
     private List<MedTretRel> editedRelations;
-    private List<Medicine> medicineList;
+    private List<Medicine> userMedicines;
+    private Treatment treatment;
+    private boolean isTreatmentEdit;
     private int style;
     private static LayoutInflater inflater = null;
 
     private Date finalDate;
-    private Spinner listMedicines;
+    private Spinner spinnerMedicines;
     private EditText period;
 
     DataBaseOperations us;
 
-    public TreatmentMedicinesListAdapter(Context context, int layoutId, List<List<T>> data) {
+    public TreatmentMedicinesListAdapter(Context context, int layoutId, List<Object> data) {
         // TODO Auto-generated constructor stub
-        super(context, 0 , data.get(0));
+        super(context, 0 , (List<T>)data.get(0));
         this.context = context;
-        this.listItems = data.get(0);
-        this.relations = ((List<MedTretRel>) data.get(1));
-        this.removedRelations = ((List<MedTretRel>) data.get(2));
-        this.editedRelations = ((List<MedTretRel>) data.get(3));
-        this.medicineList = ((List<Medicine>) data.get(4));
+        this.treatmentMedicines = (List<T>) data.get(0);
+        this.relations = (List<MedTretRel>) data.get(1);
+        this.removedRelations = (List<MedTretRel>) data.get(2);
+        this.editedRelations = (List<MedTretRel>) data.get(3);
+        this.userMedicines = (List<Medicine>) data.get(4);
+        this.treatment = (Treatment) data.get(5);
+        this.isTreatmentEdit = (boolean) data.get(6);
         this.style = layoutId;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -70,13 +70,13 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return listItems.size();
+        return treatmentMedicines.size();
     }
 
     @Override
     public T getItem(int position) {
         // TODO Auto-generated method stub
-        return listItems.get(position);
+        return treatmentMedicines.get(position);
     }
 
     @Override
@@ -95,92 +95,34 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
         }
 
         TextView header = vi.findViewById(R.id.treatment_list_item_header);
-        header.setText(((Medicine) listItems.get(position)).getName());
+        header.setText(((Medicine) treatmentMedicines.get(position)).getName());
 
         ImageButton editImageView = vi.findViewById(R.id.treatment_list_item_edit);
         editImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final MedTretRel oldRelation = relations.get(position);
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
 
-                View alert = LayoutInflater.from(getContext()).inflate(R.layout.popup_treatment_edit_add_new_medicine, null);
+                bundle.putBoolean("isMedicineEdit", true);
+                bundle.putBoolean("isTreatmentEdit", isTreatmentEdit);
+                bundle.putInt("position", position);
+                try {
+                    bundle.putString("treatment", new JSONObject(gson.toJson(treatment)).toString());
+                    bundle.putString("relations", new JSONArray(gson.toJson(relations)).toString());
+                    bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
+                    bundle.putString("userMedicines", new JSONArray(gson.toJson(userMedicines)).toString());
+                } catch (Exception e) {
+                    int i = 0;
+                }
 
-                listMedicines = alert.findViewById(R.id.list_medicines);
-
-                ArrayAdapter<Medicine> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, medicineList);
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                listMedicines.setAdapter(dataAdapter);
-
-                listMedicines.setSelection(position);
-
-                period = alert.findViewById(R.id.txt_edit_medicine_num);
-                period.setText(oldRelation.getFrequency().toString());
-
-                final TextView finalDateField = alert.findViewById(R.id.final_date);
-                finalDateField.setText(new SimpleDateFormat("dd/MM/yyyy").format(oldRelation.getFinalDate()));
-
-                finalDate = new Date(oldRelation.getFinalDate());
-
-                // Se construye la interfaz
-
-                Button btnFinDate = alert.findViewById(R.id.btn_date_cale);
-                btnFinDate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view){
-                        Calendar calendar = Calendar.getInstance();
-                        int year = calendar.get(Calendar.YEAR);
-                        int month = calendar.get(Calendar.MONTH);
-                        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),
-                                new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker view, int year, int month, int day) {
-                                        try {
-                                            month += 1;
-                                            finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year);
-                                            finalDateField.setText(day + "/" + month + "/" + year);
-                                        } catch (Exception e){ finalDate = null; }
-                                    }
-                                }, year, month, dayOfMonth);
-                        datePickerDialog.show();
-                    }
-                });
-
-                new AlertDialog.Builder(getContext()).setView(alert)
-                        .setTitle("Editar medicina")
-                        .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                                //Logica de guardado en la lista general
-                                // String a = period.getText().toString();
-                                dialog.dismiss();
-
-                                // this line adds the data of your Spinner and puts in your array
-                                // ((List<Medicine>) treatmentMedicines).add((Medicine) spinnerMedicines.getSelectedItem());
-
-                                ((List<Medicine>) listItems).set(position, (Medicine) listMedicines.getSelectedItem());
-
-                                MedTretRel auxRel = new MedTretRel();
-                                auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
-                                auxRel.setInitialDate(oldRelation.getInitialDate());
-                                auxRel.setId(oldRelation.getId());
-                                auxRel.setIdTreatment(oldRelation.getIdTreatment());
-                                auxRel.setFinalDate(finalDate.getTime());
-                                auxRel.setIdMedicine(((Medicine) listMedicines.getSelectedItem()).getId());
-                                auxRel.setisEdited(true);
-
-                                relations.set(position, auxRel);
-
-                                // next thing you have to do is check if your adapter has changed
-                                notifyDataSetChanged();
-                            }
-                        }).show();
+                Navigation.findNavController(v).navigate(R.id.action_treatment_edit_to_treatment_edit_add_medicine, bundle);
             }
         });
 
         ImageButton deleteImageView = vi.findViewById(R.id.treatment_list_item_delete);
         deleteImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                remove(listItems.get(position));
+                remove(treatmentMedicines.get(position));
                 removedRelations.add(relations.get(position));
                 relations.remove(position);
                 notifyDataSetChanged();
