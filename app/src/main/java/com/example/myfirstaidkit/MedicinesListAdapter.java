@@ -77,7 +77,8 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         ImageView doseWarning = vi.findViewById(R.id.dose_warning);
         TextView expiryDate = vi.findViewById(R.id.list_item_expiry_date);
         ImageView expirationWarning = vi.findViewById(R.id.expiration_warning);
-        LinearLayout rowContainer = vi.findViewById(R.id.row_container);
+//        LinearLayout rowContainer = vi.findViewById(R.id.row_container);
+        LinearLayout innerRowContainer = vi.findViewById(R.id.inner_row_container);
         header.setText(((Medicine) data.get(position)).getName());
         text.setText(((Medicine) data.get(position)).getType());
         String dateText = new SimpleDateFormat("dd MMM yyyy").format(new Date(((Medicine) data.get(position)).getExpirationDate()));
@@ -98,7 +99,7 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         }
 
         if (((Medicine)data.get(position)).getDoseNumber() < 1 || ((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis() - 24 * 3600 * 1000) {
-            rowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item_disabled));
+            innerRowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item_disabled));
             if (((Medicine)data.get(position)).getDoseNumber() < 1 ) {
                 dose.setTextColor(ContextCompat.getColor(context, R.color.alert));
                 dose.setText("AGOTADO");
@@ -120,7 +121,7 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
                 expiryDate.setText("Caducidad: " + dateText);
             }
         } else {
-            rowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item));
+            innerRowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item));
             expiryDate.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
             dose.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
             expiryDate.setText("Caducidad: " + dateText);

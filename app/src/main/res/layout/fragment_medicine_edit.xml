@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".medicine_edit"
-    android:background="@color/colorPrimaryLight"
+    android:background="?attr/colorPrimaryLight"
     android:orientation="vertical">
 
     <LinearLayout
@@ -129,7 +129,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorDivider" />
+            android:background="?attr/colorDivider" />
 
 
         <android.support.constraint.ConstraintLayout
@@ -171,7 +171,7 @@
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorDivider" />
+            android:background="?attr/colorDivider" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -232,7 +232,7 @@
             android:layout_marginBottom="28dp"
             android:background="@drawable/button_selector_primary"
             android:text="@string/btn_done"
-            android:textColor="@color/colorIcons"
+            android:textColor="?attr/colorIcons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.973"

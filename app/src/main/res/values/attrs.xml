@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Other values-->
+    <attr name="colorAlert" format="reference" />
+    <attr name="colorPrimaryLight" format="reference" />
+    <attr name="colorPrimaryText" format="reference" />
+    <attr name="colorSecondaryText" format="reference" />
+    <attr name="colorDivider" format="reference" />
+    <attr name="colorIcons" format="reference" />
+    <attr name="colorDisabled" format="reference" />
+    <attr name="colorDisabledBorder" format="reference" />
+    <attr name="colorConnection" format="reference" />
+
+</resources>

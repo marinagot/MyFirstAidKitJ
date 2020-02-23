@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/colorPrimaryDark">
+        android:background="?android:attr/colorPrimaryDark">
 
         <Space
             android:layout_width="0dp"
@@ -53,7 +53,7 @@
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:backgroundTint="@color/colorIcons"
+            android:backgroundTint="?attr/colorIcons"
             android:entries="@array/treatment_types"
             android:gravity="top|end" />
 
@@ -62,16 +62,16 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryLight">
+        android:background="?attr/colorPrimaryLight">
 
         <ListView
             android:id="@+id/list_user_treatments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:divider="@android:color/transparent"
-            android:dividerHeight="5dp"
-            android:layout_margin="5dp"
-            android:focusableInTouchMode="true"/>
+            android:dividerHeight="10dp"
+            android:focusableInTouchMode="true" />
 
         <!--<android.support.design.widget.FloatingActionButton
             android:id="@+id/newTreatment"

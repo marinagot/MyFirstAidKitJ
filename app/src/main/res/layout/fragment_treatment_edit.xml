@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryLight"
+    android:background="?attr/colorPrimaryLight"
     tools:context=".treatment_edit">
 
     <LinearLayout
@@ -44,7 +44,7 @@
             android:id="@+id/view2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorDivider" />
+            android:background="?attr/colorDivider" />
 
         <Button
             android:id="@+id/btn_treatment_edit_add"
@@ -56,7 +56,7 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/button_selector_primary"
             android:text="@string/edit_treatment_lbl_medicine3"
-            android:textColor="@color/colorIcons"
+            android:textColor="?attr/colorIcons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.08"
@@ -64,22 +64,23 @@
             app:layout_constraintTop_toBottomOf="@+id/txt_treatment_name"
             app:layout_constraintVertical_bias="0.018" />
 
+
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@color/colorPrimaryLight"
-            android:divider="@color/colorPrimary"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="0dp"
+            android:divider="@drawable/list_divider"
             android:dividerHeight="1dp"
             android:listSelector="@android:color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.787" />
+            app:layout_constraintVertical_bias="0.0" />
 
     </LinearLayout>
 
@@ -104,7 +105,7 @@
             android:layout_marginBottom="28dp"
             android:background="@drawable/button_selector_primary"
             android:text="@string/btn_done"
-            android:textColor="@color/colorIcons"
+            android:textColor="?attr/colorIcons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.973"

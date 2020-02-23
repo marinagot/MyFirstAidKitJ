@@ -46,10 +46,10 @@
             android:id="@+id/banner_network_disconnected"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/alert"
+            android:background="?attr/colorAlert"
             android:text="Sin conexión"
             android:textAlignment="center"
-            android:textColor="@color/colorIcons"
+            android:textColor="?attr/colorIcons"
             android:visibility="gone" />
 
         <TextView
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:background="@color/conexion"
+            android:background="?attr/colorConnection"
             android:text="Conexión recuperada"
             android:textAlignment="center"
             android:textColor="#F0F0F0"

@@ -57,6 +57,9 @@ public class LoggedActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setTheme(R.style.AppTheme);
+//        setTheme(R.style.AppThemeDark);
+
         prefs = getApplicationContext().getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
         edit = prefs.edit();
         us = DataBaseOperations.get_Instance(getApplicationContext());

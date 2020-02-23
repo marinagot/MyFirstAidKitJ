@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/colorPrimaryLight"
     tools:context=".treatment_edit_add_medicine">
 
     <LinearLayout
@@ -187,7 +188,7 @@
             android:layout_marginBottom="28dp"
             android:background="@drawable/button_selector_primary"
             android:text="@string/btn_done"
-            android:textColor="@color/colorIcons"
+            android:textColor="?attr/colorIcons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.973"
