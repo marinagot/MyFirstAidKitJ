@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -57,12 +58,30 @@ public class LoggedActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(R.style.AppTheme);
-//        setTheme(R.style.AppThemeDark);
-
         prefs = getApplicationContext().getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
         edit = prefs.edit();
         us = DataBaseOperations.get_Instance(getApplicationContext());
+
+        boolean isThemeEdited = prefs.getBoolean("isThemeEdited",false);
+        boolean isThemeDark = prefs.getBoolean("isThemeDark",false);
+
+        if (isThemeEdited) {
+            if (isThemeDark) {
+                setTheme(R.style.AppThemeDark);
+            } else {
+                setTheme(R.style.AppTheme);
+            }
+        } else {
+            switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+                case Configuration.UI_MODE_NIGHT_YES:
+                    setTheme(R.style.AppThemeDark);
+                    break;
+                case Configuration.UI_MODE_NIGHT_NO:
+                    setTheme(R.style.AppTheme);
+                    break;
+            }
+        }
+
 
         if (prefs.getString("id", null) == null) {
             Intent intent = new Intent(this, LoginActivity.class);

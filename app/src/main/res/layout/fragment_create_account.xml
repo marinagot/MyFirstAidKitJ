@@ -31,7 +31,7 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="@string/txt_email"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_username_set"
         app:layout_constraintEnd_toEndOf="parent"
@@ -139,7 +139,7 @@
             android:layout_marginBottom="28dp"
             android:text="Inicia sesión"
             android:textAllCaps="false"
-            android:textColor="?android:attr/colorPrimaryDark"
+            android:textColor="?attr/colorCardTitle"
             android:textStyle="bold" />
 
     </LinearLayout>

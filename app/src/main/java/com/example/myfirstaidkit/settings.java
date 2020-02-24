@@ -1,6 +1,8 @@
 package com.example.myfirstaidkit;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,9 +11,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RadioButton;
-
+import android.widget.Switch;
 
 
 /**
@@ -33,6 +36,9 @@ public class settings extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
 
     public settings() {
         // Required empty public constructor
@@ -82,35 +88,67 @@ public class settings extends Fragment {
         // Inflate the layout for this fragment
         final View vSett = inflater.inflate(R.layout.fragment_settings, container, false);
         Button btnSaSett = vSett.findViewById(R.id.btn_save_settings);
-        RadioButton btnDefault = (RadioButton) vSett.findViewById(R.id.btn_rad_def);
-        if ((btnDefault.isChecked()) == true ){
-            btnSaSett.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getActivity().setTheme(R.style.AppTheme);
-                }
-            });
+
+        final Switch themeSelector = vSett.findViewById(R.id.theme_switch);
+
+        boolean isThemeEdited = prefs.getBoolean("isThemeEdited",false);
+
+        if (!isThemeEdited) {
+            switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+                case Configuration.UI_MODE_NIGHT_YES:
+                    themeSelector.setChecked(true);
+                    break;
+                case Configuration.UI_MODE_NIGHT_NO:
+                    themeSelector.setChecked(false);
+                    break;
+            }
         }
-        RadioButton btnDark = (RadioButton) vSett.findViewById(R.id.btn_rad_dark);
-        if ((btnDark.isChecked()) == true ){
-            btnSaSett.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+
+        themeSelector.setOnClickListener(new Switch.OnClickListener() {
+            public void onClick(View view) {
+
+                if (themeSelector.isChecked()) {
                     getActivity().setTheme(R.style.AppThemeDark);
-                }
-            });
-        }
-
-        RadioButton btnLight = (RadioButton) vSett.findViewById(R.id.btn_rad_light);
-        if ((btnLight.isChecked()) == true ){
-            btnSaSett.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                } else {
                     getActivity().setTheme(R.style.AppTheme);
-
                 }
-            });
-        }
+
+                edit.putBoolean("isThemeEdited", true);
+                edit.putBoolean("isThemeDark", themeSelector.isChecked());
+                edit.apply();
+            }
+        });
+
+
+//        RadioButton btnDefault = (RadioButton) vSett.findViewById(R.id.btn_rad_def);
+//        if ((btnDefault.isChecked()) == true ){
+//            btnSaSett.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    getActivity().setTheme(R.style.AppTheme);
+//                }
+//            });
+//        }
+//        RadioButton btnDark = (RadioButton) vSett.findViewById(R.id.btn_rad_dark);
+//        if ((btnDark.isChecked()) == true ){
+//            btnSaSett.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    getActivity().setTheme(R.style.AppThemeDark);
+//                }
+//            });
+//        }
+//
+//        RadioButton btnLight = (RadioButton) vSett.findViewById(R.id.btn_rad_light);
+//        if ((btnLight.isChecked()) == true ){
+//            btnSaSett.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    getActivity().setTheme(R.style.AppTheme);
+//
+//                }
+//            });
+//        }
 
         return vSett;
     }
@@ -127,6 +165,9 @@ public class settings extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+
+            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
+            edit = prefs.edit();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
