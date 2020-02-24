@@ -14,10 +14,18 @@
         <item name="colorPrimaryText">@color/colorPrimaryText</item>
         <item name="colorSecondaryText">@color/colorSecondaryText</item>
         <item name="colorDivider">@color/darkColorDivider</item>
-        <item name="colorIcons">@color/darkColorIcons</item>
-        <item name="colorDisabled">@color/disabled</item>
-        <item name="colorDisabledBorder">@color/disabledBorder</item>
+        <item name="colorIcons">@color/colorIcons</item>
         <item name="colorConnection">@color/connection</item>
+
+
+        <item name="colorCard">@color/colorCard</item>
+        <item name="colorDisabledCard">@color/disabled</item>
+        <item name="colorDisabledCardBorder">@color/disabledBorder</item>
+        <item name="colorCardTitle">@color/colorPrimary</item>
+        <item name="colorDisabledCardTitle">@color/colorSecondaryText</item>
+
+        <item name="colorButtonText">@color/colorIcons</item>
+
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat">
@@ -32,9 +40,15 @@
         <item name="colorSecondaryText">@color/darkColorSecondaryText</item>
         <item name="colorDivider">@color/darkColorDivider</item>
         <item name="colorIcons">@color/darkColorIcons</item>
-        <item name="colorDisabled">@color/darkDisabled</item>
-        <item name="colorDisabledBorder">@color/darkDisabledBorder</item>
         <item name="colorConnection">@color/darkConnection</item>
+
+        <item name="colorCard">@color/darkColorCard</item>
+        <item name="colorDisabledCard">@color/darkDisabled</item>
+        <item name="colorDisabledCardBorder">@color/darkDisabledBorder</item>
+        <item name="colorCardTitle">@color/darkColorCardTitle</item>
+        <item name="colorDisabledCardTitle">@color/colorSecondaryText</item>
+
+        <item name="colorButtonText">@color/darkColorPrimaryText</item>
 
     </style>
 

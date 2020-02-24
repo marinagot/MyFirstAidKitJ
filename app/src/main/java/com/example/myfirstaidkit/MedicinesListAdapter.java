@@ -1,12 +1,14 @@
 package com.example.myfirstaidkit;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +27,8 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static com.example.myfirstaidkit.helpers.Utils.getColorByAttributeId;
 
 class MedicinesListAdapter<T> extends ArrayAdapter<T> {
 
@@ -76,6 +80,7 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         TextView dose = vi.findViewById(R.id.list_item_dose);
         ImageView doseWarning = vi.findViewById(R.id.dose_warning);
         TextView expiryDate = vi.findViewById(R.id.list_item_expiry_date);
+        ImageButton editImageView = vi.findViewById(R.id.list_item_edit);
         ImageView expirationWarning = vi.findViewById(R.id.expiration_warning);
 //        LinearLayout rowContainer = vi.findViewById(R.id.row_container);
         LinearLayout innerRowContainer = vi.findViewById(R.id.inner_row_container);
@@ -100,35 +105,42 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
 
         if (((Medicine)data.get(position)).getDoseNumber() < 1 || ((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis() - 24 * 3600 * 1000) {
             innerRowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item_disabled));
+            header.setTextColor(getColorByAttributeId(context, R.attr.colorDisabledCardTitle));
+            editImageView.setColorFilter(getColorByAttributeId(context, R.attr.colorDisabledCardTitle),
+                    PorterDuff.Mode.SRC_ATOP);
+
             if (((Medicine)data.get(position)).getDoseNumber() < 1 ) {
-                dose.setTextColor(ContextCompat.getColor(context, R.color.alert));
+                dose.setTextColor(getColorByAttributeId(context, R.attr.colorAlert));
                 dose.setText("AGOTADO");
                 doseWarning.setVisibility(View.GONE);
                 expirationWarning.setVisibility(View.GONE);
             } else {
-                dose.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
+                dose.setTextColor(getColorByAttributeId(context, R.attr.colorSecondaryText));
                 dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
             }
 
 
             if (((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis()) {
-                expiryDate.setTextColor(ContextCompat.getColor(context, R.color.alert));
+                expiryDate.setTextColor(getColorByAttributeId(context, R.attr.colorAlert));
                 expiryDate.setText("CADUCADO");
                 doseWarning.setVisibility(View.GONE);
                 expirationWarning.setVisibility(View.GONE);
             } else {
-                expiryDate.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
+                expiryDate.setTextColor(getColorByAttributeId(context, R.attr.colorSecondaryText));
                 expiryDate.setText("Caducidad: " + dateText);
             }
         } else {
+            header.setTextColor(getColorByAttributeId(context, R.attr.colorCardTitle));
+            editImageView.setColorFilter(getColorByAttributeId(context, R.attr.colorCardTitle),
+                    PorterDuff.Mode.SRC_ATOP);
+
             innerRowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item));
-            expiryDate.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
-            dose.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
+            expiryDate.setTextColor(getColorByAttributeId(context, R.attr.colorSecondaryText));
+            dose.setTextColor(getColorByAttributeId(context, R.attr.colorSecondaryText));
             expiryDate.setText("Caducidad: " + dateText);
             dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
         }
 
-        ImageButton editImageView = vi.findViewById(R.id.list_item_edit);
         editImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 

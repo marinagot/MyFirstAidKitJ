@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="Header"
                 android:textAllCaps="true"
-                android:textColor="?android:attr/colorPrimaryDark"
+                android:textColor="?attr/colorCardTitle"
                 android:textStyle="bold" />
 
             <TextView
@@ -107,7 +107,7 @@
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="Editar"
                 android:src="@drawable/ic_edit_black_24dp"
-                android:tint="?android:attr/colorPrimaryDark"
+                android:tint="?attr/colorCardTitle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/list_item_delete"
                 app:layout_constraintHorizontal_bias="1.0"

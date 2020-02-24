@@ -237,7 +237,7 @@
             android:layout_marginBottom="28dp"
             android:background="@drawable/button_selector_primary"
             android:text="@string/btn_done"
-            android:textColor="?attr/colorIcons"
+            android:textColor="?attr/colorButtonText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.973"

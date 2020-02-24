@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="?attr/colorDisabled" />
-    <stroke android:color="?attr/colorDisabledBorder"
+    <solid android:color="?attr/colorDisabledCard" />
+    <stroke android:color="?attr/colorDisabledCardBorder"
         android:width="1dp"/>
     <padding android:left="10dp"
         android:top="10dp"

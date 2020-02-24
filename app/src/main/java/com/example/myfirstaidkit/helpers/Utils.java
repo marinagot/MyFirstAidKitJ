@@ -7,9 +7,13 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.PersistableBundle;
+import android.support.annotation.AttrRes;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.NotificationCompat;
+import android.util.TypedValue;
 
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
@@ -163,4 +167,13 @@ public class Utils {
         Notification notification = builder.setStyle(new NotificationCompat.BigTextStyle().bigText(content)).build();
         notifManager.notify(NOTIFY_ID, notification);
     }
+
+    @ColorInt
+    public static int getColorByAttributeId(Context context, @AttrRes int attrIdForColor){
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(attrIdForColor, typedValue, true);
+        return typedValue.data;
+    }
+
 }

@@ -9,24 +9,28 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorIcons">#FFFFFF</color>
+    <color name="colorCard">#FFFFFF</color>
     <color name="disabled">#80AFAFAF</color>
     <color name="disabledBorder">#80636363</color>
     <color name="alert">#E53935</color>
     <color name="connection">#44BB44</color>
 
     <!-- Dark theme colors -->
-    <color name="darkColorPrimary">#303F9F</color>
-    <color name="darkColorPrimaryDark">#3F51B5</color>
-    <color name="darkColorPrimaryLight">#C5CAE9</color>
+    <color name="darkColorPrimary">#181818</color>
+    <color name="darkColorPrimaryDark">#242424</color>
+    <color name="darkColorPrimaryLight">#000000</color>
     <color name="darkColorAccent">#A05700</color>
-    <color name="darkColorPrimaryText">#212121</color>
+    <color name="darkColorPrimaryText">#B8B8B8</color>
     <color name="darkColorSecondaryText">#757575</color>
-    <color name="darkColorDivider">#BDBDBD</color>
+    <color name="darkColorDivider">#4E4E4E</color>
     <color name="darkColorIcons">#FFFFFF</color>
-    <color name="darkDisabled">#80AFAFAF</color>
-    <color name="darkDisabledBorder">#80636363</color>
+    <color name="darkColorCard">#111111</color>
+    <color name="darkDisabled">#242424</color>
+    <color name="darkDisabledBorder">#3F3F3F</color>
     <color name="darkAlert">#B00020</color>
-    <color name="darkConnection">#44BB44</color>
+    <color name="darkConnection">#00A700</color>
+
+    <color name="darkColorCardTitle">#0048A5</color>
 
     <!-- OLD -->
     <color name="grey">#808080</color>

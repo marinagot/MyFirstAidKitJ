@@ -8,8 +8,14 @@
     <attr name="colorSecondaryText" format="reference" />
     <attr name="colorDivider" format="reference" />
     <attr name="colorIcons" format="reference" />
-    <attr name="colorDisabled" format="reference" />
-    <attr name="colorDisabledBorder" format="reference" />
     <attr name="colorConnection" format="reference" />
+
+    <attr name="colorCard" format="reference" />
+    <attr name="colorDisabledCard" format="reference" />
+    <attr name="colorCardTitle" format="reference" />
+    <attr name="colorDisabledCardTitle" format="reference" />
+    <attr name="colorDisabledCardBorder" format="reference" />
+
+    <attr name="colorButtonText" format="reference" />
 
 </resources>
