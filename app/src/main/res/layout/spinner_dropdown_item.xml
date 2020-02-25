@@ -4,4 +4,6 @@
     style="?android:attr/spinnerDropDownItemStyle"
     android:maxLines="1"
     android:layout_width="match_parent"
+    android:foregroundTint="@color/blue"
+    android:backgroundTint="@color/blue"
     android:layout_height="?android:attr/listPreferredItemHeightSmall"/>

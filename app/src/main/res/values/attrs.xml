@@ -16,6 +16,10 @@
     <attr name="colorDisabledCardTitle" format="reference" />
     <attr name="colorDisabledCardBorder" format="reference" />
 
+    <attr name="colorDeleteAccountButton" format="reference" />
+    <attr name="colorDeleteAccountButtonHover" format="reference" />
     <attr name="colorButtonText" format="reference" />
+
+    <attr name="iconLaucher" format="reference" />
 
 </resources>

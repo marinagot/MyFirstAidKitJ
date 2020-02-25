@@ -61,6 +61,7 @@
     <string name="edit_medicine_lbl_type">Tipo</string>
     <string name="edit_medicine_txt_num">Cantidad</string>
     <string name="edit_medicine_txt_exp_date">Fecha de expiración</string>
+    <string name="edit_medicine_txt_end_date">Fecha de finalización</string>
 
     <string name="settings_lbl_notif">Notificaciones</string>
     <string name="settings_lbl_alert">Alertas</string>
@@ -109,4 +110,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sincronizar">Sincronizar</string>
+    <string name="nuevo">Nuevo</string>
 </resources>

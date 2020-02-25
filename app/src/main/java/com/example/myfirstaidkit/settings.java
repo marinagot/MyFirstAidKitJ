@@ -1,6 +1,7 @@
 package com.example.myfirstaidkit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -15,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Switch;
+
+import androidx.navigation.Navigation;
 
 
 /**
@@ -87,11 +90,11 @@ public class settings extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View vSett = inflater.inflate(R.layout.fragment_settings, container, false);
-        Button btnSaSett = vSett.findViewById(R.id.btn_save_settings);
 
         final Switch themeSelector = vSett.findViewById(R.id.theme_switch);
 
         boolean isThemeEdited = prefs.getBoolean("isThemeEdited",false);
+        boolean isThemeDark = prefs.getBoolean("isThemeDark",false);
 
         if (!isThemeEdited) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
@@ -102,16 +105,32 @@ public class settings extends Fragment {
                     themeSelector.setChecked(false);
                     break;
             }
+        } else if (isThemeDark) {
+            themeSelector.setChecked(true);
         }
-
         themeSelector.setOnClickListener(new Switch.OnClickListener() {
             public void onClick(View view) {
 
                 if (themeSelector.isChecked()) {
                     getActivity().setTheme(R.style.AppThemeDark);
+                    getContext().getTheme().applyStyle(R.style.AppThemeDark, true);
                 } else {
                     getActivity().setTheme(R.style.AppTheme);
+                    getContext().getTheme().applyStyle(R.style.AppTheme, true);
                 }
+
+
+                Intent intent = getActivity().getIntent();
+                getActivity().overridePendingTransition(0, 0);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                getActivity().finish();
+
+                getActivity().overridePendingTransition(0, 0);
+                startActivity(intent);
+
+//                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.settings);
+
+
 
                 edit.putBoolean("isThemeEdited", true);
                 edit.putBoolean("isThemeDark", themeSelector.isChecked());

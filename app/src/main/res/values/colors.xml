@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Light theme colors -->
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorPrimaryLight">#C5CAE9</color>
-    <color name="colorAccent">#FB8C00</color>
-    <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#757575</color>
-    <color name="colorDivider">#BDBDBD</color>
-    <color name="colorIcons">#FFFFFF</color>
-    <color name="colorCard">#FFFFFF</color>
-    <color name="disabled">#80AFAFAF</color>
-    <color name="disabledBorder">#80636363</color>
-    <color name="alert">#E53935</color>
-    <color name="connection">#44BB44</color>
+    <!-- Colors -->
+    <color name="blue">#3F51B5</color>
+    <color name="dark_blue">#303F9F</color>
+    <color name="light_blue">#C5CAE9</color>
+    <color name="orange">#FB8C00</color>
+    <color name="color_21">#212121</color>
+    <color name="color_75">#757575</color>
+    <color name="color_BD">#BDBDBD</color>
+    <color name="white">#FFFFFF</color>
+    <color name="color_AF_t_80">#80AFAFAF</color>
+    <color name="color_63_t_80">#80636363</color>
+    <color name="red">#E53935</color>
+    <color name="green">#44BB44</color>
+    <color name="color_18">#181818</color>
+    <color name="black">#000000</color>
+    <color name="darkest_orange">#A05700</color>
+    <color name="color_B8">#B8B8B8</color>
+    <color name="color_4E">#4E4E4E</color>
+    <color name="color_11">#111111</color>
+    <color name="color_24">#242424</color>
+    <color name="color_3F">#3F3F3F</color>
+    <color name="dark_red">#B00020</color>
+    <color name="dark_green">#00A700</color>
+    <color name="dark_orange">#D17200</color>
 
-    <!-- Dark theme colors -->
-    <color name="darkColorPrimary">#181818</color>
-    <color name="darkColorPrimaryDark">#242424</color>
-    <color name="darkColorPrimaryLight">#000000</color>
-    <color name="darkColorAccent">#A05700</color>
-    <color name="darkColorPrimaryText">#B8B8B8</color>
-    <color name="darkColorSecondaryText">#757575</color>
-    <color name="darkColorDivider">#4E4E4E</color>
-    <color name="darkColorIcons">#FFFFFF</color>
-    <color name="darkColorCard">#111111</color>
-    <color name="darkDisabled">#242424</color>
-    <color name="darkDisabledBorder">#3F3F3F</color>
-    <color name="darkAlert">#B00020</color>
-    <color name="darkConnection">#00A700</color>
-
-    <color name="darkColorCardTitle">#0048A5</color>
 
     <!-- OLD -->
     <color name="grey">#808080</color>

@@ -67,7 +67,7 @@ public class treatment_edit extends Fragment {
     DataBaseOperations us;
     Treatment treatment = new Treatment();
     List<MedTretRel> relations = new ArrayList<>();
-    View viewCA, alert;
+    View viewCA;
 
     List<Medicine> userMedicines;
 
@@ -142,7 +142,6 @@ public class treatment_edit extends Fragment {
 
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_treatment_edit, container, false);
-        alert = inflater.inflate(R.layout.popup_treatment_edit_add_new_medicine, null, false);
         us = DataBaseOperations.get_Instance(getContext());
 
         if (getArguments() != null) {

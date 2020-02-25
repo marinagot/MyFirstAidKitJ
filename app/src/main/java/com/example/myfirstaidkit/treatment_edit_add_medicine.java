@@ -1,13 +1,16 @@
 package com.example.myfirstaidkit;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -33,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -145,28 +149,29 @@ public class treatment_edit_add_medicine extends Fragment {
             treatmentMedicines = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
         }
 
-        Button btnFinDate = viewCA.findViewById(R.id.btn_date_cale);
+        final Spinner choseDate = viewCA.findViewById(R.id.treatment_edit_add_medicine_final_date);
 
-        final TextView finalDateField = viewCA.findViewById(R.id.final_date);
-        btnFinDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int day) {
-                                try {
-                                    month += 1;
-                                    finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year);
-                                    finalDateField.setText(day + "/" + month + "/" + year);
-                                } catch (Exception e){ finalDate = null; }
-                            }
-                        },year,month,dayOfMonth);
-                datePickerDialog.show();
+        choseDate.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    Calendar calendar = Calendar.getInstance();
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH);
+                    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int day) {
+                                    try {
+                                        Calendar calendar = new GregorianCalendar(year, month, day);
+                                        setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format(calendar.getTime()));
+                                        finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year);
+                                    } catch (Exception e){ finalDate = null; }
+                                }
+                            },year,month,dayOfMonth);
+                    datePickerDialog.show();
+                }
+                return true;
             }
         });
 
@@ -181,8 +186,11 @@ public class treatment_edit_add_medicine extends Fragment {
         if (isMedicineEdit) {
             spinnerMedicines.setSelection(position);
             period.setText(oldRelation.getFrequency().toString());
-            finalDateField.setText(new SimpleDateFormat("dd/MM/yyyy").format(oldRelation.getFinalDate()));
+            setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format( oldRelation.getFinalDate()));
             finalDate = new Date(oldRelation.getFinalDate());
+        } else {
+            Date d = new Date();
+            setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format(d.getTime()));
         }
 
         Button btnAdd = viewCA.findViewById(R.id.btn_add_medicine_add);
@@ -190,44 +198,67 @@ public class treatment_edit_add_medicine extends Fragment {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MedTretRel auxRel = new MedTretRel();
-                auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
-                auxRel.setFinalDate(finalDate.getTime());
-                auxRel.setIdMedicine(((Medicine) spinnerMedicines.getSelectedItem()).getId());
-                if (isTreatmentEdit) {
-                    auxRel.setIdTreatment(treatment.getId());
+                if(period.getText().toString().equals("")) {
+                    //Display Message
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("ERROR!");
+                    alertDialog.setMessage("Debes rellenar todos los campos correctamente");
+                    alertDialog.show();
+                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+                    TextView tv = alertDialog.findViewById(textViewId);
+                    tv.setTextColor(Color.RED);
+                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+                    textViewMessage.setTextColor(Color.RED);
                 }
-                if (isMedicineEdit) {
-                    auxRel.setInitialDate(oldRelation.getInitialDate());
-                    auxRel.setId(oldRelation.getId());
-                    auxRel.setIdTreatment(oldRelation.getIdTreatment());
-                    auxRel.setisEdited(true);
-                    relations.set(position, auxRel);
-                    // this line adds the data of your Spinner and puts in your array
-                    ((List<Medicine>) treatmentMedicines).set(position, (Medicine) spinnerMedicines.getSelectedItem());
-                } else {
-                    auxRel.setInitialDate(new Date().getTime());
-                    auxRel.setIsNew(true);
-                    relations.add(auxRel);
-                    // this line adds the data of your Spinner and puts in your array
-                    treatmentMedicines.add((Medicine) spinnerMedicines.getSelectedItem());
+                else {
+                    MedTretRel auxRel = new MedTretRel();
+                    auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
+                    auxRel.setFinalDate(finalDate.getTime());
+                    auxRel.setIdMedicine(((Medicine) spinnerMedicines.getSelectedItem()).getId());
+                    if (isTreatmentEdit) {
+                        auxRel.setIdTreatment(treatment.getId());
+                    }
+                    if (isMedicineEdit) {
+                        auxRel.setInitialDate(oldRelation.getInitialDate());
+                        auxRel.setId(oldRelation.getId());
+                        auxRel.setIdTreatment(oldRelation.getIdTreatment());
+                        auxRel.setisEdited(true);
+                        relations.set(position, auxRel);
+                        // this line adds the data of your Spinner and puts in your array
+                        ((List<Medicine>) treatmentMedicines).set(position, (Medicine) spinnerMedicines.getSelectedItem());
+                    } else {
+                        auxRel.setInitialDate(new Date().getTime());
+                        auxRel.setIsNew(true);
+                        relations.add(auxRel);
+                        // this line adds the data of your Spinner and puts in your array
+                        treatmentMedicines.add((Medicine) spinnerMedicines.getSelectedItem());
+                    }
+
+                    Bundle bundle = new Bundle();
+                    Gson gson = new Gson();
+
+                    try {
+                        bundle.putString("relations", new JSONArray(gson.toJson(relations)).toString());
+                        bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
+                        bundle.putString("treatment", new JSONObject(gson.toJson(treatment)).toString());
+                        bundle.putBoolean("isTreatmentEdit", isTreatmentEdit);
+                    } catch (Exception e) {
+                    }
+
+                    Navigation.findNavController(v).navigate(R.id.action_treatment_edit_add_medicine_to_treatment_edit, bundle);
                 }
-
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-
-                try {
-                    bundle.putString("relations", new JSONArray(gson.toJson(relations)).toString());
-                    bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
-                    bundle.putString("treatment", new JSONObject(gson.toJson(treatment)).toString());
-                    bundle.putBoolean("isTreatmentEdit", isTreatmentEdit);
-                } catch (Exception e) {}
-
-                Navigation.findNavController(v).navigate(R.id.action_treatment_edit_add_medicine_to_treatment_edit, bundle);
             }
         });
 
         return viewCA;
+    }
+
+    private void setTime(Spinner choseDate, String finalDate) {
+        final List<String> plantsList = new ArrayList<>();
+        plantsList.add(finalDate);
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, plantsList);
+        choseDate.setAdapter(spinnerArrayAdapter);
+        choseDate.setSelection(0);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -160,11 +160,11 @@ public class medicine_edit extends Fragment {
 
         us = DataBaseOperations.get_Instance(getContext());
 
-        final Spinner chosDate = viewCA.findViewById(R.id.chosen_date);
+        final Spinner choseDate = viewCA.findViewById(R.id.chosen_date);
         Date d = new Date();
         med.setExpirationDate(d.getTime());
-        setTime(chosDate, new SimpleDateFormat("dd MMM yyyy").format(d.getTime()));
-        chosDate.setOnTouchListener(new View.OnTouchListener() {
+        setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format(d.getTime()));
+        choseDate.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Calendar calendar = Calendar.getInstance();
@@ -180,7 +180,7 @@ public class medicine_edit extends Fragment {
                                         String finalDate = new SimpleDateFormat("dd MMM yyyy").format(calendar.getTime());
                                         Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
                                         med.setExpirationDate(timestamp.getTime());
-                                        setTime(chosDate, finalDate);
+                                        setTime(choseDate, finalDate);
                                     }
                                     catch (Exception e) { med.setExpirationDate(null);  }
                                 }

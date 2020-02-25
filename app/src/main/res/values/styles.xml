@@ -3,52 +3,63 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/dark_blue</item>
+        <item name="colorAccent">@color/orange</item>
         <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
 
+        <item name="colorAlert">@color/red</item>
+        <item name="colorPrimaryLight">@color/light_blue</item>
+        <item name="colorPrimaryText">@color/color_21</item>
+        <item name="colorSecondaryText">@color/color_75</item>
+        <item name="colorDivider">@color/color_4E</item>
+        <item name="colorIcons">@color/white</item>
+        <item name="colorConnection">@color/green</item>
 
-        <item name="colorAlert">@color/alert</item>
-        <item name="colorPrimaryLight">@color/colorPrimaryLight</item>
-        <item name="colorPrimaryText">@color/colorPrimaryText</item>
-        <item name="colorSecondaryText">@color/colorSecondaryText</item>
-        <item name="colorDivider">@color/darkColorDivider</item>
-        <item name="colorIcons">@color/colorIcons</item>
-        <item name="colorConnection">@color/connection</item>
+        <item name="colorCard">@color/white</item>
+        <item name="colorDisabledCard">@color/color_AF_t_80</item>
+        <item name="colorDisabledCardBorder">@color/color_63_t_80</item>
+        <item name="colorCardTitle">@color/blue</item>
+        <item name="colorDisabledCardTitle">@color/color_75</item>
 
+        <item name="colorButtonText">@color/white</item>
+        <item name="colorDeleteAccountButton">@color/white</item>
+        <item name="colorDeleteAccountButtonHover">@color/color_AF_t_80</item>
 
-        <item name="colorCard">@color/colorCard</item>
-        <item name="colorDisabledCard">@color/disabled</item>
-        <item name="colorDisabledCardBorder">@color/disabledBorder</item>
-        <item name="colorCardTitle">@color/colorPrimary</item>
-        <item name="colorDisabledCardTitle">@color/colorSecondaryText</item>
-
-        <item name="colorButtonText">@color/colorIcons</item>
+        <item name="iconLaucher">@color/blue</item>
 
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/darkColorPrimary</item>
-        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
-        <item name="colorAccent">@color/darkColorAccent</item>
 
-        <item name="colorAlert">@color/darkAlert</item>
-        <item name="colorPrimaryLight">@color/darkColorPrimaryLight</item>
-        <item name="colorPrimaryText">@color/darkColorPrimaryText</item>
-        <item name="colorSecondaryText">@color/darkColorSecondaryText</item>
-        <item name="colorDivider">@color/darkColorDivider</item>
-        <item name="colorIcons">@color/darkColorIcons</item>
-        <item name="colorConnection">@color/darkConnection</item>
+        <item name="colorPrimary">@color/color_18</item>
+        <item name="colorPrimaryDark">@color/color_24</item>
+        <item name="colorAccent">@color/dark_orange</item>
 
-        <item name="colorCard">@color/darkColorCard</item>
-        <item name="colorDisabledCard">@color/darkDisabled</item>
-        <item name="colorDisabledCardBorder">@color/darkDisabledBorder</item>
-        <item name="colorCardTitle">@color/darkColorCardTitle</item>
-        <item name="colorDisabledCardTitle">@color/colorSecondaryText</item>
+        <item name="colorAlert">@color/dark_red</item>
+        <item name="colorPrimaryLight">@color/black</item>
+        <item name="colorPrimaryText">@color/color_B8</item>
+        <item name="colorSecondaryText">@color/color_75</item>
+        <item name="colorDivider">@color/color_4E</item>
+        <item name="colorIcons">@color/dark_orange</item>
+        <item name="colorConnection">@color/dark_green</item>
 
-        <item name="colorButtonText">@color/darkColorPrimaryText</item>
+        <item name="colorCard">@color/color_11</item>
+        <item name="colorDisabledCard">@color/color_24</item>
+        <item name="colorDisabledCardBorder">@color/color_3F</item>
+        <item name="colorCardTitle">@color/orange</item>
+        <item name="colorDisabledCardTitle">@color/color_75</item>
+
+        <item name="colorButtonText">@color/orange</item>
+        <item name="colorDeleteAccountButton">@color/color_18</item>
+        <item name="colorDeleteAccountButtonHover">@color/color_3F</item>
+
+        <item name="iconLaucher">@color/dark_orange</item>
+
+        <item name="android:textColorSecondary">@color/orange</item>
+
 
     </style>
 
@@ -62,12 +73,12 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/blue</item>
         <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
     </style>
 
     <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
-        <item name="android:headerBackground">@color/colorPrimaryDark</item>
+        <item name="android:headerBackground">@color/dark_blue</item>
     </style>
 
 </resources>
