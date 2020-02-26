@@ -191,6 +191,7 @@ public class treatment_edit_add_medicine extends Fragment {
         } else {
             Date d = new Date();
             setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format(d.getTime()));
+            finalDate = new Date();
         }
 
         Button btnAdd = viewCA.findViewById(R.id.btn_add_medicine_add);

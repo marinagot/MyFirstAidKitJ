@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,7 +31,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -153,8 +156,8 @@ public class treatments extends Fragment {
                    @Override
                    public void processFinish(View v, List<Treatment> result){
                        treatmentList = result;
-                       ListView list = viewCA.findViewById(R.id.list_user_treatments);
-                       adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_item, treatmentList);
+                       ExpandableListView list = viewCA.findViewById(R.id.list_user_treatments);
+                       adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_item, treatmentList, getTreatmentsMap(treatmentList));
                        // adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
                        list.setAdapter(adapter);
                    }
@@ -165,21 +168,37 @@ public class treatments extends Fragment {
             public void onNothingSelected(AdapterView<?> parentView) { }
        });
 
-        final ListView list = viewCA.findViewById(R.id.list_user_treatments);
+//        new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
+//            @Override
+//            public List<Treatment> apiCall(Object... params) {
+//                return getActiveTreatments(us.getTreatment_userId((String) params[1]));
+//            }
+//
+//            @Override
+//            public void processFinish(View v, List<Treatment> result){
+//                treatmentList = result;
+//                adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_item, treatmentList, getTreatmentsMap(treatmentList));
+//                list.setAdapter(adapter);
+//
+//            }
+//        }).execute(viewCA, us.getIdLogged());
 
-        new ApiCallThread<List<Treatment>>(new AsyncResponse<List<Treatment>>(){
-            @Override
-            public List<Treatment> apiCall(Object... params) {
-                return getActiveTreatments(us.getTreatment_userId((String) params[1]));
-            }
 
+        ExpandableListView list = viewCA.findViewById(R.id.list_user_treatments);
+        list.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
-            public void processFinish(View v, List<Treatment> result){
-                treatmentList = result;
-                adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_item, treatmentList);
-                list.setAdapter(adapter);
+            public void onGroupExpand(int groupPosition) {
+
             }
-        }).execute(viewCA, us.getIdLogged());
+        });
+
+        list.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+                return false;
+            }
+        });
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -238,6 +257,20 @@ public class treatments extends Fragment {
         });
 
         return viewCA;
+    }
+
+    public HashMap<Treatment, List<Medicine>> getTreatmentsMap(List<Treatment> list) {
+        HashMap<Treatment, List<Medicine>> map = new HashMap<>();
+
+        for (Treatment treatment : treatmentList ) {
+            List<Medicine> mapMedicineList = new ArrayList<>();
+            listrel = us.getRelations_treatmentId(treatment.getId());
+            for (MedTretRel mtr : listrel) {
+                mapMedicineList.add(us.getMedicine_medicineId(mtr.getIdMedicine()));
+            }
+            map.put(treatment, mapMedicineList);
+        }
+        return map;
     }
 
     @Override

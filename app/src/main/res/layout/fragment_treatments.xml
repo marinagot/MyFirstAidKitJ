@@ -64,14 +64,24 @@
         android:layout_height="match_parent"
         android:background="?attr/colorPrimaryLight">
 
-        <ListView
+        <ExpandableListView
             android:id="@+id/list_user_treatments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:divider="@android:color/transparent"
             android:dividerHeight="10dp"
+            android:backgroundTint="@color/blue"
             android:focusableInTouchMode="true" />
+
+<!--        <ListView-->
+<!--            android:id="@+id/list_user_treatments"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:divider="@android:color/transparent"-->
+<!--            android:dividerHeight="10dp"-->
+<!--            android:focusableInTouchMode="true" />-->
 
         <!--<android.support.design.widget.FloatingActionButton
             android:id="@+id/newTreatment"
