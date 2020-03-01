@@ -71,8 +71,9 @@
             android:layout_margin="10dp"
             android:divider="@android:color/transparent"
             android:dividerHeight="10dp"
-            android:backgroundTint="@color/blue"
-            android:focusableInTouchMode="true" />
+            android:childDivider="?attr/colorCard"
+            android:focusableInTouchMode="true"
+            android:groupIndicator="@null" />
 
 <!--        <ListView-->
 <!--            android:id="@+id/list_user_treatments"-->

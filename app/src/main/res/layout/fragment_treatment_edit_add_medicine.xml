@@ -16,9 +16,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4">
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:id="@+id/lbl_edit_medicine_type"
@@ -50,20 +51,6 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/lbl_edit_medicine_type3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/edit_treatment_lbl_medicine2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
             app:layout_constraintVertical_bias="0.0" />
 
         <LinearLayout
@@ -121,6 +108,45 @@
         </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/list_medicines"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ImageView
+                android:id="@+id/image_add_hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_add_black_24dp"
+                android:backgroundTint="?attr/colorPrimaryText"
+                android:contentDescription="add_hour_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/add_hour"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Añadir hora"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/image_add_hour"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp">
@@ -155,51 +181,51 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
-<!--        <LinearLayout-->
-<!--            android:id="@+id/linearLayout3"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.0"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/list_medicines"-->
-<!--            app:layout_constraintVertical_bias="0.0">-->
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/linearLayout3"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/list_medicines"-->
+        <!--            app:layout_constraintVertical_bias="0.0">-->
 
-<!--            <TextView-->
-<!--                android:id="@+id/cosa"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="32dp"-->
-<!--                android:layout_marginTop="28dp"-->
-<!--                android:ems="5"-->
-<!--                android:text="dd/MM/yyyy"-->
-<!--                android:textAlignment="center"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.0"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"-->
-<!--                app:layout_constraintVertical_bias="0.0" />-->
+        <!--            <TextView-->
+        <!--                android:id="@+id/cosa"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="32dp"-->
+        <!--                android:layout_marginTop="28dp"-->
+        <!--                android:ems="5"-->
+        <!--                android:text="dd/MM/yyyy"-->
+        <!--                android:textAlignment="center"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintHorizontal_bias="0.0"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"-->
+        <!--                app:layout_constraintVertical_bias="0.0" />-->
 
-<!--            <Button-->
-<!--                android:id="@+id/btn_date_cale"-->
-<!--                android:layout_width="40dp"-->
-<!--                android:layout_height="42dp"-->
-<!--                android:layout_marginStart="8dp"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:layout_marginBottom="8dp"-->
-<!--                android:background="@android:drawable/dialog_holo_light_frame"-->
-<!--                android:drawableStart="@drawable/ic_calendar"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.0"-->
-<!--                app:layout_constraintStart_toEndOf="@+id/final_date"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"-->
-<!--                app:layout_constraintVertical_bias="0.0" />-->
-<!--        </LinearLayout>-->
+        <!--            <Button-->
+        <!--                android:id="@+id/btn_date_cale"-->
+        <!--                android:layout_width="40dp"-->
+        <!--                android:layout_height="42dp"-->
+        <!--                android:layout_marginStart="8dp"-->
+        <!--                android:layout_marginTop="16dp"-->
+        <!--                android:layout_marginEnd="8dp"-->
+        <!--                android:layout_marginBottom="8dp"-->
+        <!--                android:background="@android:drawable/dialog_holo_light_frame"-->
+        <!--                android:drawableStart="@drawable/ic_calendar"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintHorizontal_bias="0.0"-->
+        <!--                app:layout_constraintStart_toEndOf="@+id/final_date"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"-->
+        <!--                app:layout_constraintVertical_bias="0.0" />-->
+        <!--        </LinearLayout>-->
     </LinearLayout>
 
     <LinearLayout

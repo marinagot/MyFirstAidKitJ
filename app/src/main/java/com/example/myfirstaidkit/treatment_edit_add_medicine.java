@@ -165,7 +165,7 @@ public class treatment_edit_add_medicine extends Fragment {
                                     try {
                                         Calendar calendar = new GregorianCalendar(year, month, day);
                                         setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format(calendar.getTime()));
-                                        finalDate = new SimpleDateFormat("dd/MM/yyyy").parse(day + "/" + month + "/" + year);
+                                        finalDate = new GregorianCalendar(year, month, day).getTime();
                                     } catch (Exception e){ finalDate = null; }
                                 }
                             },year,month,dayOfMonth);
@@ -212,23 +212,20 @@ public class treatment_edit_add_medicine extends Fragment {
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else {
-                    MedTretRel auxRel = new MedTretRel();
+                    MedTretRel auxRel = oldRelation;
                     auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
-                    auxRel.setFinalDate(finalDate.getTime());
                     auxRel.setIdMedicine(((Medicine) spinnerMedicines.getSelectedItem()).getId());
                     if (isTreatmentEdit) {
                         auxRel.setIdTreatment(treatment.getId());
                     }
                     if (isMedicineEdit) {
-                        auxRel.setInitialDate(oldRelation.getInitialDate());
-                        auxRel.setId(oldRelation.getId());
-                        auxRel.setIdTreatment(oldRelation.getIdTreatment());
+                        auxRel.setFinalDate(finalDate.getTime());
                         auxRel.setisEdited(true);
                         relations.set(position, auxRel);
                         // this line adds the data of your Spinner and puts in your array
                         ((List<Medicine>) treatmentMedicines).set(position, (Medicine) spinnerMedicines.getSelectedItem());
                     } else {
-                        auxRel.setInitialDate(new Date().getTime());
+                        auxRel.setFinalDate(new Date().getTime());
                         auxRel.setIsNew(true);
                         relations.add(auxRel);
                         // this line adds the data of your Spinner and puts in your array

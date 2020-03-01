@@ -2,14 +2,11 @@ package com.example.myfirstaidkit;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -34,7 +31,8 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
 
     Context context;
 //    List<T> data;
-    int style;
+    private int groupLaoyutId;
+    private int childLayoutId;
     private LayoutInflater inflater;
 
     private List<Treatment> expandableListTitle;
@@ -42,11 +40,12 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
 
     DataBaseOperations dbo;
 
-    public TreatmentsListAdapter(Context context, int layoutId, List<Treatment> expandableListTitle, HashMap<Treatment, List<Medicine>> expandableListDetail) {
+    public TreatmentsListAdapter(Context context, int groupLayoutId, int childLayoutId, List<Treatment> expandableListTitle, HashMap<Treatment, List<Medicine>> expandableListDetail) {
         this.context = context;
         this.expandableListTitle = expandableListTitle;
         this.expandableListDetail = expandableListDetail;
-        this.style = layoutId;
+        this.groupLaoyutId = groupLayoutId;
+        this.childLayoutId = childLayoutId;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -102,7 +101,7 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
     public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         dbo = DataBaseOperations.get_Instance(context);
         if (convertView == null) {
-            convertView = inflater.inflate(style, null);
+            convertView = inflater.inflate(groupLaoyutId, null);
         }
 
         final Treatment t = (Treatment) getGroup(groupPosition);
@@ -166,18 +165,25 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(style, null);
+                convertView = inflater.inflate(childLayoutId, null);
         }
         final Medicine medicine = (Medicine) getChild(groupPosition, childPosition);
 
-        TextView expandedListTextView = convertView.findViewById(R.id.treatment_item_header);
-        expandedListTextView.setText(medicine.getName());
+//        if (isLastChild) {
+//            (convertView.findViewById(R.id.separator)).setVisibility(View.VISIBLE);
+//        } else {
+//            (convertView.findViewById(R.id.separator)).setVisibility(View.GONE);
+//        }
+        TextView expandedListHeader = convertView.findViewById(R.id.treatment_item_child_header);
+        expandedListHeader.setText(medicine.getName());
+        TextView expandedListText = convertView.findViewById(R.id.treatment_item_child_text);
+        expandedListText.setText("Proxima toma en " + "xx" + " horas");
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 
     @Override

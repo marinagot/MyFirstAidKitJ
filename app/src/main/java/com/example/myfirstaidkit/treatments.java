@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -157,7 +156,7 @@ public class treatments extends Fragment {
                    public void processFinish(View v, List<Treatment> result){
                        treatmentList = result;
                        ExpandableListView list = viewCA.findViewById(R.id.list_user_treatments);
-                       adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_item, treatmentList, getTreatmentsMap(treatmentList));
+                       adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_group, R.layout.treatment_list_child, treatmentList, getTreatmentsMap(treatmentList));
                        // adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, treatmentList);
                        list.setAdapter(adapter);
                    }
@@ -177,7 +176,7 @@ public class treatments extends Fragment {
 //            @Override
 //            public void processFinish(View v, List<Treatment> result){
 //                treatmentList = result;
-//                adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_item, treatmentList, getTreatmentsMap(treatmentList));
+//                adapter = new TreatmentsListAdapter<>(getContext(), R.layout.treatment_list_group, treatmentList, getTreatmentsMap(treatmentList));
 //                list.setAdapter(adapter);
 //
 //            }
