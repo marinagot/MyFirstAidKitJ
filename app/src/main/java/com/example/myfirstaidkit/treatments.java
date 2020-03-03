@@ -233,7 +233,8 @@ public class treatments extends Fragment {
                         title.setText(m.getName());
                         dateIn.setText(new SimpleDateFormat("dd/MM/yyyy").format(relation.getInitialDate()));
                         dateEnd.setText(new SimpleDateFormat("dd/MM/yyyy").format(relation.getFinalDate()));
-                        frequency.setText(relation.getFrequency().toString());
+                        // TODO poner aqui las horas del dia
+                        frequency.setText("No se que poner");
 
                         builderM.setView(alert2);
                         builderM.setTitle(t.getName())
@@ -261,7 +262,7 @@ public class treatments extends Fragment {
     public HashMap<Treatment, List<Medicine>> getTreatmentsMap(List<Treatment> list) {
         HashMap<Treatment, List<Medicine>> map = new HashMap<>();
 
-        for (Treatment treatment : treatmentList ) {
+        for (Treatment treatment : list) {
             List<Medicine> mapMedicineList = new ArrayList<>();
             listrel = us.getRelations_treatmentId(treatment.getId());
             for (MedTretRel mtr : listrel) {

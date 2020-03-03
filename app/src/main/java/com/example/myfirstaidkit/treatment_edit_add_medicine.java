@@ -2,11 +2,15 @@ package com.example.myfirstaidkit;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,14 +21,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.navigation.Navigation;
 
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,9 +42,12 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,10 +76,11 @@ public class treatment_edit_add_medicine extends Fragment {
     View viewCA;
 
     List<Medicine> userMedicines;
+    List<TakeHours> medicineHours;
+    List<TakeHours> removedHours = new ArrayList<>();
     Date finalDate;
 
     Spinner spinnerMedicines;
-    EditText period;
 
     MedTretRel oldRelation;
 
@@ -143,10 +154,19 @@ public class treatment_edit_add_medicine extends Fragment {
             if (isMedicineEdit) {
                 position = getArguments().getInt("position");
                 oldRelation = relations.get(position);
+                medicineHours = gson.fromJson(getArguments().getString("hours"), new TypeToken<List<TakeHours>>(){}.getType());
+            } else {
+                medicineHours = new ArrayList<>();
             }
             treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
             userMedicines = gson.fromJson(getArguments().getString("userMedicines"), new TypeToken<List<Medicine>>(){}.getType());
             treatmentMedicines = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
+            Collections.sort(medicineHours, new Comparator<TakeHours>(){
+                public int compare(TakeHours hour1, TakeHours hour2) {
+                    // ## Ascending order
+                    return hour1.getHour().compareTo(hour2.getHour());
+                }
+            });
         }
 
         final Spinner choseDate = viewCA.findViewById(R.id.treatment_edit_add_medicine_final_date);
@@ -176,17 +196,19 @@ public class treatment_edit_add_medicine extends Fragment {
         });
 
         spinnerMedicines = viewCA.findViewById(R.id.list_medicines);
-        period = viewCA.findViewById(R.id.txt_edit_medicine_num);
 
         ArrayAdapter<Medicine> dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, userMedicines);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMedicines.setAdapter(dataAdapter);
 
+        final ListView listOfHours = viewCA.findViewById(R.id.list_of_hours);
+        final HoursListAdapter<TakeHours> hoursAdapter = new HoursListAdapter<>(getContext(), R.layout.hour_list_item, medicineHours, removedHours);
+        listOfHours.setAdapter(hoursAdapter);
 
         if (isMedicineEdit) {
-            spinnerMedicines.setSelection(position);
-            period.setText(oldRelation.getFrequency().toString());
-            setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format( oldRelation.getFinalDate()));
+            int a = userMedicines.indexOf(treatmentMedicines.get(position));
+            spinnerMedicines.setSelection(a);
+            setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format(oldRelation.getFinalDate()));
             finalDate = new Date(oldRelation.getFinalDate());
         } else {
             Date d = new Date();
@@ -194,12 +216,43 @@ public class treatment_edit_add_medicine extends Fragment {
             finalDate = new Date();
         }
 
+        Button layoutAddHour = viewCA.findViewById(R.id.layout_add_hour);
+        layoutAddHour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                try {
+                                    TakeHours hour = new TakeHours(new SimpleDateFormat("HH:mm").parse(hourOfDay + ":" + minute).getTime());
+                                    if (isMedicineEdit) {
+                                        hour = new TakeHours(oldRelation.getId(), new SimpleDateFormat("HH:mm").parse(hourOfDay + ":" + minute).getTime());
+                                        hour.setIsNew(true);
+                                    }
+                                    medicineHours.add(hour);
+                                    Collections.sort(medicineHours, new Comparator<TakeHours>(){
+                                        public int compare(TakeHours hour1, TakeHours hour2) {
+                                            // ## Ascending order
+                                            return hour1.getHour().compareTo(hour2.getHour());
+                                        }
+                                    });
+                                    hoursAdapter.notifyDataSetChanged();
+                                } catch (Exception e) {
+                                }
+                            }
+                        }, 0, 0, false);
+                timePickerDialog.show();
+            }
+        });
+
+
         Button btnAdd = viewCA.findViewById(R.id.btn_add_medicine_add);
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(period.getText().toString().equals("")) {
+                if(hoursAdapter.isEmpty()) {
                     //Display Message
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("ERROR!");
@@ -212,24 +265,38 @@ public class treatment_edit_add_medicine extends Fragment {
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else {
-                    MedTretRel auxRel = oldRelation;
-                    auxRel.setFrequency(Integer.parseInt(period.getText().toString()));
-                    auxRel.setIdMedicine(((Medicine) spinnerMedicines.getSelectedItem()).getId());
+                    MedTretRel auxRel = new MedTretRel();
                     if (isTreatmentEdit) {
                         auxRel.setIdTreatment(treatment.getId());
                     }
+                    auxRel.setFinalDate(finalDate.getTime());
                     if (isMedicineEdit) {
-                        auxRel.setFinalDate(finalDate.getTime());
+                        auxRel = oldRelation;
+                        auxRel.setInitialDate(oldRelation.getInitialDate());
+                        auxRel.setIdMedicine(((Medicine) spinnerMedicines.getSelectedItem()).getId());
                         auxRel.setisEdited(true);
-                        relations.set(position, auxRel);
                         // this line adds the data of your Spinner and puts in your array
                         ((List<Medicine>) treatmentMedicines).set(position, (Medicine) spinnerMedicines.getSelectedItem());
+
+                        List<TakeHours> takeHoursList = medicineHours;
+                        if (isTreatmentEdit) {
+                            for (TakeHours hour : removedHours) {
+                                hour.setIsRemoved(true);
+                                takeHoursList.add(hour);
+                            }
+                        }
+                        auxRel.setHours(takeHoursList);
+
+                        relations.set(position, auxRel);
                     } else {
-                        auxRel.setFinalDate(new Date().getTime());
+                        auxRel.setIdMedicine(((Medicine) spinnerMedicines.getSelectedItem()).getId());
                         auxRel.setIsNew(true);
+                        auxRel.setInitialDate(new Date().getTime());
+                        auxRel.setHours(medicineHours);
                         relations.add(auxRel);
                         // this line adds the data of your Spinner and puts in your array
                         treatmentMedicines.add((Medicine) spinnerMedicines.getSelectedItem());
+
                     }
 
                     Bundle bundle = new Bundle();
@@ -238,6 +305,7 @@ public class treatment_edit_add_medicine extends Fragment {
                     try {
                         bundle.putString("relations", new JSONArray(gson.toJson(relations)).toString());
                         bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
+                        bundle.putString("hours", new JSONArray(gson.toJson(medicineHours)).toString());
                         bundle.putString("treatment", new JSONObject(gson.toJson(treatment)).toString());
                         bundle.putBoolean("isTreatmentEdit", isTreatmentEdit);
                     } catch (Exception e) {

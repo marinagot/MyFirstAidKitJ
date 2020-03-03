@@ -4,6 +4,9 @@ import android.arch.persistence.room.Entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity(primaryKeys = {"id"})
 public class MedTretRel {
 
@@ -13,25 +16,26 @@ public class MedTretRel {
     private String idTreatment;
     @SerializedName("medicine_id")
     private String idMedicine;
-    private Integer frequency;
     @SerializedName("date_start")
     private Long initialDate;
     @SerializedName("date_end")
     private Long finalDate;
     private boolean isNew;
     private boolean isEdited;
+    @SerializedName("hours")
+    private List<TakeHours> hours;
 
     public MedTretRel() {
 
     }
 
-    public MedTretRel(String idRelation, String idTreatment, String idMedicine, Integer frequency, Long initialDate, Long finalDate) {
+    public MedTretRel(String idRelation, String idTreatment, String idMedicine, Long initialDate, Long finalDate) {
         this.id = idRelation;
         this.idTreatment = idTreatment;
         this.idMedicine = idMedicine;
-        this.frequency = frequency;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
+        this.hours = new ArrayList<>();
         this.isNew = false;
         this.isEdited = false;
     }
@@ -58,14 +62,6 @@ public class MedTretRel {
 
     public void setIdMedicine(String idMedicine) {
         this.idMedicine = idMedicine;
-    }
-
-    public Integer getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(Integer frequency) {
-        this.frequency = frequency;
     }
 
     public Long getInitialDate() {
@@ -98,5 +94,13 @@ public class MedTretRel {
 
     public void setisEdited(boolean isEdited) {
         this.isEdited = isEdited;
+    }
+
+    public List<TakeHours> getHours() {
+        return hours;
+    }
+
+    public void setHours(List<TakeHours> hours) {
+        this.hours = hours;
     }
 }

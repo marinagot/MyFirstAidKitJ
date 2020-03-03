@@ -17,13 +17,18 @@ import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -107,9 +112,10 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
         final Treatment t = (Treatment) getGroup(groupPosition);
 
         TextView header = convertView.findViewById(R.id.treatment_item_header);
-        TextView text = convertView.findViewById(R.id.treatment_item_text);
+//        TextView text = convertView.findViewById(R.id.treatment_item_text);
         header.setText(t.getName());
-        text.setText(t.getIdUser());
+//        text.setVisibility(View.GONE);
+//        text.setText(t.getIdUser());
         ImageButton editImageView = convertView.findViewById(R.id.treatment_item_edit);
         editImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -168,16 +174,44 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
                 convertView = inflater.inflate(childLayoutId, null);
         }
         final Medicine medicine = (Medicine) getChild(groupPosition, childPosition);
+        List<MedTretRel> rels = dbo.getRelations_treatmentId(expandableListTitle.get(groupPosition).getId());
+        MedTretRel rel = rels.get(childPosition);
+        List<TakeHours> hours = rel.getHours();
 
-//        if (isLastChild) {
-//            (convertView.findViewById(R.id.separator)).setVisibility(View.VISIBLE);
-//        } else {
-//            (convertView.findViewById(R.id.separator)).setVisibility(View.GONE);
-//        }
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal.setTimeInMillis(0);
+        cal.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+        final Long current = cal.getTimeInMillis();
+        Collections.sort(hours, new Comparator<TakeHours>(){
+            public int compare(TakeHours hour1, TakeHours hour2) {
+                // ## Ascending order
+                Long current1 = hour1.getHour() - current;
+                Long current2 = hour2.getHour() - current;
+
+                if (current1 > 0 && current2 < 0) {
+                    return hour2.getHour().compareTo(hour1.getHour());
+                }
+                return hour1.getHour().compareTo(hour2.getHour());
+//                if (current1 < 0 && current2 < 0) {
+//                    return hour1.getHour().compareTo(hour2.getHour());
+//                } else if (current1 > 0 && current2 < 0) {
+//                    return hour2.getHour().compareTo(hour1.getHour());
+//                } else if (current1 < 0 && current2 > 0) {
+//                    return hour1.getHour().compareTo(hour2.getHour());
+//                } else if (current1 > 0 && current2 > 0) {
+//                    return hour1.getHour().compareTo(hour2.getHour());
+//                }
+            }
+        });
+
+        String hora = new SimpleDateFormat("HH:mm").format(hours.get(0).getHour() - current);
+
         TextView expandedListHeader = convertView.findViewById(R.id.treatment_item_child_header);
         expandedListHeader.setText(medicine.getName());
         TextView expandedListText = convertView.findViewById(R.id.treatment_item_child_text);
-        expandedListText.setText("Proxima toma en " + "xx" + " horas");
+        expandedListText.setText("Proxima toma en " + hora + " horas");
         return convertView;
     }
 

@@ -26,6 +26,7 @@ import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.myfirstaidkit.helpers.Utils.getNextDose;
 import static com.example.myfirstaidkit.helpers.Utils.removeSchedule;
 import static com.example.myfirstaidkit.helpers.Utils.scheduleDose;
 
@@ -64,7 +66,7 @@ public class treatment_edit extends Fragment {
     SharedPreferences prefs;
     SharedPreferences.Editor edit;
 
-    DataBaseOperations us;
+    DataBaseOperations dbo;
     Treatment treatment = new Treatment();
     List<MedTretRel> relations = new ArrayList<>();
     View viewCA;
@@ -72,6 +74,7 @@ public class treatment_edit extends Fragment {
     List<Medicine> userMedicines;
 
     List<Medicine> treatmentMedicines = new ArrayList<>();
+//    List<TakeHours> medicineHours;
     ArrayAdapter<Medicine> adapter;
 
     List<MedTretRel> removedRelations = new ArrayList<>();
@@ -142,7 +145,7 @@ public class treatment_edit extends Fragment {
 
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_treatment_edit, container, false);
-        us = DataBaseOperations.get_Instance(getContext());
+        dbo = DataBaseOperations.get_Instance(getContext());
 
         if (getArguments() != null) {
             Gson gson = new Gson();
@@ -153,6 +156,7 @@ public class treatment_edit extends Fragment {
             treatment = gson.fromJson(getArguments().getString("treatment"), new TypeToken<Treatment>(){}.getType());
             treatmentMedicines = gson.fromJson(getArguments().getString("medicines"), new TypeToken<List<Medicine>>(){}.getType());
             relations = gson.fromJson(getArguments().getString("relations"), new TypeToken<List<MedTretRel>>(){}.getType());
+//            medicineHours = gson.fromJson(getArguments().getString("hours"), new TypeToken<List<TakeHours>>(){}.getType());
 
             ((EditText) viewCA.findViewById(R.id.txt_treatment_name)).setText(treatment.getName());
 //            adapter.notifyDataSetChanged();
@@ -163,7 +167,7 @@ public class treatment_edit extends Fragment {
         new ApiCallThread<List<Medicine>>(new AsyncResponse<List<Medicine>>(){
             @Override
             public List<Medicine> apiCall(Object... params) {
-                return us.getMedicine_userId(((String) params[1]));
+                return dbo.getMedicine_userId(((String) params[1]));
             }
 
             @Override
@@ -179,6 +183,7 @@ public class treatment_edit extends Fragment {
                         add(userMedicines);
                         add(treatment);
                         add(isTreatmentEdit);
+//                        add(medicineHours);
                     }
                 };
                 adapter = new TreatmentMedicinesListAdapter<>(getContext(), R.layout.treatment_edit_list_item, adapterData);
@@ -203,14 +208,13 @@ public class treatment_edit extends Fragment {
                             bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
                             bundle.putString("userMedicines", new JSONArray(gson.toJson(userMedicines)).toString());
                         } catch (Exception e) {
-                            int i = 0;
                         }
 
                         Navigation.findNavController(v).navigate(R.id.action_treatment_edit_to_treatment_edit_add_medicine, bundle);
                     }
                 });
             }
-        }).execute(viewCA, us.getIdLogged());
+        }).execute(viewCA, dbo.getIdLogged());
 
         Button btnDone = viewCA.findViewById(R.id.btn_treatment_edit_done);
 
@@ -220,7 +224,7 @@ public class treatment_edit extends Fragment {
 
                 treatment.setName(((EditText) viewCA.findViewById(R.id.txt_treatment_name)).getText().toString());
 
-                treatment.setIdUser(us.getIdLogged());
+                treatment.setIdUser(dbo.getIdLogged());
 
                 if (treatment.getName().equals("") || relations.isEmpty()) {
                     //Display Message
@@ -242,11 +246,11 @@ public class treatment_edit extends Fragment {
                             if (isTreatmentEdit) {
                                 for (MedTretRel rel : relations) {
                                     if (rel.isNew()) {
-                                        if (us.insertRelation(rel) != null) {
+                                        if (dbo.insertRelation(rel) != null) {
                                             PersistableBundle bundle = new PersistableBundle();
 
                                             bundle.putString("rel_id", rel.getId());
-                                            bundle.putInt("rel_frequency", rel.getFrequency());
+                                            bundle.putLong("rel_hour", getNextDose(rel.getHours()));
                                             bundle.putString("rel_med_id", rel.getIdMedicine());
                                             bundle.putString("rel_treat_id", rel.getIdTreatment());
                                             bundle.putLong("rel_end_date", rel.getFinalDate());
@@ -255,11 +259,11 @@ public class treatment_edit extends Fragment {
                                         }
                                     }
                                     if (rel.isEdited()) {
-                                        if (us.updateRelation(rel) != null) {
+                                        if (dbo.updateRelation(rel) != null) {
                                             PersistableBundle bundle = new PersistableBundle();
 
                                             bundle.putString("rel_id", rel.getId());
-                                            bundle.putInt("rel_frequency", rel.getFrequency());
+                                            bundle.putLong("rel_hour", getNextDose(rel.getHours()));
                                             bundle.putString("rel_med_id", rel.getIdMedicine());
                                             bundle.putString("rel_treat_id", rel.getIdTreatment());
                                             bundle.putLong("rel_end_date", rel.getFinalDate());
@@ -269,22 +273,21 @@ public class treatment_edit extends Fragment {
                                     }
                                 }
                                 for (MedTretRel rel : removedRelations) {
-                                    if (us.deleteRelation(rel) != null) {
+                                    if (dbo.deleteRelation(rel) != null) {
                                         removeSchedule(getContext(), rel.getId().hashCode());
                                     }
-
                                 }
-                                us.updateTreatment(treatment,  null);
+                                dbo.updateTreatment(treatment,  null);
                             }
                             else {
-                                treatment.setId(us.insertTreatment(treatment));
+                                treatment.setId(dbo.insertTreatment(treatment));
                                 for (MedTretRel rel : relations) {
                                     rel.setIdTreatment(treatment.getId());
-                                    if (us.insertRelation(rel) != null) {
+                                    if (dbo.insertRelation(rel) != null) {
                                         PersistableBundle bundle = new PersistableBundle();
 
                                         bundle.putString("rel_id", rel.getId());
-                                        bundle.putInt("rel_frequency", rel.getFrequency());
+                                        bundle.putLong("rel_hour", getNextDose(rel.getHours()));
                                         bundle.putString("rel_med_id", rel.getIdMedicine());
                                         bundle.putString("rel_treat_id", rel.getIdTreatment());
                                         bundle.putLong("rel_end_date", rel.getFinalDate());

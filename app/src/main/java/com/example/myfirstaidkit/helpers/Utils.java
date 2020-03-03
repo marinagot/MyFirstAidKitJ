@@ -17,6 +17,7 @@ import android.util.TypedValue;
 
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
 import com.example.myfirstaidkit.jobScheduler.DailyJob;
 import com.example.myfirstaidkit.jobScheduler.DoseJob;
@@ -24,6 +25,7 @@ import com.example.myfirstaidkit.jobScheduler.DoseJob;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class Utils {
@@ -59,7 +61,14 @@ public class Utils {
         ComponentName componentName = new ComponentName(context, DoseJob.class);
 
         JobInfo.Builder builder = new JobInfo.Builder(bundle.getString("rel_id").hashCode(), componentName);
-        builder.setMinimumLatency(bundle.getInt("rel_frequency") * 3600000); // ms
+
+        Calendar calendar = Calendar.getInstance();
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTimeInMillis(bundle.getLong("rel_hour"));
+        calendar.set(Calendar.HOUR_OF_DAY, calendar2.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar2.get(Calendar.MINUTE));
+
+        builder.setMinimumLatency(calendar.getTimeInMillis()); // ms
         builder.setPersisted(true);
         builder.setBackoffCriteria(500, JobInfo.BACKOFF_POLICY_LINEAR);
         builder.setExtras(bundle);
@@ -174,6 +183,10 @@ public class Utils {
         Resources.Theme theme = context.getTheme();
         theme.resolveAttribute(attrIdForColor, typedValue, true);
         return typedValue.data;
+    }
+
+    public static Long getNextDose(List<TakeHours> hours) {
+        return 0L;
     }
 
 }

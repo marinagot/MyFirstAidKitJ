@@ -85,6 +85,19 @@ public class Medicine {
     public String toString() {
         return this.getName();
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+        return (this.toString().equals(object.toString()));
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
 
 

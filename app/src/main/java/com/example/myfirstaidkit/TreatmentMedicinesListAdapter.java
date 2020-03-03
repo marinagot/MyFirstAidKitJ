@@ -1,16 +1,11 @@
 package com.example.myfirstaidkit;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -21,14 +16,13 @@ import androidx.navigation.Navigation;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -45,11 +39,7 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
     private int style;
     private static LayoutInflater inflater = null;
 
-    private Date finalDate;
-    private Spinner spinnerMedicines;
-    private EditText period;
-
-    DataBaseOperations us;
+    DataBaseOperations dbo;
 
     public TreatmentMedicinesListAdapter(Context context, int layoutId, List<Object> data) {
         // TODO Auto-generated constructor stub
@@ -88,16 +78,15 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-        View vi = convertView;
-        us = DataBaseOperations.get_Instance(getContext());
-        if (vi == null) {
-            vi = inflater.inflate(style, null);
+        dbo = DataBaseOperations.get_Instance(getContext());
+        if (convertView == null) {
+            convertView = inflater.inflate(style, null);
         }
 
-        TextView header = vi.findViewById(R.id.treatment_list_item_header);
+        TextView header = convertView.findViewById(R.id.treatment_list_item_header);
         header.setText(((Medicine) treatmentMedicines.get(position)).getName());
 
-        ImageButton editImageView = vi.findViewById(R.id.treatment_list_item_edit);
+        ImageButton editImageView = convertView.findViewById(R.id.treatment_list_item_edit);
         editImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -111,15 +100,14 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
                     bundle.putString("relations", new JSONArray(gson.toJson(relations)).toString());
                     bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
                     bundle.putString("userMedicines", new JSONArray(gson.toJson(userMedicines)).toString());
-                } catch (Exception e) {
-                    int i = 0;
-                }
+                    bundle.putString("hours", new JSONArray(gson.toJson(relations.get(position).getHours())).toString());
+                } catch (Exception e) { }
 
                 Navigation.findNavController(v).navigate(R.id.action_treatment_edit_to_treatment_edit_add_medicine, bundle);
             }
         });
 
-        ImageButton deleteImageView = vi.findViewById(R.id.treatment_list_item_delete);
+        ImageButton deleteImageView = convertView.findViewById(R.id.treatment_list_item_delete);
         deleteImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 remove(treatmentMedicines.get(position));
@@ -129,6 +117,6 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
             }
         });
 
-        return vi;
+        return convertView;
     }
 }

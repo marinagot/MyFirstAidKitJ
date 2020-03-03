@@ -63,7 +63,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_medicines"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintVertical_bias="0.0"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/lbl_edit_treatment_freq"
@@ -108,45 +109,6 @@
         </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_medicines"
-            app:layout_constraintVertical_bias="0.0">
-
-            <ImageView
-                android:id="@+id/image_add_hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_add_black_24dp"
-                android:backgroundTint="?attr/colorPrimaryText"
-                android:contentDescription="add_hour_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/add_hour"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Añadir hora"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/image_add_hour"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp">
@@ -170,7 +132,7 @@
                 android:id="@+id/treatment_edit_add_medicine_final_date"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/form_layout"
                 android:spinnerMode="dropdown"
                 android:textAlignment="textEnd"
@@ -181,51 +143,26 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/linearLayout3"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="16dp"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintHorizontal_bias="0.0"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/list_medicines"-->
-        <!--            app:layout_constraintVertical_bias="0.0">-->
+        <Button
+            android:id="@+id/layout_add_hour"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/button_selector_primary"
+            android:text="Añadir hora"
+            android:textColor="?attr/colorButtonText"/>
 
-        <!--            <TextView-->
-        <!--                android:id="@+id/cosa"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginStart="32dp"-->
-        <!--                android:layout_marginTop="28dp"-->
-        <!--                android:ems="5"-->
-        <!--                android:text="dd/MM/yyyy"-->
-        <!--                android:textAlignment="center"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintHorizontal_bias="0.0"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"-->
-        <!--                app:layout_constraintVertical_bias="0.0" />-->
+        <ListView
+            android:id="@+id/list_of_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/list_divider"
+            android:dividerHeight="1dp">
 
-        <!--            <Button-->
-        <!--                android:id="@+id/btn_date_cale"-->
-        <!--                android:layout_width="40dp"-->
-        <!--                android:layout_height="42dp"-->
-        <!--                android:layout_marginStart="8dp"-->
-        <!--                android:layout_marginTop="16dp"-->
-        <!--                android:layout_marginEnd="8dp"-->
-        <!--                android:layout_marginBottom="8dp"-->
-        <!--                android:background="@android:drawable/dialog_holo_light_frame"-->
-        <!--                android:drawableStart="@drawable/ic_calendar"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintHorizontal_bias="0.0"-->
-        <!--                app:layout_constraintStart_toEndOf="@+id/final_date"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/lbl_edit_medicine_type3"-->
-        <!--                app:layout_constraintVertical_bias="0.0" />-->
-        <!--        </LinearLayout>-->
+        </ListView>
     </LinearLayout>
 
     <LinearLayout

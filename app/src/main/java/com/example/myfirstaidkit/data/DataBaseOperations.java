@@ -16,6 +16,7 @@ import com.example.myfirstaidkit.data.DataBase.Tablas;
 import com.example.myfirstaidkit.data.FirstAidKit.MedicinesDb;
 import com.example.myfirstaidkit.data.FirstAidKit.TreatmentsDb;
 import com.example.myfirstaidkit.data.FirstAidKit.MedTretRelDb;
+import com.example.myfirstaidkit.data.FirstAidKit.HoursDb;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -44,8 +45,8 @@ public final class DataBaseOperations {
 
     Gson gson = new Gson();
 
-//    private static String base_url ="http://192.168.1.36:3000";
-    private static String base_url ="http://jdserver.ddns.net:3000";
+    private static String base_url ="http://192.168.1.36:3000";
+//    private static String base_url ="http://jdserver.ddns.net:3000";
 
 
     public static  DataBaseOperations instance = new  DataBaseOperations();
@@ -122,6 +123,7 @@ public final class DataBaseOperations {
         }*/
     }
 
+    // TODO: logica de horas aqui tambien
     public String syncDabtabase(String id, String syncId) {
         // Llamada a la api
         JSONObject response = callApi("/sync/" + id + "?sync_id=" + syncId, Request.Method.GET);
@@ -161,7 +163,7 @@ public final class DataBaseOperations {
         return null;
     }
 
-    private void syncTables(List<Medicine> medicineList, List<Treatment> treatmentList, List<MedTretRel> relationList ) {
+    private void syncTables(List<Medicine> medicineList, List<Treatment> treatmentList, List<MedTretRel> relationList) {
         SQLiteDatabase db = DataBase.getWritableDatabase();
 
         // Medicinas
@@ -184,7 +186,7 @@ public final class DataBaseOperations {
                 db.update(Tablas.MEDICINE, values, whereClause, whereArgs);
             }
         }
-        db.execSQL("delete from "+ Tablas.TREATMENT);
+        db.execSQL("delete from " + Tablas.TREATMENT);
         // Tratamientos
         for (Treatment treatment: treatmentList) {
 
@@ -201,15 +203,15 @@ public final class DataBaseOperations {
                 db.update(Tablas.TREATMENT, values, whereClause, whereArgs);
             }
         }
-        db.execSQL("delete from "+ Tablas.RELATION_MED_TREATMENT);
-        // Relaciones
+        db.execSQL("delete from " + Tablas.RELATION_MED_TREATMENT);
+        db.execSQL("delete from " + Tablas.TAKE_HOURS);
+        // Relaciones y horas
         for (MedTretRel relation: relationList) {
 
             ContentValues values = new ContentValues();
             values.put(MedTretRelDb.ID, relation.getId());
             values.put(MedTretRelDb.ID_MED, relation.getIdMedicine());
             values.put(MedTretRelDb.ID_TRAT, relation.getIdTreatment());
-            values.put(MedTretRelDb.FREQUENCY, relation.getFrequency());
             values.put(MedTretRelDb.INITIAL_DATE, relation.getInitialDate());
             values.put(MedTretRelDb.FINAL_DATE, relation.getFinalDate());
 
@@ -220,7 +222,24 @@ public final class DataBaseOperations {
                 values.remove(MedTretRelDb.ID);
                 db.update(Tablas.RELATION_MED_TREATMENT, values, whereClause, whereArgs);
             }
+
+            for (TakeHours hour: relation.getHours()) {
+                ContentValues hourValues = new ContentValues();
+                hourValues.put(HoursDb.ID, hour.getId());
+                hourValues.put(HoursDb.ID_REL, hour.getIdRelation());
+                hourValues.put(HoursDb.HOUR, hour.getHour());
+
+                whereClause = String.format("%s=?", HoursDb.ID);
+                final String[] hourWhereArgs = { hour.getId() };
+
+                if (db.insertOrThrow(Tablas.TAKE_HOURS, null, hourValues) == 0) {
+                    values.remove(HoursDb.ID);
+                    db.update(Tablas.TAKE_HOURS, hourValues, whereClause, hourWhereArgs);
+                }
+            }
         }
+
+        // Relaciones
     }
 
     public void setSyncIdLogged(String syncId) {
@@ -504,7 +523,7 @@ public final class DataBaseOperations {
 
     /* TREATMENT operations */
 
-    public String insertTreatment(Treatment treatment){
+    public String insertTreatment(Treatment treatment) {
 
         JSONObject data = null;
         try {
@@ -521,7 +540,7 @@ public final class DataBaseOperations {
             SQLiteDatabase db= DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put(MedicinesDb.ID, treatment.getId());
+            values.put(TreatmentsDb.ID, treatment.getId());
             values.put(TreatmentsDb.ID_USER, treatment.getIdUser());
             values.put(TreatmentsDb.NAME, treatment.getName());
 
@@ -534,6 +553,7 @@ public final class DataBaseOperations {
         return null;
     }
 
+    // TODO: hacer la lógica de new o mierdas aqui y no fuera
     public String updateTreatment(Treatment treatment, List<MedTretRel> removedRelations){
         JSONObject data = new JSONObject();
         try {
@@ -637,8 +657,7 @@ public final class DataBaseOperations {
     }
 
     // TODO: Logica (o no)
-    public String deleteTreatment (Treatment treatment){
-
+    public String deleteTreatment (Treatment treatment) {
         JSONObject res = callApi("/treatments/" + treatment.getId(), Request.Method.PUT);
 
         if (res != null) {
@@ -661,8 +680,7 @@ public final class DataBaseOperations {
 
     /* RELATION operations */
 
-    public String insertRelation(MedTretRel relation){
-
+    public String insertRelation(MedTretRel relation) {
         JSONObject data = null;
         try {
             data = new JSONObject(gson.toJson(relation));
@@ -671,21 +689,32 @@ public final class DataBaseOperations {
         JSONObject res = callApi("/relations/new", Request.Method.POST, data);
 
         if (res != null) {
+            List<TakeHours> hours = relation.getHours();
+
             try {
                 relation.setId(res.getString("_id"));
+                for (int i = 0; i < hours.size(); i++) {
+                    hours.get(i).setId(res.getJSONArray("hours_ids").getString(i));
+                }
+                relation.setHours(hours);
             } catch (JSONException e) { }
 
             SQLiteDatabase db= DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put(MedicinesDb.ID, relation.getId());
+            values.put(MedTretRelDb.ID, relation.getId());
             values.put(MedTretRelDb.ID_MED, relation.getIdMedicine());
             values.put(MedTretRelDb.ID_TRAT, relation.getIdTreatment());
-            values.put(MedTretRelDb.FREQUENCY, relation.getFrequency());
             values.put(MedTretRelDb.INITIAL_DATE, relation.getInitialDate());
             values.put(MedTretRelDb.FINAL_DATE, relation.getFinalDate());
 
             db.insertOrThrow(Tablas.RELATION_MED_TREATMENT, null, values);
+
+            for (TakeHours hour : hours) {
+                hour.setIdRelation(relation.getId());
+                insertHour(hour);
+            }
+
             db.close();
 
             return relation.getId();
@@ -693,7 +722,7 @@ public final class DataBaseOperations {
         return null;
     }
 
-    public String updateRelation(MedTretRel relation){
+    public String updateRelation(MedTretRel relation) {
         JSONObject data = new JSONObject();
         try {
             data.put("relation", new JSONObject(gson.toJson(relation)));
@@ -704,18 +733,27 @@ public final class DataBaseOperations {
         if (res != null) {
             resetSyncId(res);
 
+            List<TakeHours> hours = relation.getHours();
+
             SQLiteDatabase db = DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
 
             values.put(MedTretRelDb.FINAL_DATE, relation.getFinalDate());
             values.put(MedTretRelDb.ID_MED, relation.getIdMedicine());
-            values.put(MedTretRelDb.FREQUENCY, relation.getFrequency());
 
             String whereClause = String.format("%s=?", MedTretRelDb.ID);
-            final String[] whereArgs = {relation.getId()};
+            final String[] whereArgs = { relation.getId() };
 
             db.update(Tablas.RELATION_MED_TREATMENT, values, whereClause, whereArgs);
 
+            for (TakeHours hour : hours) {
+                if (hour.isNew())
+                    insertHour(hour);
+                else if (hour.isRemoved())
+                    deleteHour(hour);
+            }
+
+            db.close();
             return relation.getId();
         }
 
@@ -739,10 +777,9 @@ public final class DataBaseOperations {
             relation.setId(c.getString(0));
             relation.setIdTreatment(c.getString(1));
             relation.setIdMedicine(c.getString(2));
-            relation.setFrequency(c.getInt(3));
             relation.setInitialDate(c.getLong(4));
             relation.setFinalDate(c.getLong(5));
-
+            relation.setHours(getHours_relationId(relation.getId()));
             relations.add(relation);
 
         }
@@ -751,7 +788,7 @@ public final class DataBaseOperations {
         return relations;
     }
 
-    public String deleteRelation(MedTretRel relation){
+    public String deleteRelation(MedTretRel relation) {
 
         JSONObject res = callApi("/relations/" + relation.getId(), Request.Method.PUT);
 
@@ -761,8 +798,12 @@ public final class DataBaseOperations {
             SQLiteDatabase db= DataBase.getWritableDatabase();
 
             String whereClause = String.format("%s=?", MedTretRelDb.ID);
-            String[] whereArgs = { String.valueOf(relation.getId()) };
+            String[] whereArgs = { relation.getId() };
             db.delete(Tablas.RELATION_MED_TREATMENT, whereClause, whereArgs);
+
+            whereClause = String.format("%s=?", HoursDb.ID_REL);
+            db.delete(Tablas.TAKE_HOURS, whereClause, whereArgs);
+
             db.close();
 
             return relation.getId();
@@ -772,5 +813,61 @@ public final class DataBaseOperations {
     }
 
     /* RELATION operations */
+
+    /* HOURS operations */
+
+    public String insertHour(TakeHours hour) {
+        SQLiteDatabase db= DataBase.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(HoursDb.ID, hour.getId());
+        values.put(HoursDb.ID_REL, hour.getIdRelation());
+        values.put(HoursDb.HOUR, hour.getHour());
+
+        db.insertOrThrow(Tablas.TAKE_HOURS, null, values);
+        db.close();
+
+        return hour.getId();
+    }
+
+    public String deleteHour(TakeHours hour) {
+
+        SQLiteDatabase db= DataBase.getWritableDatabase();
+
+        String whereClause = String.format("%s=?", HoursDb.ID);
+        String[] whereArgs = { hour.getId() };
+        db.delete(Tablas.TAKE_HOURS, whereClause, whereArgs);
+        db.close();
+
+        return hour.getId();
+    }
+
+    public List<TakeHours> getHours_relationId(String relationId) {
+        SQLiteDatabase db = DataBase.getReadableDatabase();
+
+        String sql = String.format("SELECT * FROM %s WHERE %s=?",
+                Tablas.TAKE_HOURS, HoursDb.ID_REL);
+
+        String[] selectionArgs = { relationId };
+        Cursor c = db.rawQuery(sql, selectionArgs);
+
+        List<TakeHours> hours = new ArrayList<>();
+
+        while (c.moveToNext()) {
+            TakeHours hour = new TakeHours();
+
+            hour.setId(c.getString(0));
+            hour.setIdRelation(c.getString(1));
+            hour.setHour(c.getLong(2));
+
+            hours.add(hour);
+
+        }
+        c.close();
+        db.close();
+        return hours;
+    }
+
+    /* HOURS operations */
 }
 

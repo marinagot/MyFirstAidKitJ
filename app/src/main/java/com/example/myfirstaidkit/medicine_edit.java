@@ -18,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -31,7 +30,6 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,7 +63,7 @@ public class medicine_edit extends Fragment {
     SharedPreferences prefs;
     SharedPreferences.Editor edit;
 
-    DataBaseOperations us;
+    DataBaseOperations dbo;
     Medicine med = new Medicine();
     View viewCA;
     boolean isEdit = false;
@@ -99,10 +97,8 @@ public class medicine_edit extends Fragment {
 
         if (getArguments() != null) {
             isEdit = true;
-            String medString = getArguments().getString("medicine");
             Gson gson = new Gson();
-            Type medicineType = new TypeToken<Medicine>(){}.getType();
-            med = gson.fromJson(medString, medicineType);
+            med = gson.fromJson(getArguments().getString("medicine"), new TypeToken<Medicine>(){}.getType());
 
             ((EditText) viewCA.findViewById(R.id.txt_medicine_name)).setText(med.getName());
             ((EditText) viewCA.findViewById(R.id.txt_edit_medicine_num)).setText(String.valueOf(med.getDoseNumber()));
@@ -158,7 +154,7 @@ public class medicine_edit extends Fragment {
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_medicine_edit, container, false);
 
-        us = DataBaseOperations.get_Instance(getContext());
+        dbo = DataBaseOperations.get_Instance(getContext());
 
         final Spinner choseDate = viewCA.findViewById(R.id.chosen_date);
         Date d = new Date();
@@ -218,16 +214,15 @@ public class medicine_edit extends Fragment {
                     textViewMessage.setTextColor(Color.RED);
                 }
                 else {
-
-                    med.setIdUser(us.getIdLogged());
+                    med.setIdUser(dbo.getIdLogged());
 
                     new ApiCallThread<String>(new AsyncResponse<String>(){
                         @Override
                         public String apiCall(Object... params) {
                             Medicine medAux = (Medicine) params[1];
                             if (isEdit)
-                                return us.updateMedicine(medAux);
-                            return us.insertMedicine(medAux);
+                                return dbo.updateMedicine(medAux);
+                            return dbo.insertMedicine(medAux);
                         }
 
                         @Override

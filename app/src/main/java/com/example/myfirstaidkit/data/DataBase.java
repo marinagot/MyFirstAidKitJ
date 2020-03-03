@@ -2,6 +2,7 @@ package com.example.myfirstaidkit.data;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
@@ -11,6 +12,7 @@ import com.example.myfirstaidkit.data.FirstAidKit.MedicinesDb;
 import com.example.myfirstaidkit.data.FirstAidKit.MedTretRelDb;
 import com.example.myfirstaidkit.data.FirstAidKit.TreatmentsDb;
 import com.example.myfirstaidkit.data.FirstAidKit.UsersDb;
+import com.example.myfirstaidkit.data.FirstAidKit.HoursDb;
 
 /**
  * Clase que administra la conexión de la base de datos y su estructuración
@@ -19,14 +21,17 @@ import com.example.myfirstaidkit.data.FirstAidKit.UsersDb;
 public class DataBase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "FirstAidKit.db";
-    private static final int ACTUAL_VERSION = 1;
+    private static final int ACTUAL_VERSION = 4;
     private final Context context;
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
 
     interface Tablas {
         String USER = "user";
         String MEDICINE = "medicine";
         String TREATMENT = "treatment";
         String RELATION_MED_TREATMENT = "relation";
+        String TAKE_HOURS = "hours";
     }
 
     interface Referencias {
@@ -56,52 +61,27 @@ public class DataBase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db){
-
-
-        /*db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
-                "%s TEXT NOT NULL,%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,",
-                Tablas.USER, UsersDb.ID, UsersDb.USERNAME, UsersDb.EMAIL,
-                UsersDb.PASSWORD));*/
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
+                "%s INTEGER NOT NULL, %s TEXT NOT NULL);",
+                Tablas.TREATMENT, TreatmentsDb.ID, TreatmentsDb.ID_USER, TreatmentsDb.NAME));
 
         db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
-                "%s INTEGER NOT NULL,%s TEXT NOT NULL);",
-                Tablas.TREATMENT, UsersDb.ID, TreatmentsDb.ID_USER, TreatmentsDb.NAME));
-
-        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
-                "%s TEXT NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
-                "%s TIMESTAMP NOT NULL,%s INTEGER NOT NULL);",
-                Tablas.MEDICINE, UsersDb.ID, MedicinesDb.NAME,
+                "%s TEXT NOT NULL, %s INTEGER NOT NULL, %s TEXT NOT NULL," +
+                "%s TIMESTAMP NOT NULL, %s INTEGER NOT NULL);",
+                Tablas.MEDICINE, MedicinesDb.ID, MedicinesDb.NAME,
                 MedicinesDb.ID_USER, MedicinesDb.TYPE, MedicinesDb.EXPIRATION_DATE,
                 MedicinesDb.DOSE_NUMBER));
+
         db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
-                "%s INTEGER NOT NULL , %s INTEGER NOT NULL,%s INTEGER NOT NULL,%s TIMESTAMP NOT NULL," +
+                "%s INTEGER NOT NULL, %s INTEGER NOT NULL, %s INTEGER, %s TIMESTAMP NOT NULL," +
                 "%s TIMESTAMP NOT NULL);",
-                Tablas.RELATION_MED_TREATMENT, UsersDb.ID, MedTretRelDb.ID_TRAT,
+                Tablas.RELATION_MED_TREATMENT, MedTretRelDb.ID, MedTretRelDb.ID_TRAT,
                 MedTretRelDb.ID_MED, MedTretRelDb.FREQUENCY, MedTretRelDb.INITIAL_DATE,
                 MedTretRelDb.FINAL_DATE));
 
-        /*db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,%s TEXT NOT NULL," +
-                "%s TEXT NOT NULL,%s TEXT NOT NULL);",
-                Tablas.USER, BaseColumns._ID, UsersDb.USERNAME, UsersDb.EMAIL,
-                UsersDb.PASSWORD, UsersDb.BIRTHDAY, UsersDb.AVATAR));
-
-        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s INTEGER NOT NULL,%s TEXT NOT NULL);",
-                Tablas.TREATMENT, BaseColumns._ID, TreatmentsDb.ID_USER, TreatmentsDb.NAME));
-
-        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s TEXT NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL ," +
-                "%s DATETIME NOT NULL,%s INTEGER NOT NULL);",
-                Tablas.MEDICINE, BaseColumns._ID, MedicinesDb.NAME,
-                MedicinesDb.ID_USER, MedicinesDb.TYPE, MedicinesDb.EXPIRATION_DATE,
-                MedicinesDb.DOSE_NUMBER));
-        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "%s INTEGER NOT NULL , %s INTEGER NOT NULL,%s INTEGER NOT NULL,%s DATETIME NOT NULL," +
-                "%s DATETIME NOT NULL);",
-                Tablas.RELATION_MED_TREATMENT, BaseColumns._ID, MedTretRelDb.ID_TRAT,
-                MedTretRelDb.ID_MED, MedTretRelDb.FREQUENCY, MedTretRelDb.INITIAL_DATE,
-                MedTretRelDb.FINAL_DATE));*/
+        db.execSQL(String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY," +
+                        "%s INTEGER NOT NULL, %s TIMESTAMP NOT NULL);",
+                Tablas.TAKE_HOURS, HoursDb.ID, HoursDb.ID_REL, HoursDb.HOUR));
     }
 
     @Override
@@ -110,8 +90,15 @@ public class DataBase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.MEDICINE);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.TREATMENT);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.RELATION_MED_TREATMENT);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.TAKE_HOURS);
 
         onCreate(db);
+
+        prefs = context.getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
+        edit = prefs.edit();
+
+        edit.putString("sync_id", "0");
+        edit.apply();
 
     }
 }

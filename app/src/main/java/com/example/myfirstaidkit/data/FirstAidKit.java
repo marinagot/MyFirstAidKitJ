@@ -42,6 +42,12 @@ public class FirstAidKit{
         String FINAL_DATE = "finalDate";
     }
 
+    interface ColumnHour {
+        String ID = "id";
+        String ID_REL = "id_relacion";
+        String HOUR = "hour";
+    }
+
     public static class MedTretRelDb implements ColumnMedTretRel {
         public static String createIdRel(){
             return "REL_" + UUID.randomUUID().toString();
@@ -51,6 +57,12 @@ public class FirstAidKit{
     public static class UsersDb implements ColumnUser {
         public static String createIdUser(){
             return "USER_" + UUID.randomUUID().toString();
+        }
+    }
+
+    public static class HoursDb implements ColumnHour {
+        public static String createIdHour(){
+            return "HOURS_" + UUID.randomUUID().toString();
         }
     }
 
