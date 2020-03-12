@@ -57,12 +57,12 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
-
+        super.registerDataSetObserver(observer);
     }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
-
+        super.unregisterDataSetObserver(observer);
     }
 
     @Override

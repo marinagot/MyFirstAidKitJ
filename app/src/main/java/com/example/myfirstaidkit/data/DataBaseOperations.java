@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,8 +44,8 @@ public final class DataBaseOperations {
 
     Gson gson = new Gson();
 
-    private static String base_url ="http://192.168.1.36:3000";
-//    private static String base_url ="http://jdserver.ddns.net:3000";
+//    private static String base_url ="http://192.168.1.36:3000";
+    private static String base_url ="http://jdserver.ddns.net:3000";
 
 
     public static  DataBaseOperations instance = new  DataBaseOperations();
@@ -440,7 +439,7 @@ public final class DataBaseOperations {
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.MEDICINE, MedicinesDb.ID_USER);
 
-        String[] selectionArgs = {String.valueOf(userId)};
+        String[] selectionArgs = { userId };
         Cursor c = db.rawQuery(sql, selectionArgs);
 
         List<Medicine> medicines = new ArrayList<>();
@@ -591,7 +590,7 @@ public final class DataBaseOperations {
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.TREATMENT, TreatmentsDb.NAME);
 
-        String[] selectionArgs = {treatmentName};
+        String[] selectionArgs = { treatmentName };
         Cursor c = db.rawQuery(sql, selectionArgs);
 
         Treatment treatment = new Treatment();
@@ -613,7 +612,7 @@ public final class DataBaseOperations {
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.TREATMENT, TreatmentsDb.ID);
 
-        String[] selectionArgs = {treatmentId};
+        String[] selectionArgs = { treatmentId };
         Cursor c = db.rawQuery(sql, selectionArgs);
 
         Treatment treatment = new Treatment();
@@ -635,7 +634,7 @@ public final class DataBaseOperations {
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.TREATMENT, TreatmentsDb.ID_USER);
 
-        String[] selectionArgs = {userId};
+        String[] selectionArgs = { userId };
         Cursor c = db.rawQuery(sql, selectionArgs);
 
         List<Treatment> treatments = new ArrayList<>();
@@ -668,6 +667,11 @@ public final class DataBaseOperations {
             String whereClause = String.format("%s=?", TreatmentsDb.ID);
             String[] whereArgs = {String.valueOf(treatment.getId())};
             db.delete(Tablas.TREATMENT, whereClause, whereArgs);
+
+            List<MedTretRel> relations = getRelations_treatmentId(treatment.getId());
+            for (MedTretRel relation: relations) {
+                deleteRelation(relation);
+            }
             db.close();
 
             return treatment.getId();
@@ -766,7 +770,7 @@ public final class DataBaseOperations {
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.RELATION_MED_TREATMENT, MedTretRelDb.ID_TRAT);
 
-        String[] selectionArgs = {String.valueOf(treatmentId)};
+        String[] selectionArgs = { treatmentId };
         Cursor c = db.rawQuery(sql, selectionArgs);
 
         List<MedTretRel> relations = new ArrayList<>();
