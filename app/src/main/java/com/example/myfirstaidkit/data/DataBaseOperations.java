@@ -729,7 +729,7 @@ public final class DataBaseOperations {
     public String updateRelation(MedTretRel relation) {
         JSONObject data = new JSONObject();
         try {
-            data.put("relation", new JSONObject(gson.toJson(relation)));
+            data = new JSONObject(gson.toJson(relation));
         } catch (JSONException e) { }
 
         JSONObject res = callApi("/relations/" + relation.getId(), Request.Method.POST, data);

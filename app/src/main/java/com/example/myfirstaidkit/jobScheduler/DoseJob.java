@@ -6,13 +6,17 @@ import android.os.PersistableBundle;
 
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.Medicine;
+import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import static com.example.myfirstaidkit.helpers.Utils.fireNotification;
+import static com.example.myfirstaidkit.helpers.Utils.getNextDose;
 import static com.example.myfirstaidkit.helpers.Utils.prepareDoseNotification;
 import static com.example.myfirstaidkit.helpers.Utils.prepareNotification;
 import static com.example.myfirstaidkit.helpers.Utils.scheduleDose;

@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -248,9 +249,13 @@ public class treatment_edit extends Fragment {
                                     if (rel.isNew()) {
                                         if (dbo.insertRelation(rel) != null) {
                                             PersistableBundle bundle = new PersistableBundle();
+                                            Gson gson = new Gson();
 
                                             bundle.putString("rel_id", rel.getId());
-                                            bundle.putLong("rel_hour", getNextDose(rel.getHours()));
+                                            try {
+                                                bundle.putString("rel_hour", new JSONArray(gson.toJson(rel.getHours())).toString());
+                                            } catch (JSONException e) {
+                                            }
                                             bundle.putString("rel_med_id", rel.getIdMedicine());
                                             bundle.putString("rel_treat_id", rel.getIdTreatment());
                                             bundle.putLong("rel_end_date", rel.getFinalDate());
@@ -261,9 +266,13 @@ public class treatment_edit extends Fragment {
                                     if (rel.isEdited()) {
                                         if (dbo.updateRelation(rel) != null) {
                                             PersistableBundle bundle = new PersistableBundle();
+                                            Gson gson = new Gson();
 
                                             bundle.putString("rel_id", rel.getId());
-                                            bundle.putLong("rel_hour", getNextDose(rel.getHours()));
+                                            try {
+                                                bundle.putString("rel_hour", new JSONArray(gson.toJson(rel.getHours())).toString());
+                                            } catch (JSONException e) {
+                                            }
                                             bundle.putString("rel_med_id", rel.getIdMedicine());
                                             bundle.putString("rel_treat_id", rel.getIdTreatment());
                                             bundle.putLong("rel_end_date", rel.getFinalDate());
@@ -285,9 +294,13 @@ public class treatment_edit extends Fragment {
                                     rel.setIdTreatment(treatment.getId());
                                     if (dbo.insertRelation(rel) != null) {
                                         PersistableBundle bundle = new PersistableBundle();
+                                        Gson gson = new Gson();
 
                                         bundle.putString("rel_id", rel.getId());
-                                        bundle.putLong("rel_hour", getNextDose(rel.getHours()));
+                                        try {
+                                            bundle.putString("rel_hour", new JSONArray(gson.toJson(rel.getHours())).toString());
+                                        } catch (JSONException e) {
+                                        }
                                         bundle.putString("rel_med_id", rel.getIdMedicine());
                                         bundle.putString("rel_treat_id", rel.getIdTreatment());
                                         bundle.putLong("rel_end_date", rel.getFinalDate());

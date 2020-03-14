@@ -21,6 +21,8 @@ import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
 import com.example.myfirstaidkit.jobScheduler.DailyJob;
 import com.example.myfirstaidkit.jobScheduler.DoseJob;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -59,16 +61,12 @@ public class Utils {
     public static void scheduleDose(Context context, PersistableBundle bundle) {
         JobScheduler scheduler = context.getSystemService(JobScheduler.class);
         ComponentName componentName = new ComponentName(context, DoseJob.class);
+        Gson gson = new Gson();
 
         JobInfo.Builder builder = new JobInfo.Builder(bundle.getString("rel_id").hashCode(), componentName);
+        List<TakeHours> cosa = gson.fromJson(bundle.getString("rel_hour"), new TypeToken<List<TakeHours>>(){}.getType());
 
-        Calendar calendar = Calendar.getInstance();
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTimeInMillis(bundle.getLong("rel_hour"));
-        calendar.set(Calendar.HOUR_OF_DAY, calendar2.get(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, calendar2.get(Calendar.MINUTE));
-
-        builder.setMinimumLatency(calendar.getTimeInMillis()); // ms
+        builder.setMinimumLatency(getNextDose(cosa)); // ms
         builder.setPersisted(true);
         builder.setBackoffCriteria(500, JobInfo.BACKOFF_POLICY_LINEAR);
         builder.setExtras(bundle);
@@ -186,7 +184,23 @@ public class Utils {
     }
 
     public static Long getNextDose(List<TakeHours> hours) {
-        return 0L;
+        Calendar nextDose = Calendar.getInstance();
+        Long now = Calendar.getInstance().getTimeInMillis();
+        for (TakeHours hour : hours) {
+            Calendar aux = Calendar.getInstance();
+            aux.setTimeInMillis(hour.getHour());
+            nextDose.set(Calendar.HOUR_OF_DAY, aux.get(Calendar.HOUR_OF_DAY));
+            nextDose.set(Calendar.MINUTE, aux.get(Calendar.MINUTE));
+            if (now < nextDose.getTimeInMillis()) {
+                return nextDose.getTimeInMillis() - now;
+            }
+        }
+        Calendar aux = Calendar.getInstance();
+        aux.setTimeInMillis(hours.get(0).getHour());
+        nextDose.set(Calendar.HOUR_OF_DAY, aux.get(Calendar.HOUR_OF_DAY));
+        nextDose.set(Calendar.MINUTE, aux.get(Calendar.MINUTE));
+
+        return nextDose.getTimeInMillis() + 86400000 - now;
     }
 
 }
