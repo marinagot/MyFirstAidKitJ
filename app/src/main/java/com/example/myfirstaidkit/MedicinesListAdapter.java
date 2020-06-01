@@ -3,12 +3,12 @@ package com.example.myfirstaidkit;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,14 +32,14 @@ import static com.example.myfirstaidkit.helpers.Utils.getColorByAttributeId;
 
 class MedicinesListAdapter<T> extends ArrayAdapter<T> {
 
-    Context context;
-    List<T> data;
-    int style;
+    private Context context;
+    private List<T> data;
+    private int style;
     private static LayoutInflater inflater = null;
 
-    DataBaseOperations us;
+    private DataBaseOperations us;
 
-    public MedicinesListAdapter(Context context, int layoutId, List<T> data) {
+    MedicinesListAdapter(Context context, int layoutId, List<T> data) {
         // TODO Auto-generated constructor stub
         super(context, 0 , data);
         this.context = context;
@@ -67,8 +67,9 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
         return position;
     }
 
+    @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         // TODO Auto-generated method stub
         View vi = convertView;
         us = DataBaseOperations.get_Instance(getContext());
@@ -111,23 +112,23 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
 
             if (((Medicine)data.get(position)).getDoseNumber() < 1 ) {
                 dose.setTextColor(getColorByAttributeId(context, R.attr.colorAlert));
-                dose.setText("AGOTADO");
+                dose.setText(R.string.agotado);
                 doseWarning.setVisibility(View.GONE);
                 expirationWarning.setVisibility(View.GONE);
             } else {
                 dose.setTextColor(getColorByAttributeId(context, R.attr.colorSecondaryText));
-                dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
+                dose.setText(String.format("Dosis restantes: %s", ((Medicine) data.get(position)).getDoseNumber().toString()));
             }
 
 
             if (((Medicine) data.get(position)).getExpirationDate() <= System.currentTimeMillis()) {
                 expiryDate.setTextColor(getColorByAttributeId(context, R.attr.colorAlert));
-                expiryDate.setText("CADUCADO");
+                expiryDate.setText(R.string.caducado);
                 doseWarning.setVisibility(View.GONE);
                 expirationWarning.setVisibility(View.GONE);
             } else {
                 expiryDate.setTextColor(getColorByAttributeId(context, R.attr.colorSecondaryText));
-                expiryDate.setText("Caducidad: " + dateText);
+                expiryDate.setText(String.format("Caducidad: %s", dateText));
             }
         } else {
             header.setTextColor(getColorByAttributeId(context, R.attr.colorCardTitle));
@@ -137,8 +138,8 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
             innerRowContainer.setBackground(ContextCompat.getDrawable(context, R.drawable.list_item));
             expiryDate.setTextColor(getColorByAttributeId(context, R.attr.colorSecondaryText));
             dose.setTextColor(getColorByAttributeId(context, R.attr.colorSecondaryText));
-            expiryDate.setText("Caducidad: " + dateText);
-            dose.setText("Dosis restantes: " + ((Medicine) data.get(position)).getDoseNumber().toString());
+            expiryDate.setText(String.format("Caducidad: %s", dateText));
+            dose.setText(String.format("Dosis restantes: %s", ((Medicine) data.get(position)).getDoseNumber().toString()));
         }
 
         editImageView.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +149,7 @@ class MedicinesListAdapter<T> extends ArrayAdapter<T> {
                 String medicine = null;
                 try {
                     medicine = new JSONObject(gson.toJson(data.get(position))).toString();
-                } catch (Exception e) {}
+                } catch (Exception ignored) {}
 
                 Bundle bundle = new Bundle();
                 bundle.putString("medicine", medicine);

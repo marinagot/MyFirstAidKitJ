@@ -50,7 +50,6 @@ public class LoggedActivity extends AppCompatActivity
 
 
     SharedPreferences prefs;
-    SharedPreferences.Editor edit;
     DataBaseOperations us;
     final AppCompatActivity activity = this;
 
@@ -59,7 +58,6 @@ public class LoggedActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         prefs = getApplicationContext().getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
-        edit = prefs.edit();
         us = DataBaseOperations.get_Instance(getApplicationContext());
 
         boolean isThemeEdited = prefs.getBoolean("isThemeEdited",false);
@@ -204,8 +202,7 @@ public class LoggedActivity extends AppCompatActivity
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.account);
                 break;
             case R.id.action_logout:
-                edit.clear();
-                edit.apply();
+                prefs.edit().clear().apply();
                 Intent intent = new Intent(this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -345,14 +342,12 @@ public class LoggedActivity extends AppCompatActivity
         calendar.set(Calendar.HOUR_OF_DAY, 8);
         //calendar.set(Calendar.MINUTE, 0);
 
-
         myIntent = new Intent(LoggedActivity.this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
 
         manager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
-        edit.putBoolean("dailyAlarm", true);
-        edit.apply();
+        prefs.edit().putBoolean("dailyAlarm", true).apply();
 
     }
 }

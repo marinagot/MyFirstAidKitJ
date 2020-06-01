@@ -108,8 +108,19 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="invalidFieldsTitle">Campos inválidos</string>
+    <string name="invalidFieldsMessage">Todos los campos deben rellenarse.</string>
+    <string name="apiErrorTitle">Algo ha salido mal…</string>
+    <string name="apiLoginErrorMessage">No existe un usuario con esa contraseña, por favor inténtalo de nuevo.</string>
+    <string name="apiResetPasswordErrorMessage">La contraseña introducida no es correcta, por favor inténtalo de nuevo.</string>
+    <string name="apiResetPasswordMatchErrorMessage">Los dos campos de nueva contraseña deben ser iguales, por favor inténtalo de nuevo.</string>
+    <string name="apiRegisterMatchErrorMessage">Los dos campos de contraseña deben ser iguales, por favor inténtalo de nuevo.</string>
+
     <string name="sincronizar">Sincronizar</string>
     <string name="nuevo">Nuevo</string>
+
+
+    <string name="agotado">AGOTADO</string>
+    <string name="caducado">CADUCADO</string>
 </resources>

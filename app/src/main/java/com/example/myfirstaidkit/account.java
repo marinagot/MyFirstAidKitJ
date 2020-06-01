@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,12 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 
 import com.example.myfirstaidkit.data.ApiCallThread;
 import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
+
+import java.util.Objects;
+
+import static com.example.myfirstaidkit.helpers.Utils.showError;
 
 
 /**
@@ -28,62 +30,26 @@ import com.example.myfirstaidkit.data.DataBaseOperations;
  * Activities that contain this fragment must implement the
  * {@link account.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link account#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class account extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     EditText old_password, new_password, confirm_password, del_password;
     DataBaseOperations us;
 
     //Preferencias de la aplicación
     SharedPreferences prefs;
-    SharedPreferences.Editor edit;
 
     public account() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment account.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static account newInstance(String param1, String param2) {
-        account fragment = new account();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
         setHasOptionsMenu(true);
         try {
-            getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
-        } catch (Exception e) {}
+            Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view).setVisibility(View.GONE);
+        } catch (Exception ignored) {}
     }
 
     @Override
@@ -96,7 +62,6 @@ public class account extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View v = inflater.inflate(R.layout.fragment_account, container, false);
 
         old_password = v.findViewById(R.id.old_password);
@@ -120,34 +85,18 @@ public class account extends Fragment {
                             if (result != null) {
                                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                                 alertDialog.setTitle("Successful!");
-                                alertDialog.setMessage("Password changed" );
+                                alertDialog.setMessage("Password changed");
                                 alertDialog.show();
                             }
                             else {
-                                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                                alertDialog.setTitle("Something went wrong!");
-                                alertDialog.setMessage("The current password introduced does not match with the one is registered, try again");
-                                alertDialog.show();
-                                int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                                TextView tv = alertDialog.findViewById(textViewId);
-                                tv.setTextColor(Color.RED);
-                                TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                                textViewMessage.setTextColor(Color.RED);
+                                showError(getContext(), R.string.apiErrorTitle, R.string.apiResetPasswordErrorMessage);
                             }
                         }
                     }).execute(v, us.getEmailLogged(), old_password.getText().toString(), new_password.getText().toString());
                 }
                 // Si las contraseñas nuevas no coinciden
                 else {
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("Something went wrong!");
-                    alertDialog.setMessage("The new password and the confirm password does not match, try again");
-                    alertDialog.show();
-                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                    TextView tv = alertDialog.findViewById(textViewId);
-                    tv.setTextColor(Color.RED);
-                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                    textViewMessage.setTextColor(Color.RED);
+                    showError(getContext(), R.string.apiErrorTitle, R.string.apiResetPasswordMatchErrorMessage);
                 }
             }
         });
@@ -172,22 +121,13 @@ public class account extends Fragment {
                             alertDialog.setMessage("Account deleted" );
                             alertDialog.show();
 
-                            edit.clear();
-                            edit.apply();
+                            prefs.edit().clear().apply();
                             Intent intent = new Intent(getContext(), LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
                         else {
-                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                            alertDialog.setTitle("Something went wrong!");
-                            alertDialog.setMessage("The current password introduced does not match with the one is registered, try again");
-                            alertDialog.show();
-                            int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                            TextView tv = alertDialog.findViewById(textViewId);
-                            tv.setTextColor(Color.RED);
-                            TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                            textViewMessage.setTextColor(Color.RED);
+                            showError(getContext(), R.string.apiErrorTitle, R.string.apiResetPasswordMatchErrorMessage);
                         }
                     }
                 }).execute(v, us.getIdLogged(), del_password.getText().toString());
@@ -198,22 +138,11 @@ public class account extends Fragment {
 
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-
-            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
-            edit = prefs.edit();
+            prefs = Objects.requireNonNull(getContext()).getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -223,7 +152,6 @@ public class account extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /**

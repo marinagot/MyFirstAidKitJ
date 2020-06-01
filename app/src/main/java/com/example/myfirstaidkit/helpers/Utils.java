@@ -1,5 +1,6 @@
 package com.example.myfirstaidkit.helpers;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,10 +13,12 @@ import android.os.Build;
 import android.os.PersistableBundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.util.TypedValue;
+import android.widget.TextView;
 
-import com.example.myfirstaidkit.data.MedTretRel;
+import com.example.myfirstaidkit.R;
 import com.example.myfirstaidkit.data.Medicine;
 import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
@@ -28,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class Utils {
 
@@ -203,4 +205,16 @@ public class Utils {
         return nextDose.getTimeInMillis() + 86400000 - now;
     }
 
+    public static void showError(Context context, int title, int message) {
+        //Display Message
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(context.getString(message));
+        alertDialog.show();
+        int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+        TextView tv = alertDialog.findViewById(textViewId);
+        tv.setTextColor(getColorByAttributeId(context, R.attr.colorAlert));
+        TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
+        textViewMessage.setTextColor(getColorByAttributeId(context, R.attr.colorAlert));
+    }
 }

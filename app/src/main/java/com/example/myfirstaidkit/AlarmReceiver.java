@@ -55,7 +55,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
         else {
             builder = new NotificationCompat.Builder(context, id);
-            intent = new Intent(context, MainActivity.class);
+            intent = new Intent(context, LoggedActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             builder.setContentTitle("Title")                            // required

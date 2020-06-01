@@ -1,10 +1,8 @@
 package com.example.myfirstaidkit;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,15 +21,17 @@ import com.example.myfirstaidkit.data.AsyncResponse;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.User;
 
+import java.util.Objects;
+
+import static com.example.myfirstaidkit.helpers.Utils.showError;
+
 public class create_account extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
     DataBaseOperations us;
     EditText username, email, password, confirm_password;
 
     //Preferencias de la aplicación
     SharedPreferences prefs;
-    SharedPreferences.Editor edit;
 
     /**
      * A simple {@link Fragment} subclass.
@@ -49,13 +49,11 @@ public class create_account extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         // Inflate the layout for this fragment
         View viewCA = inflater.inflate(R.layout.fragment_create_account, container, false);
 
 
-        us = DataBaseOperations.get_Instance(getContext());
+        us = DataBaseOperations.get_Instance(Objects.requireNonNull(getContext()));
 
         username = viewCA.findViewById(R.id.txt_username_set);
         email = viewCA.findViewById(R.id.txt_email_set);
@@ -80,16 +78,7 @@ public class create_account extends Fragment {
                         ||(password.getText().toString().equals(""))
                         ||(confirm_password.getText().toString().equals("")))
                 {
-                    //Display Message
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("ALERT!");
-                    alertDialog.setMessage("All fields must be filled");
-                    alertDialog.show();
-                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                    TextView tv = alertDialog.findViewById(textViewId);
-                    tv.setTextColor(Color.RED);
-                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                    textViewMessage.setTextColor(Color.RED);
+                    showError(getContext(), R.string.invalidFieldsTitle, R.string.invalidFieldsMessage);
                 }
                 else if((password.getText().toString()).equals(confirm_password.getText().toString())) {
 
@@ -106,16 +95,12 @@ public class create_account extends Fragment {
                         public void processFinish(View v, User result){
 
                             if(result != null) {
-                                edit.putString("username", result.getUsername());
-                                edit.putString("email", result.getEmail());
-                                edit.putString("id", result.getId());
-                                edit.putString("sync_id", result.getSyncId());
-                                edit.apply();
+                                prefs.edit().putString("username", result.getUsername())
+                                    .putString("email", result.getEmail())
+                                    .putString("id", result.getId())
+                                    .putString("sync_id", result.getSyncId())
+                                    .apply();
                             }
-                            /*AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                            alertDialog.setTitle("Successful!");
-                            alertDialog.setMessage("Account for " + username.getText().toString() + " created" );
-                            alertDialog.show();*/
 
                             Intent intent = new Intent(getContext(), LoggedActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -123,16 +108,8 @@ public class create_account extends Fragment {
                         }
                     }).execute(v, user);
                 }
-                else{
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("Something went wrong!");
-                    alertDialog.setMessage("The passwords does not match, try again");
-                    alertDialog.show();
-                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                    TextView tv = alertDialog.findViewById(textViewId);
-                    tv.setTextColor(Color.RED);
-                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                    textViewMessage.setTextColor(Color.RED);
+                else {
+                    showError(getContext(), R.string.apiErrorTitle, R.string.apiRegisterMatchErrorMessage);
                 }
             }
         });
@@ -141,22 +118,11 @@ public class create_account extends Fragment {
         return viewCA;
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-
-            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
-            edit = prefs.edit();
+            prefs = Objects.requireNonNull(getContext()).getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -166,7 +132,6 @@ public class create_account extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -180,7 +145,6 @@ public class create_account extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

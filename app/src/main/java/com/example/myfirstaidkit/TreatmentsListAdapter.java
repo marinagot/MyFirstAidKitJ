@@ -31,10 +31,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
 
-    Context context;
+    private Context context;
 //    List<T> data;
     private int groupLaoyutId;
     private int childLayoutId;
@@ -43,9 +44,9 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
     private List<Treatment> expandableListTitle;
     private HashMap<Treatment, List<Medicine>> expandableListDetail;
 
-    DataBaseOperations dbo;
+    private DataBaseOperations dbo;
 
-    public TreatmentsListAdapter(Context context, int groupLayoutId, int childLayoutId, List<Treatment> expandableListTitle, HashMap<Treatment, List<Medicine>> expandableListDetail) {
+    TreatmentsListAdapter(Context context, int groupLayoutId, int childLayoutId, List<Treatment> expandableListTitle, HashMap<Treatment, List<Medicine>> expandableListDetail) {
         this.context = context;
         this.expandableListTitle = expandableListTitle;
         this.expandableListDetail = expandableListDetail;
@@ -72,7 +73,7 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.expandableListDetail.get(this.expandableListTitle.get(groupPosition))
+        return Objects.requireNonNull(this.expandableListDetail.get(this.expandableListTitle.get(groupPosition)))
                 .size();
     }
 
@@ -83,7 +84,7 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return this.expandableListDetail.get(this.expandableListTitle.get(groupPosition))
+        return Objects.requireNonNull(this.expandableListDetail.get(this.expandableListTitle.get(groupPosition)))
                 .get(childPosition);
     }
 
@@ -134,7 +135,7 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
                     treatment = new JSONObject(gson.toJson(t)).toString();
                     medicines = new JSONArray(gson.toJson(list_med)).toString();
                     relations = new JSONArray(gson.toJson(list_rel)).toString();
-                } catch (Exception e) { }
+                } catch (Exception ignored) { }
 
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isTreatmentEdit", true);
@@ -187,8 +188,8 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
         Collections.sort(hours, new Comparator<TakeHours>(){
             public int compare(TakeHours hour1, TakeHours hour2) {
                 // ## Ascending order
-                Long current1 = hour1.getHour() - current;
-                Long current2 = hour2.getHour() - current;
+                long current1 = hour1.getHour() - current;
+                long current2 = hour2.getHour() - current;
 
                 if (current1 > 0 && current2 < 0) {
                     return hour2.getHour().compareTo(hour1.getHour());
@@ -211,7 +212,7 @@ class TreatmentsListAdapter<T> extends BaseExpandableListAdapter {
         TextView expandedListHeader = convertView.findViewById(R.id.treatment_item_child_header);
         expandedListHeader.setText(medicine.getName());
         TextView expandedListText = convertView.findViewById(R.id.treatment_item_child_text);
-        expandedListText.setText("Proxima toma en " + hora + " horas");
+        expandedListText.setText(String.format("Proxima toma en %s horas", hora));
         return convertView;
     }
 

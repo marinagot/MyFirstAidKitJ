@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -42,13 +43,13 @@ public final class DataBaseOperations {
     private static RequestQueue queue;
     private static SharedPreferences prefs;
 
-    Gson gson = new Gson();
+    private Gson gson = new Gson();
 
 //    private static String base_url ="http://192.168.1.36:3000";
     private static String base_url ="http://jdserver.ddns.net:3000";
 
 
-    public static  DataBaseOperations instance = new  DataBaseOperations();
+    private static  DataBaseOperations instance = new  DataBaseOperations();
 
     public static  DataBaseOperations get_Instance(Context context) {
         prefs = context.getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
@@ -64,11 +65,11 @@ public final class DataBaseOperations {
 
     /* Http operations */
 
-    static JSONObject callApi(String url, int type) {
+    private static JSONObject callApi(String url, int type) {
         return callApi(url, type, null);
     }
 
-    static JSONObject callApi(String url, int type, JSONObject body) {
+    private static JSONObject callApi(String url, int type, JSONObject body) {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -80,16 +81,8 @@ public final class DataBaseOperations {
         }
 
         try {
-            JSONObject response = future.get(10, TimeUnit.SECONDS); // this will block
-            return response;
-        } catch (InterruptedException e) {
-            int i = 0;
-            // exception handling
-        } catch (ExecutionException e) {
-            int i = 0;
-            // exception handling
-        } catch (TimeoutException e) {
-            int i = 0;
+            return future.get(10, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             // exception handling
         }
         return null;
@@ -102,9 +95,7 @@ public final class DataBaseOperations {
 
     public boolean ping() {
 
-        if(callApi("/", Request.Method.GET) == null)
-            return false;
-        return true;
+        return callApi("/", Request.Method.GET) != null;
 
         /*String status = "active";
         switch (status){
@@ -135,7 +126,7 @@ public final class DataBaseOperations {
             JSONArray relations = null;
             try {
                 syncIdResp = response.getString("sync_id");
-            } catch (JSONException e) { }
+            } catch (JSONException ignored) { }
 
             // Comprueba que el SyncId sea distinto
             // Si lo es, significa que hay discrepancias en las bases de datos
@@ -145,13 +136,16 @@ public final class DataBaseOperations {
                     treatments = response.getJSONArray("treatments");
                     relations = response.getJSONArray("relations");
 
-                } catch (JSONException e) { }
+                } catch (JSONException ignored) { }
 
                 Type medicineType = new TypeToken<List<Medicine>>(){}.getType();
+                assert medicines != null;
                 List<Medicine> medicineList = gson.fromJson(medicines.toString(), medicineType);
                 Type treatmentType = new TypeToken<List<Treatment>>(){}.getType();
+                assert treatments != null;
                 List<Treatment> treatmentList = gson.fromJson(treatments.toString(), treatmentType);
                 Type relationType = new TypeToken<List<MedTretRel>>(){}.getType();
+                assert relations != null;
                 List<MedTretRel> relationList = gson.fromJson(relations.toString(), relationType);
 
                 // Actualiza las tablas
@@ -247,15 +241,14 @@ public final class DataBaseOperations {
         edit.apply();
     }
 
-    public void resetSyncId(JSONObject res) {
+    private void resetSyncId(JSONObject res) {
         String syncId = "";
-                try {
+        try {
             syncId = res.get("sync_id").toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (syncId != null)
-            setSyncIdLogged(syncId);
+        setSyncIdLogged(syncId);
     }
     /* SYNC operations */
 
@@ -268,10 +261,9 @@ public final class DataBaseOperations {
         try {
             data.put("email", username);
             data.put("password", password);
-            String response = callApi("/users/login", Request.Method.POST, data).toString();
-            User user = gson.fromJson(response, User.class);
-            return user;
-        } catch (Exception e) {}
+            String response = Objects.requireNonNull(callApi("/users/login", Request.Method.POST, data)).toString();
+            return gson.fromJson(response, User.class);
+        } catch (Exception ignored) {}
 
         return null;
     }
@@ -281,18 +273,16 @@ public final class DataBaseOperations {
 
         try {
             data = new JSONObject(gson.toJson(user));
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
-        String response = callApi("/users/register", Request.Method.POST, data).toString();
-        if (response != null)
-            return gson.fromJson(response, User.class);
-        return null;
+        String response = Objects.requireNonNull(callApi("/users/register", Request.Method.POST, data)).toString();
+        return gson.fromJson(response, User.class);
     }
 
     public User getUser_Email(String email) {
         try {
             return gson.fromJson(callApi("/user/?email=" + email, Request.Method.GET).toString(), User.class);
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
         return null;
     }
@@ -304,8 +294,8 @@ public final class DataBaseOperations {
             data.put("email", email);
             data.put("old_password", old_password);
             data.put("new_password", new_password);
-            return callApi("/users/password", Request.Method.POST, data).getString("_id");
-        } catch (Exception e) {}
+            return Objects.requireNonNull(callApi("/users/password", Request.Method.POST, data)).getString("_id");
+        } catch (Exception ignored) {}
 
         return null;
     }
@@ -338,7 +328,7 @@ public final class DataBaseOperations {
             JSONObject res = callApi("/users/" + id, Request.Method.PUT, data);
             if (res != null)
                 return true;
-        } catch (Exception e) { }
+        } catch (Exception ignored) { }
 
         return false;
     }
@@ -352,7 +342,7 @@ public final class DataBaseOperations {
         JSONObject data = null;
         try {
             data = new JSONObject(gson.toJson(med));
-        } catch (JSONException e) { }
+        } catch (JSONException ignored) { }
 
         JSONObject res = callApi("/medicines/new", Request.Method.POST, data);
 
@@ -361,7 +351,7 @@ public final class DataBaseOperations {
 
             try {
                 med.setId(res.getString("_id"));
-            } catch (JSONException e) { }
+            } catch (JSONException ignored) { }
 
             SQLiteDatabase db = DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -412,8 +402,7 @@ public final class DataBaseOperations {
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",
                 Tablas.MEDICINE, "id");
-        String param = medicineId;
-        String[] selectionArgs = {param};
+        String[] selectionArgs = {medicineId};
 
         Cursor c = db.rawQuery(sql, selectionArgs);
 
@@ -467,7 +456,7 @@ public final class DataBaseOperations {
         JSONObject data = null;
         try {
             data = new JSONObject(gson.toJson(med));
-        } catch (JSONException e) { }
+        } catch (JSONException ignored) { }
 
         JSONObject res = callApi("/medicines/" + med.getId(), Request.Method.POST, data);
 
@@ -503,7 +492,7 @@ public final class DataBaseOperations {
 
             try {
                 med.setId(res.getString("_id"));
-            } catch (JSONException e) { }
+            } catch (JSONException ignored) { }
 
             SQLiteDatabase db= DataBase.getWritableDatabase();
 
@@ -527,14 +516,14 @@ public final class DataBaseOperations {
         JSONObject data = null;
         try {
             data = new JSONObject(gson.toJson(treatment));
-        } catch (JSONException e) { }
+        } catch (JSONException ignored) { }
 
         JSONObject res = callApi("/treatments/new", Request.Method.POST, data);
 
         if (res != null) {
             try {
                 treatment.setId(res.getString("_id"));
-            } catch (JSONException e) { }
+            } catch (JSONException ignored) { }
 
             SQLiteDatabase db= DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -558,7 +547,7 @@ public final class DataBaseOperations {
         try {
             data.put("treatment", new JSONObject(gson.toJson(treatment)));
             data.put("removed_relations", new JSONArray(gson.toJson(removedRelations)));
-        } catch (JSONException e) { }
+        } catch (JSONException ignored) { }
 
         JSONObject res = callApi("/treatments/" + treatment.getId(), Request.Method.POST, data);
 
@@ -688,7 +677,7 @@ public final class DataBaseOperations {
         JSONObject data = null;
         try {
             data = new JSONObject(gson.toJson(relation));
-        } catch (JSONException e) { }
+        } catch (JSONException ignored) { }
 
         JSONObject res = callApi("/relations/new", Request.Method.POST, data);
 
@@ -701,7 +690,7 @@ public final class DataBaseOperations {
                     hours.get(i).setId(res.getJSONArray("hours_ids").getString(i));
                 }
                 relation.setHours(hours);
-            } catch (JSONException e) { }
+            } catch (JSONException ignored) { }
 
             SQLiteDatabase db= DataBase.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -730,7 +719,7 @@ public final class DataBaseOperations {
         JSONObject data = new JSONObject();
         try {
             data = new JSONObject(gson.toJson(relation));
-        } catch (JSONException e) { }
+        } catch (JSONException ignored) { }
 
         JSONObject res = callApi("/relations/" + relation.getId(), Request.Method.POST, data);
 
@@ -820,7 +809,7 @@ public final class DataBaseOperations {
 
     /* HOURS operations */
 
-    public String insertHour(TakeHours hour) {
+    private String insertHour(TakeHours hour) {
         SQLiteDatabase db= DataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -834,7 +823,7 @@ public final class DataBaseOperations {
         return hour.getId();
     }
 
-    public String deleteHour(TakeHours hour) {
+    private String deleteHour(TakeHours hour) {
 
         SQLiteDatabase db= DataBase.getWritableDatabase();
 
@@ -846,7 +835,7 @@ public final class DataBaseOperations {
         return hour.getId();
     }
 
-    public List<TakeHours> getHours_relationId(String relationId) {
+    private List<TakeHours> getHours_relationId(String relationId) {
         SQLiteDatabase db = DataBase.getReadableDatabase();
 
         String sql = String.format("SELECT * FROM %s WHERE %s=?",

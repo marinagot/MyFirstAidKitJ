@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
-import android.provider.BaseColumns;
 
 import com.example.myfirstaidkit.data.FirstAidKit.MedicinesDb;
 import com.example.myfirstaidkit.data.FirstAidKit.MedTretRelDb;
@@ -23,8 +21,6 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "FirstAidKit.db";
     private static final int ACTUAL_VERSION = 4;
     private final Context context;
-    SharedPreferences prefs;
-    SharedPreferences.Editor edit;
 
     interface Tablas {
         String USER = "user";
@@ -42,7 +38,7 @@ public class DataBase extends SQLiteOpenHelper {
 
     }
 
-    public DataBase(Context context){
+    DataBase(Context context){
         super(context, DATABASE_NAME, null, ACTUAL_VERSION);
         this.context = context;
     }
@@ -51,11 +47,7 @@ public class DataBase extends SQLiteOpenHelper {
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
         if (!db.isReadOnly()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                db.setForeignKeyConstraintsEnabled(true);
-            } else {
-                db.execSQL("PRAGMA foreign_keys=ON");
-            }
+            db.setForeignKeyConstraintsEnabled(true);
         }
     }
 
@@ -94,8 +86,8 @@ public class DataBase extends SQLiteOpenHelper {
 
         onCreate(db);
 
-        prefs = context.getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
-        edit = prefs.edit();
+        SharedPreferences prefs = context.getSharedPreferences("UserLogged", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = prefs.edit();
 
         edit.putString("sync_id", "0");
         edit.apply();

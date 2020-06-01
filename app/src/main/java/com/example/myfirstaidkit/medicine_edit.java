@@ -1,12 +1,11 @@
 package com.example.myfirstaidkit;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +18,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
@@ -37,6 +35,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Objects;
+
+import static com.example.myfirstaidkit.helpers.Utils.showError;
 
 
 /**
@@ -44,24 +45,10 @@ import java.util.List;
  * Activities that contain this fragment must implement the
  * {@link medicine_edit.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link medicine_edit#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class medicine_edit extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
     //Preferencias de la aplicación
     SharedPreferences prefs;
-    SharedPreferences.Editor edit;
 
     DataBaseOperations dbo;
     Medicine med = new Medicine();
@@ -72,26 +59,8 @@ public class medicine_edit extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment medicine_edit.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static medicine_edit newInstance(String param1, String param2) {
-        medicine_edit fragment = new medicine_edit();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
@@ -121,25 +90,19 @@ public class medicine_edit extends Fragment {
     }
 
     private int getSelectedMedicineIndex(String type) {
-        switch (type) {
-            case "Jarabe":
-                return 1;
-            default: return 0;
+        if ("Jarabe".equals(type)) {
+            return 1;
         }
+        return 0;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
         setHasOptionsMenu(true);
         try {
-            getActivity().findViewById(R.id.nav_view).setVisibility(View.GONE);
-        } catch (Exception e) {}
+            Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view).setVisibility(View.GONE);
+        } catch (Exception ignored) {}
     }
 
     @Override
@@ -154,7 +117,7 @@ public class medicine_edit extends Fragment {
         // Inflate the layout for this fragment
         viewCA = inflater.inflate(R.layout.fragment_medicine_edit, container, false);
 
-        dbo = DataBaseOperations.get_Instance(getContext());
+        dbo = DataBaseOperations.get_Instance(Objects.requireNonNull(getContext()));
 
         final Spinner choseDate = viewCA.findViewById(R.id.chosen_date);
         Date d = new Date();
@@ -162,12 +125,13 @@ public class medicine_edit extends Fragment {
         setTime(choseDate, new SimpleDateFormat("dd MMM yyyy").format(d.getTime()));
         choseDate.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
+                v.performClick();
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Calendar calendar = Calendar.getInstance();
                     int year = calendar.get(Calendar.YEAR);
                     int month = calendar.get(Calendar.MONTH);
                     int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getActivity()),
                             new DatePickerDialog.OnDateSetListener() {
                                 @Override
                                 public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -202,16 +166,7 @@ public class medicine_edit extends Fragment {
                 }
 
                 if(med.getName().equals("") || med.getExpirationDate() == null || med.getDoseNumber().equals(-1)) {
-                    //Display Message
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                    alertDialog.setTitle("ERROR!");
-                    alertDialog.setMessage("Debes rellenar todos los campos correctamente");
-                    alertDialog.show();
-                    int textViewId = alertDialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
-                    TextView tv = alertDialog.findViewById(textViewId);
-                    tv.setTextColor(Color.RED);
-                    TextView textViewMessage = alertDialog.findViewById(android.R.id.message);
-                    textViewMessage.setTextColor(Color.RED);
+                    showError(getContext(), R.string.invalidFieldsTitle, R.string.invalidFieldsMessage);
                 }
                 else {
                     med.setIdUser(dbo.getIdLogged());
@@ -240,26 +195,16 @@ public class medicine_edit extends Fragment {
     private void setTime(Spinner chosDate, String finalDate) {
         final List<String> plantsList = new ArrayList<>();
         plantsList.add(finalDate);
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, plantsList);
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, plantsList);
         chosDate.setAdapter(spinnerArrayAdapter);
         chosDate.setSelection(0);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-
-            prefs = getContext().getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
-            edit = prefs.edit();
+            prefs = Objects.requireNonNull(getContext()).getSharedPreferences("UserLogged",Context.MODE_PRIVATE);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -269,7 +214,6 @@ public class medicine_edit extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -283,7 +227,6 @@ public class medicine_edit extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

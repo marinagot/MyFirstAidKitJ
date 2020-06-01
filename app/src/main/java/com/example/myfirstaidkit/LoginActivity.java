@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import static com.example.myfirstaidkit.helpers.Utils.MEDICINES_JOB_ID;
 import static com.example.myfirstaidkit.helpers.Utils.removeSchedule;
 
 

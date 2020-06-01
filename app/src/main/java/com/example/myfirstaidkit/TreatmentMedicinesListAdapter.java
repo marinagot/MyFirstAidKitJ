@@ -2,13 +2,12 @@ package com.example.myfirstaidkit;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.navigation.Navigation;
@@ -16,19 +15,17 @@ import androidx.navigation.Navigation;
 import com.example.myfirstaidkit.data.DataBaseOperations;
 import com.example.myfirstaidkit.data.MedTretRel;
 import com.example.myfirstaidkit.data.Medicine;
-import com.example.myfirstaidkit.data.TakeHours;
 import com.example.myfirstaidkit.data.Treatment;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.List;
 
 class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
 
-    Context context;
+    private Context context;
     private List<T> treatmentMedicines;
     private List<MedTretRel> relations;
     private List<MedTretRel> removedRelations;
@@ -39,9 +36,9 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
     private int style;
     private static LayoutInflater inflater = null;
 
-    DataBaseOperations dbo;
+    private DataBaseOperations dbo;
 
-    public TreatmentMedicinesListAdapter(Context context, int layoutId, List<Object> data) {
+    TreatmentMedicinesListAdapter(Context context, int layoutId, List<Object> data) {
         // TODO Auto-generated constructor stub
         super(context, 0 , (List<T>)data.get(0));
         this.context = context;
@@ -75,8 +72,9 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
         return position;
     }
 
+    @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         // TODO Auto-generated method stub
         dbo = DataBaseOperations.get_Instance(getContext());
         if (convertView == null) {
@@ -101,7 +99,7 @@ class TreatmentMedicinesListAdapter<T> extends ArrayAdapter<T> {
                     bundle.putString("medicines", new JSONArray(gson.toJson(treatmentMedicines)).toString());
                     bundle.putString("userMedicines", new JSONArray(gson.toJson(userMedicines)).toString());
                     bundle.putString("hours", new JSONArray(gson.toJson(relations.get(position).getHours())).toString());
-                } catch (Exception e) { }
+                } catch (Exception ignored) { }
 
                 Navigation.findNavController(v).navigate(R.id.action_treatment_edit_to_treatment_edit_add_medicine, bundle);
             }
